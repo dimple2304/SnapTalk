@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ST. What's happening.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/8bdb017b66.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="bg-black text-white flex items-center justify-center min-h-screen">
+    <div class="grid grid-cols-1 md:grid-cols-2 w-full max-w-6xl">
+
+        <!-- Left section (logo) -->
+        <div class="flex items-center justify-center p-6">
+            <img src="/images/logo.png" alt="logo" class="w-72 h-72 object-contain">
+        </div>
+
+        <!-- Right section (content) -->
+        <div class="flex flex-col justify-center p-6 space-y-6 w-[85%]">
+            <h1 class="text-4xl md:text-5xl font-bold">Happening now</h1>
+            <h2 class="text-2xl font-semibold">Join today.</h2>
+
+            <!-- Create account -->
+            <button id="createac-btn"
+                class="w-full bg-white text-black rounded-full py-2 font-semibold hover:bg-gray-200">
+                Create account
+            </button>
+
+            <p class="text-xs text-gray-400">
+                By signing up, you agree to the
+                <a href="#" class="text-blue-400 hover:underline">Terms of Service</a> and
+                <a href="#" class="text-blue-400 hover:underline">Privacy Policy</a>,
+                including <a href="#" class="text-blue-400 hover:underline">Cookie Use</a>.
+            </p>
+
+            <!-- OR separator -->
+            <div class="flex items-center gap-2">
+                <div class="flex-1 h-px bg-gray-600"></div>
+                <span class="text-gray-400 text-sm">OR</span>
+                <div class="flex-1 h-px bg-gray-600"></div>
+            </div>
+
+            <!-- Already have account -->
+            <div class="space-y-3">
+                <p class="font-semibold">Already have an account?</p>
+                <button class="w-full border border-gray-500 rounded-full py-2 font-semibold hover:bg-gray-900">
+                    Sign in
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <dialog id="register-dialog"
+        class="relative w-[35%] max-w-[45%] mx-auto bg-black text-white rounded-2xl border-0 backdrop:bg-black backdrop:bg-opacity-50">
+        <div class="p-6 py-2">
+            <!-- Header with close button -->
+            <div class="flex justify-between items-center w-full">
+                <div class="w-8"></div> <!-- Spacer for centering -->
+                <div class="flex items-center justify-center h-[120px] w-[120px]">
+                    <img src="/images/logo.png" alt="logo" class="object-contain">
+                </div>
+                <button id="signupModal-close"
+                    class="w-8 h-8 flex items-center justify-center text-white hover:bg-gray-800 rounded-full transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Loading indicater -->
+            <div id="spinner" role="status"
+                class="hidden absolute inset-0 bg-black/50 z-10 flex justify-center items-center">
+                <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                    viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                        fill="currentColor" />
+                    <path
+                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                        fill="currentFill" />
+                </svg>
+                <span class="sr-only">Loading...</span>
+            </div>
+
+            <!-- Registration Form -->
+            <div id="registrationForm">
+                <!-- Title -->
+                <div class="mb-4">
+                    <h1 class="text-3xl font-bold text-white">Create your account</h1>
+                </div>
+
+                <form id="register" action="" class="flex flex-col gap-4">
+                    <!-- Name Field -->
+                    <div class="flex flex-col gap-2">
+                        <div class="relative">
+                            <input type="text" id="name" name="name" placeholder="Name"
+                                class="w-full px-4 py-4 bg-black border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors">
+                        </div>
+                        <span id="nameError" class="error text-red-600 text-sm"></span>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="flex flex-col gap-2">
+                        <div class="relative">
+                            <input type="email" id="email" name="email" placeholder="Email"
+                                class="w-full px-4 py-4 bg-black border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors">
+                            <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span id="emailError" class="error text-red-600 text-sm"></span>
+                    </div>
+
+                    <!-- Date of Birth Section -->
+                    <div class="flex flex-col gap-4">
+                        <div>
+                            <h3 class="text-white font-medium text-base">Date of birth</h3>
+                            <p class="text-gray-400 text-sm mb-1">This will not be shown publicly. Confirm your own age,
+                                even if this account is for a business, a pet, or something else.</p>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <!-- Month Dropdown -->
+                            <div class="flex-1">
+                                <div class="relative">
+                                    <select name="month" id="select-month"
+                                        class="w-full px-4 py-4 bg-black border border-gray-600 rounded-lg text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors appearance-none cursor-pointer">
+                                        <option value="" class="text-gray-400">Month</option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                    <div
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <span id="monthError" class="error text-red-400 text-sm"></span>
+                            </div>
+
+                            <!-- Day Dropdown -->
+                            <div class="flex-1">
+                                <div class="relative">
+                                    <select name="day" id="select-day"
+                                        class="w-full px-4 py-4 bg-black border border-gray-600 rounded-lg text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors appearance-none cursor-pointer">
+                                        <option value="" class="text-gray-400">Day</option>
+                                        <% for(let i=1; i <=31; i++) {%>
+                                            <option value="<%= i %>">
+                                                <%= i %>
+                                            </option>
+                                            <% } %>
+                                    </select>
+                                    <div
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <span id="dayError" class="error text-red-400 text-sm"></span>
+                            </div>
+
+                            <!-- Year Dropdown -->
+                            <div class="flex-1">
+                                <div class="relative">
+                                    <select name="year" id="select-year"
+                                        class="w-full px-4 py-4 bg-black border border-gray-600 rounded-lg text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors appearance-none cursor-pointer">
+                                        <option value="" class="text-gray-400">Year</option>
+                                        <% for(let i=new Date().getFullYear(); i>= 1900; i--) {%>
+                                            <option value="<%= i %>">
+                                                <%= i %>
+                                            </option>
+                                            <% } %>
+                                    </select>
+                                    <div
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <span id="yearError" class="error text-red-400 text-sm"></span>
+                            </div>
+                        </div>
+                        <span id="dateError" class="error text-red-400 text-sm"></span>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="">
+                        <button id="next-btn" type="submit" disabled="true"
+                            class="w-full bg-white text-black font-bold py-4 px-6 rounded-full hover:bg-gray-200 transition-colors disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed">
+                            Next
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Form for otp input -->
+            <div id="otpVerificationForm" class="hidden relative min-h-[490px]">
+                <div class="mb-4 text-left">
+                    <h1 class="text-3xl font-bold text-white mb-2">We sent you a code</h1>
+                    <p class="text-gray-400 text-sm">Enter it below to verify your email.</p>
+                </div>
+                <form id="otp-form" action="" class="flex flex-col gap-4">
+                    <div class="relative flex flex-col gap-2">
+                        <div id="append-relative" class="relative">
+                            <div class="absolute inset-0 px-5 py-4 text-gray-500 tracking-[0.8em] text-lg font-semibold pointer-events-none"
+                                aria-hidden="true">
+                                ______
+                            </div>
+
+                            <input type="text" id="otp" name="otp" inputmode="numeric" autocomplete="one-time-code"
+                                maxlength="6"
+                                class="relative z-10 w-full px-5 py-4 bg-transparent border border-gray-600 rounded-lg text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors tracking-[0.8em] text-lg font-semibold">
+                        </div>
+                        <span id="otpError" class="error text-red-600 text-sm"></span>
+                        <!-- <div class="counters flex flex-row absolute top-1/2 right-4 -translate-y-1/2">
+                            <span id="minutesCounter" class="text-sm"></span>
+                            <span id="secondsCounter" class="text-sm"></span>
+                        </div> -->
+                        <div class="mt-2 flex justify-end items-center text-sm space-x-1 absolute top-20 right-1">
+                            <span>Didn't receive a code?</span>
+                            <button type="button" id="resend-btn" disabled="true"
+                                class="text-blue-500 hover:underline cursor-pointer disabled:text-white disabled:pointer-events-none">
+                                Resend
+                            </button>
+                            <span id="inSeparator">in</span>
+                            <span id="minutesCounter"></span>
+                            <span id="secondsCounter"></span>
+                        </div>
+
+                    </div>
+                    <div class="absolute bottom-6 w-full">
+                        <button type="button" id="verify-btn" type="submit" disabled="true"
+                            class="w-full bg-white text-black font-bold py-4 px-6 rounded-full hover:bg-gray-200 transition-colors disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed">
+                            Verify & next
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+
+
+            <!-- Password input form -->
+            <div id="passwordCreationForm" class="hidden relative min-h-[490px]">
+                <div class="mb-4 text-left">
+                    <h1 class="text-3xl font-bold text-white mb-2">Create your password</h1>
+                    <p class="text-gray-400 text-sm">Make sure it's secure and at least 8 characters long.</p>
+                </div>
+
+                <form id="password-form" action="" class="flex flex-col gap-4">
+
+                    <div class="flex flex-col gap-2">
+                        <div class="relative">
+                            <input type="password" id="password" name="password" placeholder="Password"
+                                class="w-full px-4 py-4 bg-black border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors font-semibold text-lg">
+                            <i id="passToggler"
+                                class="fa-solid fa-eye-slash absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer"
+                                style="color: #ffffff; --fa-animation-iteration-count: 1;""></i>
+                        </div>
+                        <span id=" passwordError" class="error text-red-600 text-sm"></span>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <div class="relative">
+                                <input type="password" id="confirmPassword" name="confirmPassword"
+                                    placeholder="Confirm Password"
+                                    class="w-full px-4 py-4 bg-black border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors font-semibold text-lg">
+                                <i id="confirmPassToggler"
+                                    class="fa-solid fa-eye-slash absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer"
+                                    style="color: #ffffff;"></i>
+                            </div>
+                            <span id="confirmPasswordError" class="error text-red-600 text-sm"></span>
+                            <div id="passworderrors" class="flex flex-col">
+                                <span id="passLengthError" class="error text-red-600 text-sm"></span>
+                                <span id="upperCaseError" class="error text-red-600 text-sm"></span>
+                                <span id="lowerCaseError" class="error text-red-600 text-sm"></span>
+                                <span id="numberError" class="error text-red-600 text-sm"></span>
+                                <span id="specialCharError" class="error text-red-600 text-sm"></span>
+                            </div>
+                        </div>
+
+                        <div class="absolute bottom-6 w-full">
+                            <button id="confirm-btn" type="submit" disabled="true"
+                                class="w-full bg-white text-black font-bold py-4 px-6 rounded-full hover:bg-gray-200 transition-colors disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed">
+                                Save & continue
+                            </button>
+                        </div>
+                </form>
+            </div>
+
+
+        </div>
+    </dialog>
+
+    <script src="/js/dob.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="https://kit.fontawesome.com/8bdb017b66.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
