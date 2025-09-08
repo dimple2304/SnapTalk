@@ -19,10 +19,9 @@ connectDB();
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.render("index");
+    res.render("auth");
 })
 app.use('/api/auth', authRoutes);
-
 
 app.listen(PORT, () => {
     console.log(`Server started at https://localhost:${PORT}`); 
