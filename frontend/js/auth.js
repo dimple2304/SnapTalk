@@ -199,7 +199,7 @@ nextBtn.addEventListener("click", async function (e) {
         else if (data.success) {
             registrationForm.classList.add("hidden");
             otpVerificationForm.classList.remove("hidden");
-            id = setInterval(() => startTimer(4, 59), 1000);
+            id = setInterval(() => startTimer(0, 30), 1000);
         }
         else {
             dateError.innerHTML = "Error sending otp, Please try again!"
@@ -222,6 +222,7 @@ resendBtn.addEventListener("click", async function (e) {
         resentMsg.innerHTML = "";
 
         resendBtn.classList.remove("cursor-pointer")
+        spinner.classList.remove("hidden");
 
         const emailVal = email.value.trim();
 
@@ -231,6 +232,7 @@ resendBtn.addEventListener("click", async function (e) {
             body: JSON.stringify({ email: emailVal })
         })
         const data = await res.json();
+        spinner.classList.add("hidden");
 
         if (!res.ok) {
             otpError.innerHTML = data.messaage;
@@ -238,12 +240,12 @@ resendBtn.addEventListener("click", async function (e) {
             resentMsg.innerHTML = "OTP re-sent to your registered email.";
             resentMsg.style.color = "green";
             relative.appendChild(resentMsg);
-            id = setInterval(() => startTimer(4, 59), 1000);
+            id = setInterval(() => startTimer(0, 30), 1000);
         }
     } catch (err) {
         console.log("Catch triggered" + err);
-
         otpError.innerHTML = "Something went wrong!";
+        spinner.classList.add("hidden");
         return;
     }
 })
@@ -271,7 +273,6 @@ verifyBtn.addEventListener("click", async function (e) {
         otpError.innerHTML = "";
         resentMsg.innerHTML = "";
         console.log(timeOver);
-
 
         if (timeOver) {
             otpError.innerHTML = "Invalid otp!";
