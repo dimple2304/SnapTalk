@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { PORT } from './config/envIndex.js';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
+import frontendRoutes from './routes/frontend.routes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,11 +19,9 @@ connectDB();
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.render("auth");
-})
 app.use('/api/auth', authRoutes);
+app.use('/', frontendRoutes);
 
 app.listen(PORT, () => {
-    console.log(`Server started at https://localhost:${PORT}`); 
+    console.log(`Server started at https://localhost:${PORT}`);
 })

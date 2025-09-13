@@ -1,7 +1,15 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-    username : {
+    username: {
+        type: String,
+        // required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        index: true
+    },
+    name:{
         type: String,
         required: true,
         unique: true,
@@ -9,7 +17,7 @@ const userSchema = new mongoose.Schema({
         trim: true,
         index: true
     },
-    email:{
+    email: {
         type: String,
         required: true,
         lowercase: true,
@@ -17,10 +25,10 @@ const userSchema = new mongoose.Schema({
         trim: true,
         index: true
     },
-    dob:{
+    dob: {
         type: Date,
         required: true,
-    }, 
+    },
     password: {
         type: String,
         required: true
@@ -29,17 +37,21 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    isOnline:{
+    isOnline: {
         type: Boolean,
         default: false
     },
     status: {
         type: String,
-        trim: true,
-        required: true
+        enum: ["active", "inactive", "pending", "suspended", "banned"],
+        default: "active",
+        required: true,
+        trim: true
     },
     role: {
         type: String,
+        enum: ["user", "admin", "moderator"], 
+        default: "user",
         required: true,
         trim: true
     },
@@ -51,6 +63,6 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     }]
-}, {timestamps: true})
+}, { timestamps: true })
 
 export const Users = mongoose.model("Users", userSchema);

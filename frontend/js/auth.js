@@ -194,12 +194,12 @@ nextBtn.addEventListener("click", async function (e) {
         spinner.classList.add("hidden");
 
         if (!res.ok) {
-            emailError.innerHTML = data.messaage;
+            emailError.innerHTML = data.message;
         }
         else if (data.success) {
             registrationForm.classList.add("hidden");
             otpVerificationForm.classList.remove("hidden");
-            id = setInterval(() => startTimer(0, 30), 1000);
+            id = setInterval(() => startTimer(4, 59), 1000);
         }
         else {
             dateError.innerHTML = "Error sending otp, Please try again!"
@@ -240,7 +240,7 @@ resendBtn.addEventListener("click", async function (e) {
             resentMsg.innerHTML = "OTP re-sent to your registered email.";
             resentMsg.style.color = "green";
             relative.appendChild(resentMsg);
-            id = setInterval(() => startTimer(0, 30), 1000);
+            id = setInterval(() => startTimer(4, 59), 1000);
         }
     } catch (err) {
         console.log("Catch triggered" + err);
@@ -405,6 +405,49 @@ function toggleHandler(inputField, icon) {
     inputField.type = inputField.type === "password" ? "text" : "password";
     toggleIcon(icon);
 }
+
+
+// Save user details and redirect to the homepage
+confirmBtn.addEventListener("click", async function(e){
+    e.preventDefault();
+
+    try{
+        confirmPasswordError.innerHTML = "";
+
+        const userDetails = {
+            name:name.value.trim(),
+            email:email.value.trim(),
+            month:selectMonthV.value.trim(),
+            day:selectDayV.value.trim(),
+            year:selectYearV.value.trim(),
+            password:password.value.trim()
+        }
+
+        spinner.classList.remove("hidden");
+
+        const res = await fetch("/api/auth/register-user", {
+            method:"POST",
+            headers:{"Content-Type":"Application/json"},
+            body:JSON.stringify(userDetails)
+        });
+   
+        const data = await res.json();
+        
+        if(!res.ok){
+            confirmPasswordError.innerHTML = data.message;
+            spinner.classList.add("hidden");
+            return;
+        }
+        window.location.href = data.redirectUrl;
+
+    }catch(err){
+        confirmPasswordError.innerHTML = "Something went wrong!";
+        spinner.classList.add("hidden");
+        console.log(err);     
+    }
+})
+
+
 
 
 
