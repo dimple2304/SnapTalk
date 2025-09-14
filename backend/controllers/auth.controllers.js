@@ -74,9 +74,6 @@ export const registerUser = async (req, res) => {
 
         const dobInIst = moment.tz([parseInt(year), parseInt(month) - 1, parseInt(day)], "Asia/Kolkata");
         const dobInUtc = dobInIst.utc();
-        // const dateOfBirth = moment(
-        //     new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
-        // ).tz("Asia/Kolkata").format();
 
         console.log(dobInUtc);
 

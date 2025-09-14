@@ -7,4 +7,5 @@ router.post('/send-otp', sendOtp);
 router.post('/verify-otp', verifyOtp);
 router.post('/register-user', registerUser);
 
+
 export default router;

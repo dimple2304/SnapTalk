@@ -45,7 +45,7 @@
             <!-- Already have account -->
             <div class="space-y-3">
                 <p class="font-semibold">Already have an account?</p>
-                <button class="w-full border border-gray-500 rounded-full py-2 font-semibold hover:bg-gray-900">
+                <button id="signin-btn" class="w-full border border-gray-500 rounded-full py-2 font-semibold hover:bg-gray-900">
                     Sign in
                 </button>
             </div>
@@ -318,8 +318,10 @@
         </div>
     </dialog>
 
+    <%- include("login") %>
+
     <script src="/js/dob.js"></script>
-    <script src="/js/auth.js"></script>
+    <script src="/js/registration.js"></script>
     <script src="https://kit.fontawesome.com/8bdb017b66.js" crossorigin="anonymous"></script>
 </body>
 
