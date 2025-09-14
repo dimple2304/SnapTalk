@@ -53,19 +53,31 @@
             <span id="loginPasswordError" class="error text-red-600 text-sm"></span>
           </div>
 
-          <!-- Button pinned at bottom -->
-          <div class="absolute bottom-6 w-full">
+          <!-- Forgot Password -->
+          <div class="text-right mb-4">
+            <button type="button" id="forgotPassword"
+              class="text-blue-500 text-sm hover:underline">Forgot Password?</button>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="absolute bottom-12 w-full">
             <button type="submit"
               class="w-full bg-white text-black font-bold py-4 px-6 rounded-full hover:bg-gray-200 transition-colors">
               Sign in
             </button>
+          </div>
+
+          <!-- "Don't have an account? Sign up" below button -->
+          <div class="absolute bottom-4 w-full text-center">
+            <span class="text-gray-400">Don't have an account? </span>
+            <button type="button" id="signupRedirect"
+              class="text-blue-500 font-semibold hover:underline">Sign up</button>
           </div>
         </form>
       </div>
 
     </div>
   </dialog>
-
 
   <script src="/js/login.js"></script>
 </body>
