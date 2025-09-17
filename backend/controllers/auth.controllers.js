@@ -99,11 +99,34 @@ export const registerUser = async (req, res) => {
         console.log(token);
         res.cookie("token", token);
 
-        return res.status(201).json({ success: true, redirectUrl: "/homepage" });
+        return res.status(201).json({ success: true, redirectUrl: "/feed" });
     } catch (err) {
         console.log(err);
 
         return res.status(500).json({ success: false, message: "Something went wrong. Please check your internet connection and try again." })
+    }
+}
+
+
+// Login
+export const userLogin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) return res.status(400).json({ success: false, message: "All fields are required." });
+
+        const user = await Users.findOne({ email });
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!user || !passwordMatch) {
+            return res.status(401).json({success:false, message:"Either email or password is wrong!"});
+        }
+
+        const token = tokenCreation(user.id, user.email);
+        console.log(token);
+        res.cookie("token", token);
+        return res.status(200).json({success:true, message:"Login successful.", redirectUrl:"/feed"});
+    } catch (err) {
+        return res.status(500).json({ success: false, message: "Something went wrong! Please check your internet connection and try again." });
     }
 }
 

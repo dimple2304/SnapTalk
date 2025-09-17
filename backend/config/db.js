@@ -3,10 +3,7 @@ import { DB_CONNECTION_STRING } from "./envIndex.js";
 
 const connectDB = async () => {
     try{
-        await mongoose.connect(DB_CONNECTION_STRING, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
+        await mongoose.connect(DB_CONNECTION_STRING)
         console.log("Mongodb connected");    
     } catch (err) {
         console.error(err.message)

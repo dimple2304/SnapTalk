@@ -8,8 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-  <dialog id="login-dialog"
+<body class="bg-gray-800 flex items-center justify-center min-h-screen">
+  <dialog open id="login-dialog"
     class="relative w-[35%] max-w-[45%] mx-auto bg-black text-white rounded-2xl border-0 backdrop:bg-black backdrop:bg-opacity-50">
 
     <div class="p-6 py-2 flex flex-col h-full">
@@ -61,7 +61,7 @@
 
           <!-- Submit Button -->
           <div class="absolute bottom-12 w-full">
-            <button type="submit"
+            <button id="submit-btn" type="submit"
               class="w-full bg-white text-black font-bold py-4 px-6 rounded-full hover:bg-gray-200 transition-colors">
               Sign in
             </button>
@@ -78,6 +78,7 @@
 
     </div>
   </dialog>
+
 
   <script src="/js/login.js"></script>
 </body>

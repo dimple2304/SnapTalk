@@ -1,5 +1,5 @@
 const registerDialog = document.querySelector("#register-dialog");
-const createacBtn = document.querySelector("#createac-btn");
+// const createacBtn = document.querySelector("#createac-btn");
 const registrationForm = document.querySelector("#registrationForm");
 const otpVerificationForm = document.querySelector("#otpVerificationForm");
 const signupModalClose = document.querySelector("#signupModal-close");
@@ -35,11 +35,9 @@ const passToggler = document.querySelector("#passToggler");
 const confirmPassToggler = document.querySelector("#confirmPassToggler");
 
 signupModalClose.addEventListener("click", () => {
-    registerDialog.close();
+    window.location.href = '/';
 })
-createacBtn.addEventListener("click", () => {
-    registerDialog.showModal();
-});
+
 
 let nameTouched = false;
 let emailTouched = false;
@@ -425,7 +423,7 @@ confirmBtn.addEventListener("click", async function(e){
 
         spinner.classList.remove("hidden");
 
-        const res = await fetch("/api/auth/register-user", {
+        const res = await fetch("/api/auth/register", {
             method:"POST",
             headers:{"Content-Type":"Application/json"},
             body:JSON.stringify(userDetails)

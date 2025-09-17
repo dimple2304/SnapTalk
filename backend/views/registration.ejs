@@ -4,55 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ST. What's happening.</title>
+    <title>Registration</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://kit.fontawesome.com/8bdb017b66.js" crossorigin="anonymous"></script>
 </head>
 
-<body class="bg-black text-white flex items-center justify-center min-h-screen">
-    <div class="grid grid-cols-1 md:grid-cols-2 w-full max-w-6xl">
-
-        <!-- Left section (logo) -->
-        <div class="flex items-center justify-center p-6">
-            <img src="/images/logo.png" alt="logo" class="w-72 h-72 object-contain">
-        </div>
-
-        <!-- Right section (content) -->
-        <div class="flex flex-col justify-center p-6 space-y-6 w-[85%]">
-            <h1 class="text-4xl md:text-5xl font-bold">Happening now</h1>
-            <h2 class="text-2xl font-semibold">Join today.</h2>
-
-            <!-- Create account -->
-            <button id="createac-btn"
-                class="w-full bg-white text-black rounded-full py-2 font-semibold hover:bg-gray-200">
-                Create account
-            </button>
-
-            <p class="text-xs text-gray-400">
-                By signing up, you agree to the
-                <a href="#" class="text-blue-400 hover:underline">Terms of Service</a> and
-                <a href="#" class="text-blue-400 hover:underline">Privacy Policy</a>,
-                including <a href="#" class="text-blue-400 hover:underline">Cookie Use</a>.
-            </p>
-
-            <!-- OR separator -->
-            <div class="flex items-center gap-2">
-                <div class="flex-1 h-px bg-gray-600"></div>
-                <span class="text-gray-400 text-sm">OR</span>
-                <div class="flex-1 h-px bg-gray-600"></div>
-            </div>
-
-            <!-- Already have account -->
-            <div class="space-y-3">
-                <p class="font-semibold">Already have an account?</p>
-                <button id="signin-btn" class="w-full border border-gray-500 rounded-full py-2 font-semibold hover:bg-gray-900">
-                    Sign in
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <dialog id="register-dialog"
+<body class="bg-gray-800 flex items-center justify-center min-h-screen">
+    <dialog open id="register-dialog"
         class="relative w-[35%] max-w-[45%] mx-auto bg-black text-white rounded-2xl border-0 backdrop:bg-black backdrop:bg-opacity-50">
         <div class="p-6 py-2">
             <!-- Header with close button -->
@@ -318,11 +275,8 @@
         </div>
     </dialog>
 
-    <%- include("login") %>
-
     <script src="/js/dob.js"></script>
     <script src="/js/registration.js"></script>
-    <script src="https://kit.fontawesome.com/8bdb017b66.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -3,19 +3,20 @@ import express from 'express';
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    res.render("registration");
+    res.render("home");
 })
 
 router.get('/registration', (req, res) => {
-    res.render("auth/registration");
+    res.render("registration");
 })
 
 router.get('/login', (req, res) => {
-    res.render("auth/login");
+    res.render("login");
 })
 
-router.get('/homepage', (req, res) => {
-    res.render("homepage");
+
+router.get('/feed', (req, res) => {
+    res.render("feedpage");
 })
 
 export default router;
