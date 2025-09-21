@@ -7,70 +7,74 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import moment from 'moment-timezone';
 import { tokenCreation } from '../utils/jwt_service.js';
+import { BadRequestError, ConflictError, ForbiddenError, InternalServerError, UnauthorizedError } from '../utils/customErrorHandler/customError.js';
 
-export const otpStore = {};
 
 // otp sender
-export const sendOtp = async (req, res) => {
+export const sendOtp = async (req, res, next) => {
     try {
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         const { email, year } = req.body;
-        if (!email) return res.status(400).json({ message: "Email missing" });
+        if (!email) throw new BadRequestError("Email missing!");
 
         const existed = await Users.findOne({ email });
         if (existed) {
-            return res.status(409).json({ success: false, message: "Email already in use." })
+            throw new ConflictError("Email is already in use.");
         }
-        if (year > 2009) {
-            return res.status(400).json({ success: false, message: "Age must be greater than 16." })
+
+        const currentYear = new Date().getFullYear();
+        if (parseInt(year) > currentYear - 16) {
+            throw new ForbiddenError("Age must be greater than 16.");
         }
 
         const cachedOtp = await cache.get(email);
 
         if (cachedOtp) {
-            return res.status(400).json({ success: false, message: "OTP already sent. Wait for 5 minutes before retry." });
+            throw new BadRequestError("OTP has been sent already.");
         }
 
         await sendMail({ email: email, subject: "One Time Password Verification", html: generateOtpEmail(otp) })
         cache.set(email, otp);
-        console.log("Otp sent");
         return res.status(200).json({ success: true, message: "OTP sent successfully to your registered email." })
 
     } catch (err) {
-        return res.status(500).json({ success: false, message: "Error sending OTP. Please try again." });
+        // return res.status(500).json({ success: false, message: "Error sending OTP. Please try again." });
+        next(err);
     }
 }
 
 
 // otp verification
-export const verifyOtp = async (req, res) => {
+export const verifyOtp = async (req, res, next) => {
     try {
         const { otp, email } = req.body;
-        if (!otp) return res.status(400).json({ success: false, message: "OTP missing!" });
+        if (!otp) throw new BadRequestError("OTP missing");
 
         const cachedOtp = await cache.get(email);
 
-        if (!cachedOtp || cachedOtp !== otp) return res.status(409).json({ success: false, message: "Invalid OTP!" });
+        if (!cachedOtp || cachedOtp !== otp) throw new BadRequestError("Invalid OTP!");
+
+        cache.del(email);
 
         return res.status(200).json({ success: true, message: "OTP verified successfully." });
     } catch (err) {
-        return res.status(500).json({ success: false, message: "Something went wrong. Please check your internet connection and try again." })
+        next(err)
     }
 }
 
 
 // Save user details final
-export const registerUser = async (req, res) => {
+export const registerUser = async (req, res, next) => {
     try {
         const { name, email, month, day, year, password } = req.body;
         if (!name || !email || !month || !day || !year || !password) {
-            return res.status(400).json({ success: false, message: "All fields are required." });
+            throw new BadRequestError("All fields are required!");
         }
 
-        const existingEmail = await Users.findOne({ email });
-        if (existingEmail) {
-            return res.status(409).json({ success: false, message: "Email already in use." });
-        }
+        // const existingEmail = await Users.findOne({ email });
+        // if (existingEmail) {
+        //     return res.status(409).json({ success: false, message: "Email already in use." });
+        // }
 
         const dobInIst = moment.tz([parseInt(year), parseInt(month) - 1, parseInt(day)], "Asia/Kolkata");
         const dobInUtc = dobInIst.utc();
@@ -93,40 +97,55 @@ export const registerUser = async (req, res) => {
         })
 
         const savedUser = await newUser.save();
-        if (!savedUser) return res.status(500).json({ success: false, message: "Something went wrong!" });
+        if (!savedUser) throw new InternalServerError("Something went wrong!");
 
-        const token = tokenCreation(savedUser.id, savedUser.email);
+        const token = tokenCreation({ id: savedUser.id, email: savedUser.email, username:"" });
         console.log(token);
         res.cookie("token", token);
 
         return res.status(201).json({ success: true, redirectUrl: "/feed" });
     } catch (err) {
-        console.log(err);
-
-        return res.status(500).json({ success: false, message: "Something went wrong. Please check your internet connection and try again." })
+        next(err);
     }
 }
 
 
 // Login
-export const userLogin = async (req, res) => {
+export const userLogin = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-        if (!email || !password) return res.status(400).json({ success: false, message: "All fields are required." });
-
+        if (!email || !password) throw new BadRequestError("All fields are required!");
         const user = await Users.findOne({ email });
-        const passwordMatch = await bcrypt.compare(password, user.password);
 
-        if (!user || !passwordMatch) {
-            return res.status(401).json({success:false, message:"Either email or password is wrong!"});
+        if (!user) {
+            throw new UnauthorizedError("Either email or password is wrong!");
         }
 
-        const token = tokenCreation(user.id, user.email);
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            throw new UnauthorizedError("Either email or password is wrong!");
+        }
+
+        const token = tokenCreation({ id: user.id, email: user.email, username:user.username });
         console.log(token);
         res.cookie("token", token);
-        return res.status(200).json({success:true, message:"Login successful.", redirectUrl:"/feed"});
+        return res.status(200).json({ success: true, message: "Login successful.", redirectUrl: "/feed" });
     } catch (err) {
-        return res.status(500).json({ success: false, message: "Something went wrong! Please check your internet connection and try again." });
+        next(err);
     }
 }
 
+
+export const getUserDetails = async (_id) => {
+    try {
+        const user = await Users.findOne({ _id }).select('-password');
+        if (!user) {
+            return null;
+        }
+
+        return user;
+    } catch (err) {
+        throw new InternalServerError("Couldn't retrieve user details.")
+    }
+}

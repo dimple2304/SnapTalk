@@ -1,11 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home / SnapTalk</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom scrollbar for a more integrated look */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #000;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #2f3336;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3f4346;
+    }
+  </style>
 </head>
-<body>
-    <h1>hii mr</h1>
+
+<body class="bg-black text-gray-100 font-sans">
+  <div class="container mx-auto flex">
+
+    <!-- Sidebar Partial -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main Content -->
+    <main class="w-full lg:w-1/2 border-l border-r border-gray-700">
+      <!-- Header -->
+      <div class="sticky top-0 bg-black bg-opacity-80 backdrop-blur-md z-10 px-4 py-3 border-b border-gray-700">
+        <h2 class="text-xl font-bold text-white">Home</h2>
+        <div class="flex mt-2 border-b border-gray-700">
+          <a href="#" class="w-1/2 text-center py-3 font-bold text-white border-b-2 border-blue-500">For you</a>
+          <a href="#" class="w-1/2 text-center py-3 font-semibold text-gray-500 hover:bg-gray-800">Following</a>
+        </div>
+      </div>
+
+      <!-- Create Snap Box -->
+      <div class="p-4 border-b border-gray-700">
+        <div class="flex space-x-4">
+          <img src="https://placehold.co/48x48/7e22ce/ffffff?text=U" alt="Your Avatar" class="rounded-full h-12 w-12">
+          <div class="w-full">
+            <textarea class="bg-transparent w-full text-xl placeholder-gray-500 focus:outline-none resize-none" rows="3" placeholder="What's happening?"></textarea>
+            <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-800">
+              <!-- Icons for media etc. would go here -->
+              <div class="flex space-x-2 text-blue-500">
+                <!-- Image Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <path d="m21 15-5-5L5 21" />
+                </svg>
+                <!-- Poll Icon, etc. -->
+              </div>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full disabled:opacity-50">Snap</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feed Timeline -->
+      <div>
+        <!-- Sample Snap Post 1 -->
+        <div class="p-4 border-b border-gray-700 hover:bg-gray-900 transition-colors duration-200 cursor-pointer">
+          <div class="flex space-x-4">
+            <img src="https://placehold.co/48x48/1d4ed8/ffffff?text=A" alt="Avatar" class="rounded-full h-12 w-12">
+            <div class="w-full">
+              <div class="flex items-center">
+                <span class="font-bold text-white">Alice</span>
+                <span class="text-gray-500 ml-2">@alice_dev · 10m</span>
+              </div>
+              <p class="mt-1">Just launched a new feature for SnapTalk! So excited to see how everyone uses it. #webdev #coding</p>
+              <div class="flex justify-between items-center mt-4 text-gray-500 max-w-sm">
+                <!-- Reply -->
+                <div class="flex items-center space-x-1 hover:text-blue-500"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg><span>12</span></div>
+                <!-- Resnap -->
+                <div class="flex items-center space-x-1 hover:text-green-500"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 2.1l4 4-4 4" />
+                    <path d="M3 12.6V16a2 2 0 0 0 2 2h14" />
+                    <path d="M7 21.9l-4-4 4-4" />
+                    <path d="M21 11.4V8a2 2 0 0 0-2-2H5" />
+                  </svg><span>5</span></div>
+                <!-- Like -->
+                <div class="flex items-center space-x-1 hover:text-pink-500"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg><span>45</span></div>
+                <!-- Share -->
+                <div class="hover:text-blue-500"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                    <polyline points="16 6 12 2 8 6" />
+                    <line x1="12" x2="12" y1="2" y2="15" />
+                  </svg></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Sample Snap Post 2 -->
+        <div class="p-4 border-b border-gray-700 hover:bg-gray-900 transition-colors duration-200 cursor-pointer">
+          <div class="flex space-x-4">
+            <img src="https://placehold.co/48x48/be123c/ffffff?text=B" alt="Avatar" class="rounded-full h-12 w-12">
+            <div class="w-full">
+              <div class="flex items-center">
+                <span class="font-bold text-white">Bob</span>
+                <span class="text-gray-500 ml-2">@bob_designs · 1h</span>
+              </div>
+              <p class="mt-1">Working on a new UI concept. What do you all think of this color palette?</p>
+              <img src="https://placehold.co/500x280/1a202c/ffffff?text=UI+Palette" class="mt-3 rounded-2xl border border-gray-700" alt="UI Palette Image">
+              <div class="flex justify-between items-center mt-4 text-gray-500 max-w-sm">
+                <div class="flex items-center space-x-1 hover:text-blue-500"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg><span>31</span></div>
+                <div class="flex items-center space-x-1 hover:text-green-500"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 2.1l4 4-4 4" />
+                    <path d="M3 12.6V16a2 2 0 0 0 2 2h14" />
+                    <path d="M7 21.9l-4-4 4-4" />
+                    <path d="M21 11.4V8a2 2 0 0 0-2-2H5" />
+                  </svg><span>15</span></div>
+                <div class="flex items-center space-x-1 hover:text-pink-500"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg><span>102</span></div>
+                <div class="hover:text-blue-500"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                    <polyline points="16 6 12 2 8 6" />
+                    <line x1="12" x2="12" y1="2" y2="15" />
+                  </svg></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Right Column -->
+    <aside class="hidden lg:block w-1/3 p-4">
+      <div class="sticky top-0">
+        <!-- Search Bar -->
+        <div class="relative">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute top-1/2 left-3 -translate-y-1/2 text-gray-500">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <input type="text" placeholder="Search SnapTalk" class="w-full bg-gray-800 border border-gray-700 text-white rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <!-- What's Happening -->
+        <div class="bg-gray-900 rounded-2xl mt-4">
+          <h3 class="font-bold text-xl p-4">What's happening</h3>
+          <div class="p-4 border-t border-gray-700 hover:bg-gray-800 transition-colors duration-200 cursor-pointer">
+            <p class="text-sm text-gray-500">Technology · Trending</p>
+            <p class="font-bold">#AIRevolution</p>
+            <p class="text-sm text-gray-500">15.K Snaps</p>
+          </div>
+          <div class="p-4 border-t border-gray-700 hover:bg-gray-800 transition-colors duration-200 cursor-pointer">
+            <p class="text-sm text-gray-500">Sports · Trending</p>
+            <p class="font-bold">#WorldCupFinal</p>
+            <p class="text-sm text-gray-500">22.1K Snaps</p>
+          </div>
+          <div class="p-4 border-t border-gray-700 hover:bg-gray-800 transition-colors duration-200 cursor-pointer">
+            <p class="text-sm text-gray-500">Gaming · Trending</p>
+            <p class="font-bold">New Game Release</p>
+            <p class="text-sm text-gray-500">8,956 Snaps</p>
+          </div>
+          <a href="#" class="block p-4 text-blue-500 border-t border-gray-700 hover:bg-gray-800 rounded-b-2xl">Show more</a>
+        </div>
+
+        <!-- Who to follow -->
+        <div class="bg-gray-900 rounded-2xl mt-4">
+          <h3 class="font-bold text-xl p-4">Who to follow</h3>
+          <div class="flex items-center justify-between p-4 border-t border-gray-700 hover:bg-gray-800 transition-colors duration-200 cursor-pointer">
+            <div class="flex">
+              <img src="https://placehold.co/40x40/ca8a04/ffffff?text=C" alt="Avatar" class="rounded-full h-10 w-10">
+              <div class="ml-3">
+                <p class="font-bold text-white">Charlie</p>
+                <p class="text-sm text-gray-400">@charlie_ux</p>
+              </div>
+            </div>
+            <button class="bg-white text-black font-bold py-1 px-4 rounded-full">Follow</button>
+          </div>
+          <div class="flex items-center justify-between p-4 border-t border-gray-700 hover:bg-gray-800 transition-colors duration-200 cursor-pointer">
+            <div class="flex">
+              <img src="https://placehold.co/40x40/047857/ffffff?text=D" alt="Avatar" class="rounded-full h-10 w-10">
+              <div class="ml-3">
+                <p class="font-bold text-white">Dana</p>
+                <p class="text-sm text-gray-400">@dana_crypto</p>
+              </div>
+            </div>
+            <button class="bg-white text-black font-bold py-1 px-4 rounded-full">Follow</button>
+          </div>
+          <a href="#" class="block p-4 text-blue-500 border-t border-gray-700 hover:bg-gray-800 rounded-b-2xl">Show more</a>
+        </div>
+      </div>
+    </aside>
+
+  </div>
 </body>
+
 </html>

@@ -1,4 +1,6 @@
 import express from 'express';
+import { verifyToken } from '../middlewares/auth.middlewares.js';
+import { getUserDetails } from '../controllers/auth.controllers.js';
 
 const router = express.Router();
 
@@ -15,8 +17,15 @@ router.get('/login', (req, res) => {
 })
 
 
-router.get('/feed', (req, res) => {
-    res.render("feedpage");
+router.get('/feed', verifyToken, async (req, res) => {
+    try {
+        const user = await getUserDetails(req.user.id);
+        res.render("feedpage", {
+            user
+        });
+    } catch (err) {
+        next(err);
+    }
 })
 
 export default router;

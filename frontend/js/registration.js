@@ -1,5 +1,4 @@
 const registerDialog = document.querySelector("#register-dialog");
-// const createacBtn = document.querySelector("#createac-btn");
 const registrationForm = document.querySelector("#registrationForm");
 const otpVerificationForm = document.querySelector("#otpVerificationForm");
 const signupModalClose = document.querySelector("#signupModal-close");
@@ -33,9 +32,14 @@ const specialCharError = document.querySelector("#specialCharError");
 const confirmBtn = document.querySelector("#confirm-btn");
 const passToggler = document.querySelector("#passToggler");
 const confirmPassToggler = document.querySelector("#confirmPassToggler");
+const signinRedirect = document.querySelector("#signinRedirect");
 
 signupModalClose.addEventListener("click", () => {
     window.location.href = '/';
+})
+
+signinRedirect.addEventListener("click", function(){
+    window.location.href = "/login";
 })
 
 

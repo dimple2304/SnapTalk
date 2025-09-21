@@ -5,6 +5,7 @@ const loginEmail = document.querySelector("#loginEmail");
 const loginPassword = document.querySelector("#loginPassword");
 const loginEmailError = document.querySelector("#loginEmailError");
 const loginPasswordError = document.querySelector("#loginPasswordError");
+const signupRedirect = document.querySelector("#signupRedirect");
 
 loginModalClose.addEventListener("click", function () {
     window.location.href = "/";
@@ -44,6 +45,12 @@ submitBtn.addEventListener("click", async function(e){
         console.log(err);
         
     }
+})
+
+
+// Redirect for signup from login page if don't have an account
+signupRedirect.addEventListener("click", function(){
+    window.location.href = "/registration";
 })
 
 

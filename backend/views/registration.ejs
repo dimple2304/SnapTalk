@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration</title>
+    <title>SnapTalk-Registration</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-800 flex items-center justify-center min-h-screen">
     <dialog open id="register-dialog"
-        class="relative w-[35%] max-w-[45%] mx-auto bg-black text-white rounded-2xl border-0 backdrop:bg-black backdrop:bg-opacity-50">
+        class="relative w-[35%] max-w-[45%] h-[620px] mx-auto bg-black text-white rounded-2xl border-0 backdrop:bg-black backdrop:bg-opacity-50">
         <div class="p-6 py-2">
             <!-- Header with close button -->
             <div class="flex justify-between items-center w-full">
@@ -173,6 +173,13 @@
                             class="w-full bg-white text-black font-bold py-4 px-6 rounded-full hover:bg-gray-200 transition-colors disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed">
                             Next
                         </button>
+                    </div>
+
+                    <!-- "ALready have an account button" -->
+                    <div class="absolute bottom-4 w-full text-center">
+                        <span class="text-gray-400">Already have an account? </span>
+                        <button type="button" id="signinRedirect"
+                            class="text-blue-500 font-semibold hover:underline">Sign in</button>
                     </div>
                 </form>
             </div>
