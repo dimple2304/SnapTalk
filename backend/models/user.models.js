@@ -13,7 +13,6 @@ const userSchema = new mongoose.Schema({
     name:{
         type: String,
         required: true,
-        unique: true,
         lowercase: true,
         trim: true,
         index: true
@@ -63,7 +62,11 @@ const userSchema = new mongoose.Schema({
     followingCount: [{
         type: Number,
         default: 0
-    }]
+    }],
+    posts:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Posts"
+    }
 }, { timestamps: true })
 
 export const Users = mongoose.model("Users", userSchema);

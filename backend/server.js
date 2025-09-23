@@ -1,5 +1,5 @@
 import express from 'express';
-import path, { win32 } from 'path';
+import path from 'path';
 import { fileURLToPath } from 'url';
 import { PORT } from './config/envIndex.js';
 import connectDB from './config/db.js';
@@ -7,6 +7,14 @@ import authRoutes from './routes/auth.routes.js';
 import frontendRoutes from './routes/frontend.routes.js';
 import cookieParser from 'cookie-parser';
 import { globalErrorHandler } from './middlewares/globalErrorHandler.js';
+
+
+/* 
+import expressSession from 'express-session';
+import passport from 'passport';
+import {Users} from './models/user.models.js';
+*/
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,6 +29,23 @@ app.set("views", path.resolve("./views"));
 connectDB();
 
 app.use(express.json());
+
+
+/* 
+// to keep user logged in
+app.use(expressSession({
+    resave: false,
+    saveUninitialized: false,
+    secret: "hey hey hey"
+}))
+
+// for protected routes
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser(Users.serializeUser());
+passport.deserializeUser(Users.deserializeUser());
+*/
+
 
 app.use('/api/auth', authRoutes);
 app.use('/', frontendRoutes);

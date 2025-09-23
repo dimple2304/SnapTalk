@@ -18,18 +18,18 @@ const postsSchema = new mongoose.Schema({
     caption: {
         type: String,
     },
-    like: [{
+    likedBy: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Users"
     }],
-    comment: [{
+    commentBy: [{
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Users"
         },
         createdAt: {type: Date, default: Date.now}
     }],
-    tags: [{
+    hashtags: [{
         type: String,
         trim: true,
         lowercase: true
