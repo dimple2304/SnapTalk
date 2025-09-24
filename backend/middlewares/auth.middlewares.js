@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/envIndex.js"
+import { UnauthorizedError } from "../utils/customErrorHandler/customError.js";
 
 export const verifyToken = (req, res, next) => {
     const token = req.cookies["token"];
@@ -12,16 +13,16 @@ export const verifyToken = (req, res, next) => {
         const decoded = jwt.verify(token, JWT_SECRET);
 
         if (!decoded) {
-            return res.status(401).json({ success: false, message: "Unauthorized access!" })
+            throw new UnauthorizedError("Unauthorized access!");
         }
 
         req.user = decoded;
 
-        if (!decoded.username && (req.url != "/feed" || req.url != "/api/auth/setting-username")) {
-            return res.redirect("/feed");
+        if (!decoded.username && (req.url != "/feed" && req.url != "/api/auth/setting-username")) {
+            return res.redirect("feed");
         }
         next();
     } catch (err) {
-        return res.status(401).json({ message: "Invalid token" });
+        next(err);
     }
 }
