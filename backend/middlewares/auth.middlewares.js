@@ -17,10 +17,12 @@ export const verifyToken = (req, res, next) => {
         }
 
         req.user = decoded;
+        console.log(req.user);
 
-        if (!decoded.username && (req.url != "/feed" && req.url != "/api/auth/setting-username")) {
-            return res.redirect("feed");
-        }
+
+        // if ((req.url != '/api/auth/setting-username') && !decoded.username) {
+        //     return res.redirect("/feed");
+        // }
         next();
     } catch (err) {
         next(err);

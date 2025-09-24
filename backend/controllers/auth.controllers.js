@@ -113,9 +113,27 @@ export const registerUser = async (req, res, next) => {
 // username
 export const setUsername = async (req, res, next) => {
     try {
+        const { username } = req.body;
+        if (!username) throw new BadRequestError("Username is required!");
 
+        const user = await getUserDetails(req.user.id);
+        console.log(user);
+        
+        if(!user) throw new BadRequestError("User not found.");
+
+        const existed = await Users.findOne({ username });
+        if (existed) throw new ConflictError("This username is not available. Please choose a different one.");
+
+        user.username = username;
+
+        const updated = await user.save();
+        if(!updated) throw new InternalServerError("Something went wrong!");
+
+        const token = tokenCreation({ id: user.id, email: user.email, username: username });
+        res.cookie("token", token);
+        return res.status(200).json({ success: true, message: "Username set successfully.", redirectUrl: "/feed" });
     } catch (err) {
-        // next(err);
+        next(err);
     }
 }
 
@@ -138,7 +156,6 @@ export const userLogin = async (req, res, next) => {
         }
 
         const token = tokenCreation({ id: user.id, email: user.email, username: user.username });
-        console.log(token);
         res.cookie("token", token);
         return res.status(200).json({ success: true, message: "Login successful.", redirectUrl: "/feed" });
     } catch (err) {

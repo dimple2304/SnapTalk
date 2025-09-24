@@ -18,19 +18,18 @@ router.get('/login', (req, res) => {
 
 router.get('/setting-username', async (req, res, next) => {
     res.render("setusername")
+})
 
-    })
 
+router.get('/feed', verifyToken, async (req, res, next) => {
+    try {
+        const user = await getUserDetails(req.user.id);
+        res.render("feedpage", {
+            user
+        });
+    } catch (err) {
+        next(err);
+    }
+})
 
-    router.get('/feed', verifyToken, async (req, res, next) => {
-        try {
-            const user = await getUserDetails(req.user.id);
-            res.render("feedpage", {
-                user
-            });
-        } catch (err) {
-            next(err);
-        }
-    })
-
-    export default router;
+export default router;
