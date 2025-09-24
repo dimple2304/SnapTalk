@@ -99,13 +99,23 @@ export const registerUser = async (req, res, next) => {
         const savedUser = await newUser.save();
         if (!savedUser) throw new InternalServerError("Something went wrong!");
 
-        const token = tokenCreation({ id: savedUser.id, email: savedUser.email, username:"" });
+        const token = tokenCreation({ id: savedUser.id, email: savedUser.email, username: "" });
         console.log(token);
         res.cookie("token", token);
 
-        return res.status(201).json({ success: true, redirectUrl: "/feed" });
+        return res.status(201).json({ success: true, redirectUrl: "/setting-username" });
     } catch (err) {
         next(err);
+    }
+}
+
+
+// username
+export const setUsername = async (req, res, next) => {
+    try {
+
+    } catch (err) {
+        // next(err);
     }
 }
 
@@ -127,7 +137,7 @@ export const userLogin = async (req, res, next) => {
             throw new UnauthorizedError("Either email or password is wrong!");
         }
 
-        const token = tokenCreation({ id: user.id, email: user.email, username:user.username });
+        const token = tokenCreation({ id: user.id, email: user.email, username: user.username });
         console.log(token);
         res.cookie("token", token);
         return res.status(200).json({ success: true, message: "Login successful.", redirectUrl: "/feed" });

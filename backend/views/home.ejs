@@ -1,72 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ST. What's happening.</title>
+    <title>SnapTalk | Connect, Share, and Discover</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://kit.fontawesome.com/8bdb017b66.js" crossorigin="anonymous"></script>
+    <style>
+        /* Optional: for smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
 </head>
+<body class="bg-white text-gray-800">
 
-<body class="bg-black text-white flex items-center justify-center min-h-screen">
-    <div class="grid grid-cols-1 md:grid-cols-2 w-full max-w-6xl">
-
-        <!-- Left section (logo) -->
-        <div class="flex items-center justify-center p-6">
-            <img src="/images/logo.png" alt="logo" class="w-72 h-72 object-contain">
-        </div>
-
-        <!-- Right section (content) -->
-        <div class="flex flex-col justify-center p-6 space-y-6 w-[85%]">
-            <h1 class="text-4xl md:text-5xl font-bold">Happening now</h1>
-            <h2 class="text-2xl font-semibold">Join today.</h2>
-
-            <!-- Create account -->
-            <button id="createac-btn"
-                class="w-full bg-white text-black rounded-full py-2 font-semibold hover:bg-gray-200">
-                Create account
-            </button>
-
-            <p class="text-xs text-gray-400">
-                By signing up, you agree to the
-                <a href="#" class="text-blue-400 hover:underline">Terms of Service</a> and
-                <a href="#" class="text-blue-400 hover:underline">Privacy Policy</a>,
-                including <a href="#" class="text-blue-400 hover:underline">Cookie Use</a>.
-            </p>
-
-            <!-- OR separator -->
-            <div class="flex items-center gap-2">
-                <div class="flex-1 h-px bg-gray-600"></div>
-                <span class="text-gray-400 text-sm">OR</span>
-                <div class="flex-1 h-px bg-gray-600"></div>
-            </div>
-
-            <!-- Already have account -->
-            <div class="space-y-3">
-                <p class="font-semibold">Already have an account?</p>
-                <button id="signin-btn"
-                    class="w-full border border-gray-500 rounded-full py-2 font-semibold hover:bg-gray-900">
-                    Sign in
-                </button>
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <a href="#" class="text-2xl font-bold text-gray-900">SnapTalk</a>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#features" class="text-gray-600 hover:text-indigo-600 font-medium">Features</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600 font-medium">Community</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600 font-medium">Blog</a>
+            </nav>
+            <div class="flex items-center space-x-2">
+                <a href="/login" class="px-5 py-2 text-gray-800 font-semibold rounded-full hover:bg-slate-100 transition-colors">Log In</a>
+                <a href="/registration" class="px-5 py-2 bg-gray-900 text-white font-semibold rounded-full hover:bg-gray-800 transition-colors">Sign Up</a>
             </div>
         </div>
-    </div>
+    </header>
 
+    <main>
+        <section class="container mx-auto px-6 py-24 md:py-32 text-center">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                    Connect, Share, and Discover What's New.
+                </h1>
+                <p class="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
+                    SnapTalk is your new home for sharing moments, joining vibrant communities, and staying in touch with what matters most.
+                </p>
+                <a href="/registration" class="mt-10 inline-block bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold text-lg py-4 px-10 rounded-full hover:opacity-90 transform hover:scale-105 transition-all duration-200">
+                    Get Started for Free
+                </a>
+            </div>
+            <div class="mt-16 max-w-5xl mx-auto">
+                <img src="images/uisample.png" alt="SnapTalk App Interface" class="rounded-2xl shadow-2xl">
+            </div>
+        </section>
 
-    <script>
-        const createacBtn = document.querySelector("#createac-btn");
-        const signinBtn = document.querySelector("#signin-btn");
-        createacBtn.addEventListener("click", () => {
-            window.location.href = "/registration";
+        <section id="features" class="py-24 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-900">Everything you need to connect</h2>
+                    <p class="mt-4 text-gray-600">Our platform is designed to be intuitive, powerful, and fun. Explore the features that make SnapTalk special.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-10 mt-16">
+                    <div class="text-center p-8 bg-white rounded-2xl shadow-lg">
+                        <div class="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold">Share Your Story</h3>
+                        <p class="mt-2 text-gray-600">Post photos, videos, and updates to a beautiful, chronological feed. Let your friends and followers see your world.</p>
+                    </div>
+                    <div class="text-center p-8 bg-white rounded-2xl shadow-lg">
+                        <div class="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center">
+                             <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold">Find Your Community</h3>
+                        <p class="mt-2 text-gray-600">Explore forums and groups based on your hobbies. From hiking to coding, there's a place for you to connect.</p>
+                    </div>
+                    <div class="text-center p-8 bg-white rounded-2xl shadow-lg">
+                        <div class="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold">Real-time Messaging</h3>
+                        <p class="mt-2 text-gray-600">Chat with friends and groups in real-time with our fast, secure, and fully-featured private messenger.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="bg-white py-24">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-bold text-gray-900">Ready to Join the Conversation?</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-xl mx-auto">Create an account in seconds and start exploring a social network that puts you first.</p>
+                <a href="/registration" class="mt-8 inline-block bg-gray-900 text-white font-bold text-lg py-4 px-10 rounded-full hover:bg-gray-800 transition-colors">
+                    Sign Up Now
+                </a>
+            </div>
+        </section>
+    </main>
 
-        });
-        signinBtn.addEventListener("click", () => {
-            window.location.href = "/login";
-
-        });
-    </script>
-    <script src="https://kit.fontawesome.com/8bdb017b66.js" crossorigin="anonymous"></script>
 </body>
-
 </html>

@@ -1,24 +1,20 @@
 import mongoose from "mongoose";
 
 const profileSchema = new mongoose.Schema({
-    user:{
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Users"
     },
-    profilepic:{
+    profilepic: {
         type: String,
-    },
-    name: {
-        type: String,
-        trim:true
     },
     bio: {
         type: String,
-        trim:true
+        trim: true
     },
-    uploads:[{
+    uploads: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref:"Posts"
+        ref: "Posts"
     }],
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -29,6 +25,6 @@ const profileSchema = new mongoose.Schema({
         ref: "Users"
     }]
 
-}, {timestamps: true})
+}, { timestamps: true })
 
 export const Profile = mongoose.model("Profile", profileSchema)
