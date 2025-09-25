@@ -8,7 +8,7 @@ router.post('/send-otp',sendOtp);
 router.post('/verify-otp', verifyOtp);
 router.post('/register', registerUser);
 router.post('/login', userLogin);
-router.patch('/setting-username', verifyToken,setUsername);
+router.patch('/setting-username',verifyToken, setUsername);
 
 
 export default router;

@@ -16,7 +16,10 @@ router.get('/login', (req, res) => {
     res.render("login");
 })
 
-router.get('/setting-username', async (req, res, next) => {
+router.get('/setting-username',verifyToken, async (req, res, next) => {
+    if(req.user.username){
+        return res.redirect("/feed");
+    }
     res.render("setusername")
 })
 

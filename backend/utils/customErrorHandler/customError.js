@@ -16,13 +16,13 @@ export class BadRequestError extends AppError{
     }
 }
 export class UnauthorizedError extends AppError{
-    constructor(message = 'Unauthorized'){
-        super(message, {status: 401, code:'UNAUTHORIZED'});
+    constructor(message = 'Unauthorized', details){
+        super(message, {status: 401, code:'UNAUTHORIZED', details});
     }
 }
 export class ForbiddenError extends AppError{
-    constructor(message = 'ForbiddenError'){
-        super(message, {status: 403, code:'FORBIDDEN'});
+    constructor(message = 'ForbiddenError', details){
+        super(message, {status: 403, code:'FORBIDDEN', details});
     }
 }
 export class NotFoundError extends AppError{
@@ -31,12 +31,12 @@ export class NotFoundError extends AppError{
     }
 }
 export class ConflictError extends AppError{
-    constructor(message = "Conflict error"){
+    constructor(message = "Conflict error", details){
         super(message, {status:409, code:'CONFLICT', details});
     }
 }
 export class InternalServerError extends AppError{
-    constructor(message = "Internal server error"){
+    constructor(message = "Internal server error", details){
         super(message, {status:500, code:'INTERNAL_SERVER_ERROR', details});
     }
 }

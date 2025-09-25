@@ -6,6 +6,7 @@ const loginPassword = document.querySelector("#loginPassword");
 const loginEmailError = document.querySelector("#loginEmailError");
 const loginPasswordError = document.querySelector("#loginPasswordError");
 const signupRedirect = document.querySelector("#signupRedirect");
+const passToggler = document.querySelector("#passToggler");
 
 loginModalClose.addEventListener("click", function () {
     window.location.href = "/";
@@ -52,6 +53,22 @@ submitBtn.addEventListener("click", async function(e){
 signupRedirect.addEventListener("click", function(){
     window.location.href = "/registration";
 })
+
+  //Visibility toggle
+    passToggler.addEventListener("click", () => {
+      toggleHandler(loginPassword, passToggler)
+    });
+
+    // add or remove class
+    function toggleIcon(icon) {
+      icon.classList.toggle("fa-eye");
+      icon.classList.toggle("fa-eye-slash");
+    }
+
+    function toggleHandler(inputField, icon) {
+      inputField.type = inputField.type === "password" ? "text" : "password";
+      toggleIcon(icon);
+    }
 
 
 

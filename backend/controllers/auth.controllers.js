@@ -29,9 +29,9 @@ export const sendOtp = async (req, res, next) => {
 
         const cachedOtp = await cache.get(email);
 
-        if (cachedOtp) {
-            throw new BadRequestError("OTP has been sent already.");
-        }
+        // if (cachedOtp) {
+        //     throw new BadRequestError("OTP has been sent already.");
+        // }
 
         await sendMail({ email: email, subject: "One Time Password Verification", html: generateOtpEmail(otp) })
         cache.set(email, otp);
@@ -131,7 +131,7 @@ export const setUsername = async (req, res, next) => {
 
         const token = tokenCreation({ id: user.id, email: user.email, username: username });
         res.cookie("token", token);
-        return res.status(200).json({ success: true, message: "Username set successfully.", redirectUrl: "/feed" });
+        return res.status(200).json({ success: true, message: "Username set successfully.", redirectUrl: "/feed" });6
     } catch (err) {
         next(err);
     }
