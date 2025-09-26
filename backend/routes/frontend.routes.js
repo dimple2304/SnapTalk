@@ -5,6 +5,11 @@ import { getUserDetails } from '../controllers/auth.controllers.js';
 const router = express.Router();
 
 router.get('/', (req, res) => {
+    const token = req.cookies["token"];
+    if (token) {
+        console.log("Token found", token);
+        return res.redirect("/feed");
+    }
     res.render("home");
 })
 
@@ -16,8 +21,8 @@ router.get('/login', (req, res) => {
     res.render("login");
 })
 
-router.get('/setting-username',verifyToken, async (req, res, next) => {
-    if(req.user.username){
+router.get('/setting-username', verifyToken, async (req, res, next) => {
+    if (req.user.username) {
         return res.redirect("/feed");
     }
     res.render("setusername")

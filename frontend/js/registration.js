@@ -373,6 +373,7 @@ password.addEventListener("input", function () {
 
 // Confirm password
 confirmPassword.addEventListener("input", confirmPass);
+
 // Function for confirm password validation
 function confirmPass() {
     confirmPasswordError.innerHTML = "";

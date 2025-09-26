@@ -12,6 +12,10 @@
   <dialog open id="username-modal" class="relative w-full max-w-md bg-white text-gray-900 rounded-2xl shadow-xl border-0">
     <div class="p-8">
 
+      <div id="spinner-partial">
+        <%- include('partials/spinner')  %>
+      </div>
+
       <div class="text-center">
         <h2 class="text-3xl font-bold text-gray-900">Choose your username</h2>
         <p class="mt-2 text-gray-500">Your username is unique and will be visible to others on your profile. You can always change it later.</p>
@@ -43,43 +47,48 @@
     const submitBtn = document.querySelector("#submit-btn");
     const usernameError = document.querySelector("#username-error");
     const username = document.querySelector("#username");
+    const spinner = document.querySelector("#spinner");
 
     submitBtn.addEventListener("click", async function(e) {
-        e.preventDefault();
-        try {
-          usernameError.innerHTML = "";
-          const usernameVal = username.value.trim();
+      e.preventDefault();
+      try {
+        usernameError.innerHTML = "";
+        const usernameVal = username.value.trim();
 
-          if(!usernameVal){
-            usernameError.innerHTML = "Username is required!";
-            return;
-          }
+        spinner.classList.remove("hidden");
 
-          const res = await fetch("/api/auth/setting-username", {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "Application/json"
-            },
-            body: JSON.stringify({
-              username: usernameVal
-            })
-          })
-
-          const data = await res.json();
-
-          if (!res.ok) {
-            usernameError.innerHTML = data.message;
-          } else {
-
-            window.location.href = data.redirectUrl;
-          }
-
-        } catch (err) {
-          usernameError.innerHTML = "Something went wrong!";
+        if (!usernameVal) {
+          usernameError.innerHTML = "Username is required!";
+          spinner.classList.add("hidden");
+          return;
         }
-      })
 
+        const res = await fetch("/api/auth/setting-username", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "Application/json"
+          },
+          body: JSON.stringify({
+            username: usernameVal
+          })
+        })
 
+        const data = await res.json();
+        spinner.classList.add("hidden");
+
+        if (!res.ok) {
+          usernameError.innerHTML = data.message;
+        } else {
+
+          window.location.href = data.redirectUrl;
+        }
+
+      } catch (err) {
+        usernameError.innerHTML = "Something went wrong!";
+        spinner.classList.add("hidden");
+        return;
+      }
+    })
   </script>
 </body>
 

@@ -17,7 +17,6 @@ export const verifyToken = (req, res, next) => {
         }
 
         req.user = decoded;
-        console.log(req.user);
 
         if(!decoded.username){
             if(req.path === "/setting-username" || req.path === "/api/auth/setting-username"){

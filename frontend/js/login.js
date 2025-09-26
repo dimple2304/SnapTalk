@@ -7,6 +7,7 @@ const loginEmailError = document.querySelector("#loginEmailError");
 const loginPasswordError = document.querySelector("#loginPasswordError");
 const signupRedirect = document.querySelector("#signupRedirect");
 const passToggler = document.querySelector("#passToggler");
+const spinner = document.querySelector("#spinner");
 
 loginModalClose.addEventListener("click", function () {
     window.location.href = "/";
@@ -22,6 +23,8 @@ submitBtn.addEventListener("click", async function(e){
         const emailVal = loginEmail.value.trim();
         const passwordVal = loginPassword.value.trim();
 
+        spinner.classList.remove("hidden");
+
         const credentials = {
             email:emailVal,
             password:passwordVal
@@ -34,6 +37,7 @@ submitBtn.addEventListener("click", async function(e){
         })
 
         const data = await res.json();
+        spinner.classList.add("hidden");
 
         if(!res.ok){
             loginPasswordError.innerHTML = data.message;
@@ -43,8 +47,9 @@ submitBtn.addEventListener("click", async function(e){
         window.location.href = data.redirectUrl;
 
     }catch(err){
-        console.log(err);
-        
+        loginPasswordError.innerHTML = "Something went wrong.";
+        spinner.classList.add("hidden");
+        return;
     }
 })
 

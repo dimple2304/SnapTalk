@@ -100,7 +100,6 @@ export const registerUser = async (req, res, next) => {
         if (!savedUser) throw new InternalServerError("Something went wrong!");
 
         const token = tokenCreation({ id: savedUser.id, email: savedUser.email, username: "" });
-        console.log(token);
         res.cookie("token", token);
 
         return res.status(201).json({ success: true, redirectUrl: "/setting-username" });
