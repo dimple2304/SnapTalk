@@ -7,67 +7,67 @@
   <title>Home / SnapTalk</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Custom scrollbar for a more integrated look */
     ::-webkit-scrollbar {
       width: 6px;
     }
 
     ::-webkit-scrollbar-track {
       background: #f1f5f9;
-      /* slate-100 */
     }
 
     ::-webkit-scrollbar-thumb {
       background: #cbd5e1;
-      /* slate-300 */
       border-radius: 3px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
       background: #94a3b8;
-      /* slate-400 */
-    }
-
-    /* CSS to apply ONLY on screens smaller than 1024px */
-    @media (max-width: 1023px) {
-
-      /* Hide the left sidebar */
-      .container>aside:first-child {
-        display: none;
-      }
-
-      /* Make the main content take up the full width */
-      .container>main {
-        width: 100%;
-      }
-
-      /* Remove container constraints for a full-width mobile view */
-      .container {
-        max-width: 100%;
-        padding-left: 0;
-        padding-right: 0;
-      }
     }
   </style>
 </head>
 
-<body class="bg-slate-100 text-gray-800 font-sans">
+<body class="bg-slate-100 text-gray-800 font-sans pb-20 lg:pb-0">
   <div class="container mx-auto flex">
 
-    <%- include('partials/sidebar') %>
+    <div id="sidebar-partial-call" class="hidden lg:block">
+      <%- include('partials/sidebar') %>
+    </div>
 
     <main class="w-full lg:w-1/2">
       <div>
-        <div class="sticky top-0 z-10 flex justify-between items-center bg-slate-100/80 backdrop-blur-md px-4 py-4 border-b border-slate-200">
-          <h2 class="text-3xl font-bold text-gray-900">Feeds</h2>
-          <div class="flex space-x-4 text-gray-500 font-semibold">
+        <!-- Main Header -->
+        <div class="sticky top-0 z-10 flex justify-between items-center bg-slate-100/80 backdrop-blur-md px-4 py-3 border-b border-slate-200">
+          <!-- SnapTalk Title (Mobile) / Feeds Title (Desktop) -->
+          <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">
+            <span class="lg:hidden">SnapTalk</span>
+            <span class="hidden lg:inline">Feeds</span>
+          </h2>
+
+          <!-- Desktop Links -->
+          <div class="hidden lg:flex space-x-4 text-gray-500 font-semibold">
             <a href="#" class="hover:text-gray-900">Recents</a>
             <a href="#" class="text-gray-900 font-bold">Friends</a>
             <a href="#" class="hover:text-gray-900">Popular</a>
           </div>
+
+          <!-- Right Side: Message Icon (Mobile Only) -->
+          <a href="#" class="p-2 text-gray-500 hover:text-gray-900 lg:hidden rounded-full hover:bg-slate-200">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+          </a>
         </div>
 
-        <div id="feed-story-partial-call" class="block lg:hidden mx-4">
+        <!-- For You / Following Tabs -->
+        <div class="border-b border-slate-200 bg-slate-100/80 backdrop-blur-md">
+          <nav class="flex">
+            <a href="#" class="w-1/2 text-center py-4 font-bold text-indigo-600 border-b-2 border-indigo-600">For you</a>
+            <a href="#" class="w-1/2 text-center py-4 font-medium text-gray-500 hover:bg-slate-200 transition-colors">Following</a>
+          </nav>
+        </div>
+
+
+        <div id="feed-story-partial-call" class="block lg:hidden mx-2">
           <%- include("partials/stories") %>
         </div>
 
@@ -87,13 +87,11 @@
                   </div>
                   <button class="text-gray-400 hover:text-gray-600">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z">
-                      </path>
+                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
                     </svg>
                   </button>
                 </div>
-                <p class="mt-2 text-gray-700">Just launched a new feature for SnapTalk! So excited to
-                  see how everyone uses it. <span class="text-blue-500">#webdev #coding</span></p>
+                <p class="mt-2 text-gray-700">Just launched a new feature for SnapTalk! So excited to see how everyone uses it. <span class="text-blue-500">#webdev #coding</span></p>
                 <div class="flex justify-start items-center mt-5 space-x-8 text-gray-500">
                   <div class="flex items-center space-x-2 hover:text-pink-500 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
@@ -120,13 +118,11 @@
                   </div>
                   <button class="text-gray-400 hover:text-gray-600">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z">
-                      </path>
+                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
                     </svg>
                   </button>
                 </div>
-                <p class="mt-2 text-gray-700">Working on a new UI concept. What do you all think of
-                  this color palette?</p>
+                <p class="mt-2 text-gray-700">Working on a new UI concept. What do you all think of this color palette?</p>
                 <img src="https://placehold.co/500x280/1a202c/ffffff?text=UI+Palette" class="mt-4 rounded-xl w-full" alt="UI Palette Image">
                 <div class="flex justify-start items-center mt-5 space-x-8 text-gray-500">
                   <div class="flex items-center space-x-2 hover:text-pink-500 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -146,8 +142,9 @@
     </main>
 
     <%- include('partials/rightColumn') %>
-
   </div>
+
+  <%- include('partials/mobileNavigationBar') %>
 </body>
 
 </html>

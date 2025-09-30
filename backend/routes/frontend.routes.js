@@ -40,4 +40,17 @@ router.get('/feed', verifyToken, async (req, res, next) => {
     }
 })
 
+
+router.get('/profile', verifyToken, async (req, res, next) => {
+    try{
+        const user = await getUserDetails(req.user.id);
+        res.render('profile/profile',{
+            user
+        });
+    } catch (err){
+        next(err);
+    }
+    
+})
+
 export default router;
