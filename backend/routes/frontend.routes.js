@@ -1,6 +1,7 @@
 import express from 'express';
 import { verifyToken } from '../middlewares/auth.middlewares.js';
 import { getUserDetails } from '../controllers/auth.controllers.js';
+import { Profile } from '../models/profile.models.js';
 
 const router = express.Router();
 
@@ -32,8 +33,10 @@ router.get('/setting-username', verifyToken, async (req, res, next) => {
 router.get('/feed', verifyToken, async (req, res, next) => {
     try {
         const user = await getUserDetails(req.user.id);
+        const profile = await Profile.findOne({ user: req.user.id });
         res.render("feedpage", {
-            user
+            user,
+            profile: profile ? profile : { profilepic:`https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}`}
         });
     } catch (err) {
         next(err);
@@ -42,15 +45,18 @@ router.get('/feed', verifyToken, async (req, res, next) => {
 
 
 router.get('/profile', verifyToken, async (req, res, next) => {
-    try{
+    try {
         const user = await getUserDetails(req.user.id);
-        res.render('profile/profile',{
-            user
+        const profile = await Profile.findOne({ user: req.user.id });
+
+        res.render('profile/profile', {
+            user,
+            profile: profile ? profile : { profilepic: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}`, bio: "", link: { url: "", label: "" }, uploads: [] }
         });
-    } catch (err){
+    } catch (err) {
         next(err);
     }
-    
+
 })
 
 export default router;

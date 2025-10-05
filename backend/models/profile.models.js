@@ -8,6 +8,9 @@ const profileSchema = new mongoose.Schema({
     profilepic: {
         type: String,
     },
+    banner:{
+        type:String
+    },
     bio: {
         type: String,
         trim: true

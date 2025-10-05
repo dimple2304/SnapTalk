@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { PORT } from './config/envIndex.js';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
+import profileRoutes from './routes/profile.routes.js';
 import frontendRoutes from './routes/frontend.routes.js';
 import cookieParser from 'cookie-parser';
 import { globalErrorHandler } from './middlewares/globalErrorHandler.js';
@@ -31,24 +32,9 @@ connectDB();
 app.use(express.json());
 
 
-/* 
-// to keep user logged in
-app.use(expressSession({
-    resave: false,
-    saveUninitialized: false,
-    secret: "hey hey hey"
-}))
-
-// for protected routes
-app.use(passport.initialize());
-app.use(passport.session());
-passport.serializeUser(Users.serializeUser());
-passport.deserializeUser(Users.deserializeUser());
-*/
-
-
 app.use('/api/auth', authRoutes);
 app.use('/', frontendRoutes);
+app.use('/api/account', profileRoutes);
 
 
 app.use(globalErrorHandler)

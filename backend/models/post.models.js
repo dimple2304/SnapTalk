@@ -9,10 +9,10 @@ const postsSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    tweet: {
+    thought: {
         type: String,
     },
-     image: {
+     media: {
         type: String,
     },
     caption: {

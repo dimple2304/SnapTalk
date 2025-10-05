@@ -71,15 +71,8 @@ export const registerUser = async (req, res, next) => {
             throw new BadRequestError("All fields are required!");
         }
 
-        // const existingEmail = await Users.findOne({ email });
-        // if (existingEmail) {
-        //     return res.status(409).json({ success: false, message: "Email already in use." });
-        // }
-
         const dobInIst = moment.tz([parseInt(year), parseInt(month) - 1, parseInt(day)], "Asia/Kolkata");
         const dobInUtc = dobInIst.utc();
-
-        console.log(dobInUtc);
 
         const isVerified = true;
         const isOnline = true;

@@ -63,10 +63,10 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    posts:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Posts"
-    }]
+    // posts:[{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Posts"
+    // }]
 }, { timestamps: true })
 
 export const Users = mongoose.model("Users", userSchema);

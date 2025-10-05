@@ -2,28 +2,120 @@ const editProfileBtn = document.querySelector("#edit-profile-btn");
 const editProfileModal = document.querySelector("#edit-profile-modal");
 
 
+
 editProfileBtn.addEventListener("click", function () {
     Swal.fire({
         html: editProfileModal.innerHTML,
         showConfirmButton: false,
         showCloseButton: true,
-    });
+        didOpen: () => {
+            const swalContainer = document.querySelector(".swal2-container");
+            const profilePicInput = swalContainer.querySelector("#profile-pic-input");
+            const label = swalContainer.querySelector("#profile-pic-label");
+            const nameInput = swalContainer.querySelector("#name-input");
+            const usernameInput = swalContainer.querySelector("#username-input");
+            const bioInput = swalContainer.querySelector("#bio-input");
+            const linkLabelInput = swalContainer.querySelector("#link-label-input");
+            const linkUrlInput = swalContainer.querySelector("#link-url-input");
+            const saveBtn = swalContainer.querySelector("#save-changes");
+            const editError = swalContainer.querySelector("#edit-error");
+            const editSpinner = swalContainer.querySelector(".editSpinner #spinner");
+            const preview = swalContainer.querySelector("#image-preview")
+            const nameError = swalContainer.querySelector("#name-error")
+            const usernameError = swalContainer.querySelector("#username-error")
 
-    let skipBtn = document.querySelector(".swal2-container [data-action=skip]");
-    let backBtn = document.querySelector(".swal2-container [data-action=back]");
+            profilePicInput.addEventListener("change", async function (e) {
+                const file = e.target.files[0];
+                console.log(file);
+                
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("filename", file.name);
+                formData.append("folder", "profilepic");
 
-    let current = 1;
-    skipBtn.addEventListener("click", function () {
-        let total = 5;
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        preview.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
 
-        current += 1;
+                const res = await fetch("/api/account/upload-file", {
+                    method:"POST",
+                    body:formData
+                })
 
-        document.querySelector(`.swal2-container #step-${current}`).classList.remove("hidden");
+                const data = await res.json();
+                preview.src = data.fileUrl;
+                console.log(data);
+                
 
-        if ((current - 1) != 0) {
-            document.querySelector(`.swal2-container #step-${current - 1}`).classList.add("hidden");
+            })
+            label.addEventListener("click", () => profilePicInput.click());
+
+            saveBtn.addEventListener("click", async function () {
+                const profilePicVal = preview.getAttribute("src");
+                const nameVal = nameInput.value;
+                const usernameVal = usernameInput.value.trim();
+                const bioVal = bioInput.value;
+                const labelVal = linkLabelInput.value;
+                const urlVal = linkUrlInput.value;
+
+                editError.innerHTML = "";
+                nameError.innerHTML = "";
+                usernameError.innerHTML = "";
+
+                let hasError = false;
+
+                if(!nameVal) {
+                    nameError.innerHTML = "Name is required.";
+                    hasError = true;
+                }
+                if(!usernameVal){
+                    usernameError.innerHTML = "Username is required.";
+                    hasError = true;
+                }
+
+                if(hasError) return;
+
+                const details = {
+                    profilepic: profilePicVal,
+                    name: nameVal,
+                    username: usernameVal,
+                    bio: bioVal,
+                    linkLabel: labelVal,
+                    link: urlVal
+                };
+
+                try {
+                    editSpinner.classList.remove("hidden");
+
+                    const res = await fetch("/api/account/edit-profile", {
+                        method: "PATCH",
+                        headers: { "Content-Type": "Application/json" },
+                        body: JSON.stringify(details)
+                    });
+
+                    const data = await res.json();
+                    console.log(data);
+
+
+                    editSpinner.classList.add("hidden");
+
+                    if (!res.ok) {
+                        editError.innerHTML = data.message;
+                    }
+                    Swal.close();
+                    window.location.reload();
+
+                } catch (err) {
+                    editError.innerHTML = data.message;
+                    editSpinner.classList.add("hidden");
+                }
+            })
         }
-    })
+    });
 })
 
 
