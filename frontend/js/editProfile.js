@@ -23,6 +23,7 @@ editProfileBtn.addEventListener("click", function () {
             const preview = swalContainer.querySelector("#image-preview")
             const nameError = swalContainer.querySelector("#name-error")
             const usernameError = swalContainer.querySelector("#username-error")
+            let fileId;
 
             profilePicInput.addEventListener("change", async function (e) {
                 const file = e.target.files[0];
@@ -48,6 +49,7 @@ editProfileBtn.addEventListener("click", function () {
 
                 const data = await res.json();
                 preview.src = data.fileUrl;
+                fileId = data.fileId;
                 console.log(data);
                 
 
@@ -80,13 +82,16 @@ editProfileBtn.addEventListener("click", function () {
                 if(hasError) return;
 
                 const details = {
-                    profilepic: profilePicVal,
+                    url: profilePicVal,
                     name: nameVal,
                     username: usernameVal,
                     bio: bioVal,
                     linkLabel: labelVal,
-                    link: urlVal
+                    link: urlVal,
+                    fileId: fileId
                 };
+                console.log(details);
+                
 
                 try {
                     editSpinner.classList.remove("hidden");

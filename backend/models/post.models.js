@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const postsSchema = new mongoose.Schema({
-    user:{
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
@@ -12,22 +12,32 @@ const postsSchema = new mongoose.Schema({
     thought: {
         type: String,
     },
-     media: {
-        type: String,
+    media: {
+        url: {
+            type: String,
+            trim: true
+        },
+        fileId: {
+            type: String,
+            trim: true
+        }
     },
     caption: {
         type: String,
     },
     likedBy: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Users"
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Users"
+        },
+        createdAt: { type: Date, default: Date.now }
     }],
     commentBy: [{
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Users"
         },
-        createdAt: {type: Date, default: Date.now}
+        createdAt: { type: Date, default: Date.now }
     }],
     hashtags: [{
         type: String,

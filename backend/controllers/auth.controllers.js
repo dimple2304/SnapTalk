@@ -29,16 +29,15 @@ export const sendOtp = async (req, res, next) => {
 
         const cachedOtp = await cache.get(email);
 
-        // if (cachedOtp) {
-        //     throw new BadRequestError("OTP has been sent already.");
-        // }
+        if (cachedOtp) {
+            throw new BadRequestError("OTP has been sent already.");
+        }
 
         await sendMail({ email: email, subject: "One Time Password Verification", html: generateOtpEmail(otp) })
         cache.set(email, otp);
         return res.status(200).json({ success: true, message: "OTP sent successfully to your registered email." })
 
     } catch (err) {
-        // return res.status(500).json({ success: false, message: "Error sending OTP. Please try again." });
         next(err);
     }
 }

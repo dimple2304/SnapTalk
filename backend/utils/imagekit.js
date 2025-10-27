@@ -19,7 +19,8 @@ export const uploadFile = async (req, res, next) => {
                 fileName: `${req.user.id + filename}`,
                 folder: "SnapTalk/" + folder
             })
-            return res.status(200).json({ success: true, fileUrl: result.url })
+            
+            return res.status(200).json({ success: true, fileUrl: result.url, fileId: result.fileId });
         }
         throw new BadRequestError("File is required.");
     } catch (err) {
@@ -29,9 +30,9 @@ export const uploadFile = async (req, res, next) => {
 
 
 // get file id (file name)
-export const getFileId = function(url){
-    const fileId = url.slice(url.lastIndexOf('/')+1,url.length)
-    console.log(fileId);
+// export const getFileId = function(url){
+//     const fileId = url.slice(url.lastIndexOf('/')+1,url.length)
+//     console.log(fileId);
     
-    return fileId.trim();
-}
+//     return fileId.trim();
+// }

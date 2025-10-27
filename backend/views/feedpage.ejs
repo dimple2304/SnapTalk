@@ -72,11 +72,11 @@
         </div>
 
         <div id="new-post-partial">
-          <%- include('partials/newPost') %>
+          <%- include('partials/createPost') %>
         </div>
 
         <div class="space-y-6 px-2 pb-4">
-          <div class="bg-white p-6 rounded-2xl shadow-sm">
+          <!-- <div class="bg-white p-6 rounded-2xl shadow-sm">
             <div class="flex space-x-4">
               <img src="https://placehold.co/48x48/1d4ed8/ffffff?text=A" alt="Avatar" class="rounded-full h-12 w-12">
               <div class="w-full">
@@ -105,9 +105,13 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
-          <div class="bg-white p-6 rounded-2xl shadow-sm">
+          <div id="posted-post-partial-call">
+            <%- include("partials/postTemplate") %>
+          </div>
+          
+          <!-- <div class="bg-white p-6 rounded-2xl shadow-sm">
             <div class="flex space-x-4">
               <img src="https://placehold.co/48x48/be123c/ffffff?text=B" alt="Avatar" class="rounded-full h-12 w-12">
               <div class="w-full">
@@ -137,7 +141,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
     </main>
 
@@ -146,5 +150,7 @@
 
   <%- include('partials/mobileNavigationBar') %>
 </body>
+
+<script src="/js/createPost.js"></script>
 
 </html>

@@ -6,15 +6,9 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
 import profileRoutes from './routes/profile.routes.js';
 import frontendRoutes from './routes/frontend.routes.js';
+import postRoutes from './routes/posts.routes.js';
 import cookieParser from 'cookie-parser';
 import { globalErrorHandler } from './middlewares/globalErrorHandler.js';
-
-
-/* 
-import expressSession from 'express-session';
-import passport from 'passport';
-import {Users} from './models/user.models.js';
-*/
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -29,12 +23,14 @@ app.set("views", path.resolve("./views"));
 
 connectDB();
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 
 app.use('/api/auth', authRoutes);
 app.use('/', frontendRoutes);
 app.use('/api/account', profileRoutes);
+app.use('/api/create', postRoutes);
 
 
 app.use(globalErrorHandler)

@@ -6,10 +6,24 @@ const profileSchema = new mongoose.Schema({
         ref: "Users"
     },
     profilepic: {
-        type: String,
+        url: {
+            type: String,
+            trim: true
+        },
+        fileId: {
+            type: String,
+            trim: true
+        }
     },
-    banner:{
-        type:String
+    banner: {
+        url: {
+            type: String,
+            trim: true
+        },
+        fileId: {
+            type: String,
+            trim: true
+        }
     },
     bio: {
         type: String,
