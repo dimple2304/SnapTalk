@@ -5,6 +5,9 @@ const postBtn = document.querySelector("#post-btn");
 const previewSpinner = document.querySelector("#preview-spinner #spinner");
 const createPostSpinner = document.querySelector("#create-post-spinner #spinner");
 const createPostError = document.querySelector("#create-post-error");
+const postdynamicimg = document.querySelector(".postdynamicimg");
+
+
 let fileId;
 
 const mediaPreview = document.createElement("img");
@@ -60,6 +63,7 @@ postBtn.addEventListener("click", async function () {
 
     createPostSpinner.classList.remove("hidden");
 
+
     const content = {
         url: mediaVal,
         fileId: fileId,
@@ -80,8 +84,21 @@ postBtn.addEventListener("click", async function () {
         createPostError.innerHTML = data.message;
     }
 
+    const mediaFile = postMediaInput.files;
+    console.log(mediaVal);
+
+    thought.value = "";
+    postMediaInput.value = "";
+    mediaPreview.classList.add("hidden");
+    postBtn.disabled = true;
+
     window.location.reload();
 })
+
+
+
+
+
 
 
 

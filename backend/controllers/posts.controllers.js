@@ -15,11 +15,9 @@ export const createPost = async (req, res, next) => {
         const user = await getUserDetails(req.user.id);
         if (!user) throw new BadRequestError("User not found!");
 
-        const profile = await Profile.findOne({ user: req.user.id });
-
-        let post = await Posts.findOne({ user: req.user.id });
-
         hashtags = extractHashtags(thought);
+
+        let media = url ? true : false;
 
         const newPost = new Posts({
             user: req.user.id,
@@ -28,7 +26,8 @@ export const createPost = async (req, res, next) => {
                 url: url || null,
                 fileId: fileId || null
             },
-            hashtags: hashtags || []
+            hashtags: hashtags || [],
+            isMedia: media
         })
 
         const savedPost = await newPost.save();
@@ -38,5 +37,48 @@ export const createPost = async (req, res, next) => {
 
     } catch (err) {
         next(err);
+    }
+}
+
+
+export const likes = async (req, res, next) => {
+    try {
+        const { postId } = req.body;
+
+        const user = await getUserDetails(req.user.id);
+        if (!user) throw new BadRequestError("User not found!");
+
+        const post = await Posts.findOne({ _id: postId });
+        if (!post) throw new BadRequestError("Post not found!");
+
+        const userIdStr = user._id.toString();
+        const existed = post.likes.some(like => like?.user?.toString() === userIdStr);
+
+        if (!existed || post.likes === null) {
+            post.likes.push({ user: user._id });
+        } else {
+            post.likes = post.likes.filter(like => like?.user?.toString() !== userIdStr);
+        }
+
+        await post.save();
+
+        return res.status(200).json({
+            success: true, message: "Like updated successfully.",
+            likesCount: post.likes.length,
+            likes:post.likes
+        });
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+
+
+export const comments = async (req, res, next) => {
+    try {
+        
+    } catch (err) {
+        next(err)
     }
 }

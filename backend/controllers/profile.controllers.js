@@ -18,9 +18,8 @@ export const editDetails = async (req, res, next) => {
         if (existingFileId && fileId && existingFileId !== fileId) {
             try {
                 await imagekit.deleteFile(existingFileId);
-                console.log(`Deleted old image: ${existingFileId}`);
             } catch (err) {
-                console.warn("Failed to delete old image from ImageKit:", err.message);
+                next(err);
             }
         }
 
@@ -29,7 +28,7 @@ export const editDetails = async (req, res, next) => {
                 user: req.user.id,
                 profilepic: {
                     url: url || `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name[0].toUpperCase()}`,
-                    fileId: fileId || null,
+                    fileId: fileId,
                 },
                 bio,
                 link: { url: link, label: linkLabel },

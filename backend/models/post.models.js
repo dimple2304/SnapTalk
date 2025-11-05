@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const postsSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "Users"
     },
     isMedia: {
         type: Boolean,
@@ -25,20 +25,26 @@ const postsSchema = new mongoose.Schema({
     caption: {
         type: String,
     },
-    likedBy: [{
+    likes: [{
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Users",
+        },
+        createdAt: { type: Date, default: Date.now }
+    }],
+    comments: [{
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Users"
         },
-        createdAt: { type: Date, default: Date.now }
-    }],
-    commentBy: [{
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Users"
+        comment: {
+            type: String
         },
         createdAt: { type: Date, default: Date.now }
     }],
+    shares: {
+        type: Number
+    },
     hashtags: [{
         type: String,
         trim: true,
@@ -48,6 +54,6 @@ const postsSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
-})
+}, { timestamps: true })
 
 export const Posts = mongoose.model("Posts", postsSchema)
