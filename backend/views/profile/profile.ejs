@@ -66,7 +66,7 @@
         <!-- Profile Info -->
         <div class="p-4">
           <div class="flex justify-between items-start">
-            <img src="<%= profile.profilepic.url %>" alt="Avatar" class="z-10 rounded-full h-24 w-24 md:h-32 md:w-32 -mt-16 border-4 border-slate-100">
+            <img src="<%= profile.profilepic.url || `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` %>" alt="Avatar" class="z-10 rounded-full h-24 w-24 md:h-32 md:w-32 -mt-16 border-4 border-slate-100">
             <div class="flex items-center space-x-2">
               <button class="p-2 rounded-full hover:bg-slate-200">
                 <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -112,14 +112,24 @@
       </div>
 
       <!-- User's Posts Grid -->
-      <div class="tab-content">
-        <%- include("../partials/postTemplate") %>
-
-        <!-- liked content section -->
-        <div id="liked-section" class="tab-pane hidden space-y-6 px-2 pb-4">
-          <h2>Nothing here</h2>
-        </div>
+      <div id="media-section" class="tab-pane space-y-6 px-2 pb-4">
+        <%- include("../partials/postTemplate", {posts}) %>
       </div>
+      <!-- liked content section -->
+      <div id="liked-section" class="tab-pane hidden space-y-6 px-2 pb-4">
+        <% if(profile?.likes?.length > 0){ %>
+        <% profile.likes.forEach(likeId => { %>
+        <% posts.forEach(post => { %>
+        <% if(likeId.toString() === post._id.toString()){ %>
+        <%- include("../partials/postTemplate", {post}) %>
+        <% } %>
+        <% }) %>
+        <% }) %>
+        <% } else{ %>
+        <p class="text-gray-500 text-center mt-10">You didn't liked any post yet.</p>
+        <% } %>
+      </div>
+
 
     </main>
 

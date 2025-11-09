@@ -77,4 +77,22 @@ router.get('/profile', verifyToken, async (req, res, next) => {
 
 })
 
+
+router.get('/post/:id', verifyToken, async(req, res, next) => {
+    try {
+        const user = await getUserDetails(req.user.id);
+        const profile = await Profile.findOne({ user: req.user.id });
+        const posts = await Posts.findById(req.params.id).populate("comments", "name username").sort({ createdAt: -1 });
+
+        res.render('partials/postPage',{
+            user,
+            profile:profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` }, banner: { url: "" }, bio: "", link: { url: "", label: "" }, uploads: [] },
+            posts
+        })
+
+    } catch (err) {
+        next(err);
+    }
+})
+
 export default router;

@@ -65,19 +65,31 @@ const activeClasses = ["font-bold", "text-indigo-600", "border-b-2", "border-ind
 const inactiveClasses = ["font-medium", "hover:underline", "hover:text-indigo-600"];
 
 function initializeTabs() {
-    console.log(tabBtns);
-    if (tabBtns.length > 0) {
+    let activeTabId = localStorage.getItem("activeTabId") || tabBtns[0].dataset.target;
+    
+    tabBtns.forEach(btn => {
+        const pane = document.querySelector(btn.dataset.target);
+        if(btn.dataset.target === activeTabId){
+            btn.classList.add(...activeClasses);
+            btn.classList.remove(...inactiveClasses);
+            pane?.classList.remove("hidden");
+        }else{
+            btn.classList.add(...inactiveClasses);
+            btn.classList.remove(...activeClasses);
+            pane?.classList.add("hidden");
+        }
+    })
+
+    tabControls.addEventListener("click", function (e) {
+        const clickedBtn = e.target.closest(".tab-btn")
+        if (!clickedBtn) return;
+
+        localStorage.setItem("activeTabId", clickedBtn.dataset.target);
         
-        tabBtns[0].classList.add(...activeClasses);
-        tabBtns[0].classList.remove(...inactiveClasses);
-
-        const firstPane = document.querySelector(tabBtns[0].dataset.target);
-        if (firstPane) firstPane.classList.remove("hidden")
-    }
-
-    tabControls.addEventListener("click", function(e){
-        clickedBtn = e.target.closest(".tab-btn")
-        if(!clickedBtn) return;
+        if (clickedBtn.textContent.trim().toLowerCase() === "likes") {
+            location.reload();
+            return;
+        }
 
         tabBtns.forEach(btn => {
             btn.classList.remove(...activeClasses);
@@ -92,7 +104,7 @@ function initializeTabs() {
         });
 
         const targetPane = document.querySelector(clickedBtn.dataset.target);
-        if(targetPane) {
+        if (targetPane) {
             targetPane.classList.remove("hidden");
         }
     })

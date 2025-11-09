@@ -44,7 +44,8 @@ const profileSchema = new mongoose.Schema({
         ref: "Posts"
     }],
     likes: [{
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Posts"
     }],
     followers: [{
         type: mongoose.Schema.Types.ObjectId,

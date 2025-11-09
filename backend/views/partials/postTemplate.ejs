@@ -48,47 +48,77 @@
     animation: burst 0.6s ease-out forwards;
   }
 </style>
-<% if(posts && posts.length>0) { %>
-<% posts.forEach(function (element) { %>
+<% 
+// If a single post is passed in, wrap it as an array for unified handling
+let postArray = [];
+
+if (typeof post !== "undefined") {
+  postArray = [post];
+} else if (Array.isArray(posts) && posts.length > 0) {
+  postArray = posts;
+}
+%>
+
+<% if (postArray.length > 0) { %>
+<% postArray.forEach(function (element) { %>
 <div class="bg-white p-6 rounded-2xl shadow-sm">
   <div class="flex space-x-4">
-    <img src="<%= element.profile.profilepic.url %>" alt="Avatar" class="rounded-full h-12 w-12">
+    <!-- User Avatar -->
+    <img src="<%= element.profile?.profilepic?.url || 'https://placehold.co/128x128/1d4ed8/ffffff?text=U' %>" alt="Avatar" class="rounded-full h-12 w-12">
+
     <div class="w-full">
+      <!-- Header -->
       <div class="flex justify-between items-center">
         <div>
-          <span class="font-bold text-gray-900"><%= element.user.name %></span>
-          <span class="text-gray-400 ml-2 text-sm">@<%= element.user.username %></span>
+          <span class="font-bold text-gray-900"><%= element.user?.name %></span>
+          <span class="text-gray-400 ml-2 text-sm">@<%= element.user?.username %></span>
           <span class="post-time text-gray-400 ml-2 text-sm"><%= element.createdAt %></span>
         </div>
+
         <button class="text-gray-400 hover:text-gray-600">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
           </svg>
         </button>
       </div>
-      <p class="mt-2 text-gray-700"><%= element.thought %></p>
-      <div class="postdynamicimg">
-        <% if (element.media.url) { %>
-        <img src="<%= element.media.url %>" class="w-45 max-h-[350px] h-45 mt-4 object-cover" alt="Post image">
-        <% } %>
-        <!-- <img src="https://placehold.co/500x280/1a202c/ffffff?text=UI+Palette" class="mt-4 rounded-xl w-full" alt="UI Palette Image"> -->
-      </div>
+
+      <a href="post/<%= element._id %>">
+        <!-- Post Content -->
+        <p class="mt-2 text-gray-700"><%= element.thought %></p>
+
+        <!-- Media -->
+        <div class="postdynamicimg">
+          <% if (element.media?.url) { %>
+          <img src="<%= element.media.url %>" class="w-45 max-h-[350px] h-45 mt-4 object-cover rounded-xl" alt="Post image">
+          <% } %>
+        </div>
+      </a>
+      <!-- Post Actions -->
       <div class="flex justify-start items-center mt-5 space-x-8 text-gray-500">
-        <div class="like-button relative flex items-center space-x-2 <%= element.likes.some(el => el.user.toString() === user._id.toString())?"text-pink-500" : "hover:text-pink-500" %> cursor-pointer" data-userIdOfFeed="<%= user._id %>" data-postId="<%= element._id %>">
+        <!-- Like Button -->
+        <div class="like-button relative flex items-center space-x-2 
+              <%= element.likes?.some(el => el.user?.toString() === user?._id?.toString()) ? 'text-pink-500' : 'hover:text-pink-500' %> 
+              cursor-pointer" data-userIdOfFeed="<%= user?._id %>" data-postId="<%= element._id %>">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
           </svg>
-          <div class="likes-count text-black"><%= element.likes.length>0 ? element.likes.length : "" %></div>
+          <div class="likes-count text-black"><%= element.likes?.length > 0 ? element.likes.length : "" %></div>
         </div>
+
+        <!-- Comment -->
         <div class="flex items-center space-x-2 hover:text-blue-500 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
-          </svg><span>31</span>
+          </svg>
+          <span>31</span>
         </div>
+
+        <!-- Share -->
         <div class="flex items-center space-x-2 hover:text-green-500 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-          </svg><span>15</span>
+          </svg>
+          <span>15</span>
         </div>
       </div>
     </div>
@@ -98,6 +128,7 @@
 <% } else { %>
 <p class="text-gray-500 text-center mt-10">No posts yet.</p>
 <% } %>
+
 
 
 <script>
@@ -119,8 +150,8 @@
     element.innerHTML = getPostTime(element.innerHTML);
   });
 
-   document.querySelectorAll(".like-button").forEach(button => {
-    button.addEventListener("click", function () {
+  document.querySelectorAll(".like-button").forEach(button => {
+    button.addEventListener("click", function() {
       const svg = this.querySelector("svg");
 
       // Toggle color (pink ↔ gray)
