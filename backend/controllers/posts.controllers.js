@@ -134,7 +134,10 @@ export const comments = async (req, res, next) => {
         const savedComment = await post.save();
         if (!savedComment) throw new InternalServerError("Something went wrong!");
 
-        return res.status(200).json({ success: true, message: "Comment posted successfully.", comment: commentInput });
+        return res.status(200).json({
+            success: true, message: "Comment posted successfully.",
+            comment: commentInput, commentLength: post.comments.length
+        });
 
     } catch (err) {
         next(err)

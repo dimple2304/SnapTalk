@@ -10,7 +10,7 @@ export const verifyToken = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET)
 
         if (!decoded) {
             throw new UnauthorizedError("Unauthorized access!");
@@ -18,14 +18,17 @@ export const verifyToken = (req, res, next) => {
 
         req.user = decoded;
 
-        if(!decoded.username){
-            if(req.path === "/setting-username" || req.path === "/api/auth/setting-username"){
+        if (!decoded.username) {
+            if (req.path === "/setting-username" || req.path === "/api/auth/setting-username") {
                 return next();
-            }   
-            return res.redirect("/setting-username");     
+            }
+            return res.redirect("/setting-username");
         }
         next();
     } catch (err) {
+        if (err.name === "TokenExpiredError") {
+            return res.redirect("/login");
+        }
         next(err);
     }
 }

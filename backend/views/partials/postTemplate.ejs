@@ -42,7 +42,6 @@
     width: 8px;
     height: 8px;
     background-color: #ec4899;
-    /* Tailwind pink-500 */
     border-radius: 50%;
     transform-origin: center;
     animation: burst 0.6s ease-out forwards;
@@ -64,7 +63,7 @@ if (typeof post !== "undefined") {
 <div class="bg-white p-6 rounded-2xl shadow-sm">
   <div class="flex space-x-4">
     <!-- User Avatar -->
-    <img src="<%= element.profile?.profilepic?.url || 'https://placehold.co/128x128/1d4ed8/ffffff?text=U' %>" alt="Avatar" class="rounded-full h-12 w-12">
+    <img src="<%= element.profile?.profilepic?.url || `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name[0].toUpperCase()}` %>" alt="Avatar" class="rounded-full h-12 w-12">
 
     <div class="w-full">
       <!-- Header -->
@@ -106,13 +105,14 @@ if (typeof post !== "undefined") {
         </div>
 
         <!-- Comment -->
-        <div class="flex items-center space-x-2 hover:text-blue-500 cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
-          </svg>
-          <span>31</span>
-        </div>
-
+        <a href="post/<%= element._id %>">
+          <div class="comment-post flex items-center space-x-2 hover:text-blue-500 cursor-pointer" data-commentPostId="<%= element._id %>">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
+            </svg>
+            <span><%= element.comments?.length>0 ? element.comments.length : "" %></span>
+          </div>
+        </a>
         <!-- Share -->
         <div class="flex items-center space-x-2 hover:text-green-500 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -154,18 +154,14 @@ if (typeof post !== "undefined") {
     button.addEventListener("click", function() {
       const svg = this.querySelector("svg");
 
-      // Toggle color (pink ↔ gray)
       const isLiked = this.classList.toggle("text-pink-500");
       this.classList.toggle("text-gray-500", !isLiked);
 
-      // Only animate when liking
       if (!isLiked) return;
 
-      // Heart pop
       svg.classList.add("heart-pop");
       setTimeout(() => svg.classList.remove("heart-pop"), 400);
 
-      // Burst dots
       for (let i = 0; i < 6; i++) {
         const circle = document.createElement("span");
         circle.classList.add("burst-circle");

@@ -86,7 +86,7 @@ function initializeTabs() {
 
         localStorage.setItem("activeTabId", clickedBtn.dataset.target);
         
-        if (clickedBtn.textContent.trim().toLowerCase() === "likes") {
+        if (clickedBtn) {
             location.reload();
             return;
         }

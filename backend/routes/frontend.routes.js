@@ -39,8 +39,8 @@ router.get('/feed', verifyToken, async (req, res, next) => {
 
         const enrichedPosts = await Promise.all(
             posts.map(async (post) => {
-                const userProfile = await Profile.findOne({user:post.user._id});
-                post.profile = userProfile.profilepic.url ? userProfile : { profilepic: {url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}`} }
+                const userProfile = await Profile.findOne({ user: post.user._id });
+                post.profile = userProfile.profilepic.url ? userProfile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` } }
                 return post
             })
         )
@@ -62,10 +62,10 @@ router.get('/profile', verifyToken, async (req, res, next) => {
         const profile = await Profile.findOne({ user: req.user.id });
         const posts = await Posts.find({ user: req.user.id }).populate("user", "name username").sort({ createdAt: -1 });
         const enrichedPosts = posts.map((post) => {
-            post.profile = profile.profilepic.url ? profile : { profilepic: {url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}`} }
+            post.profile = profile.profilepic.url ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` } }
             return post;
         })
-        
+
         res.render('profile/profile', {
             user,
             profile: profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` }, banner: { url: "" }, bio: "", link: { url: "", label: "" }, uploads: [] },
@@ -78,16 +78,29 @@ router.get('/profile', verifyToken, async (req, res, next) => {
 })
 
 
-router.get('/post/:id', verifyToken, async(req, res, next) => {
+router.get('/post/:id', verifyToken, async (req, res, next) => {
     try {
         const user = await getUserDetails(req.user.id);
         const profile = await Profile.findOne({ user: req.user.id });
-        const posts = await Posts.findById(req.params.id).populate("comments", "name username").sort({ createdAt: -1 });
+        const post = await Posts.findById(req.params.id).populate("user", "name username").populate("comments.user", "name username");
+        post.comments.sort((a, b) => b.createdAt - a.createdAt);
 
-        res.render('partials/postPage',{
+        const userProfile = await Profile.findOne({ user: post.user._id });
+        post.profile = userProfile.profilepic.url ? userProfile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` } }
+  
+        const enrichedComments = await Promise.all(
+            post.comments.map(async (ppost) => {
+                const userProfile = await Profile.findOne({ user: ppost.user._id });
+                ppost.profile = userProfile.profilepic.url ? userProfile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` } }
+                return ppost
+            })
+        )
+
+        res.render('postPage', {
             user,
-            profile:profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` }, banner: { url: "" }, bio: "", link: { url: "", label: "" }, uploads: [] },
-            posts
+            profile: profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` }, banner: { url: "" }, bio: "", link: { url: "", label: "" }, uploads: [] },
+            post,
+            enrichedComments
         })
 
     } catch (err) {
