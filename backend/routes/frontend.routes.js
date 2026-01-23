@@ -109,7 +109,7 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
         let backTo = "/feed"; 
 
         if (source === "profile" && profileUsername) {
-            backTo = `/profile`;
+            backTo = `/profile/${profileUsername}`;
         }
 
         res.render('postPage', {
