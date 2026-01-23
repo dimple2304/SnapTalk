@@ -57,7 +57,7 @@ router.get('/feed', verifyToken, async (req, res, next) => {
 })
 
 
-router.get('/profile', verifyToken, async (req, res, next) => {
+router.get('/profile/:username', verifyToken, async (req, res, next) => {
     try {
         const user = await getUserDetails(req.user.id);
         const profile = await Profile.findOne({ user: req.user.id });
