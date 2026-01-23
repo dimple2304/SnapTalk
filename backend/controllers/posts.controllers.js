@@ -143,3 +143,20 @@ export const comments = async (req, res, next) => {
         next(err)
     }
 }
+
+
+export const deleteComment = async(req, res, next) => {
+    try{
+        const { postId, commentId} = req.body;
+        if(!postId || !commentId) throw new BadRequestError("Either post or comment not available.");
+
+        const user = await getUserDetails(req.user.id);
+        if(!user) throw new BadRequestError("User not found.");
+
+        const post = await Posts.findOne({_id: postId});
+        if(!post) throw new BadRequestError("Post not found.");
+
+    }catch(err){
+        next(err);
+    }
+}

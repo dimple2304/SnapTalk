@@ -81,9 +81,9 @@ if (typeof post !== "undefined") {
         </button>
       </div>
 
-      <a href="post/<%= element._id %>">
+      <button class="postPageBtn"  data-postpageurl="/post/<%= element._id %>?from=<%= source %><% if(source === 'profile'){ %>&username=<%= profileUsername %> <% } %>">
         <!-- Post Content -->
-        <p class="mt-2 text-gray-700"><%= element.thought %></p>
+        <p class="mt-2 text-gray-700 text-left"><%= element.thought %></p>
 
         <!-- Media -->
         <div class="postdynamicimg">
@@ -91,7 +91,8 @@ if (typeof post !== "undefined") {
           <img src="<%= element.media.url %>" class="w-45 max-h-[350px] h-45 mt-4 object-cover rounded-xl" alt="Post image">
           <% } %>
         </div>
-      </a>
+      </button>
+
       <!-- Post Actions -->
       <div class="flex justify-start items-center mt-5 space-x-8 text-gray-500">
         <!-- Like Button -->
@@ -105,14 +106,14 @@ if (typeof post !== "undefined") {
         </div>
 
         <!-- Comment -->
-        <a href="post/<%= element._id %>">
+        <button class="postPageBtn" data-postpageurl="/post/<%= element._id %>?from=<%= source %><% if(source === 'profile'){ %>&username=<%= profileUsername %> <% } %>">
           <div class="comment-post flex items-center space-x-2 hover:text-blue-500 cursor-pointer" data-commentPostId="<%= element._id %>">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
             </svg>
-            <span><%= element.comments?.length>0 ? element.comments.length : "" %></span>
+            <span class="comment-count"><%= element.comments?.length>0 ? element.comments.length : "" %></span>
           </div>
-        </a>
+        </button>
         <!-- Share -->
         <div class="flex items-center space-x-2 hover:text-green-500 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -132,6 +133,17 @@ if (typeof post !== "undefined") {
 
 
 <script>
+  
+const postPageBtn = document.querySelectorAll(".postPageBtn");
+  postPageBtn.forEach(el => {
+    el.addEventListener("click", () => {
+      const url = el.dataset.postpageurl;
+      if (window.location.pathname !== url) {
+        window.location.href = url;
+      }
+    });
+  });
+
   function getPostTime(dateString) {
 
     const postDate = new Date(dateString);

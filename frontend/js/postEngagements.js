@@ -6,7 +6,7 @@ const commentInput = document.querySelector(".comment-input");
 const commentPostBtn = document.querySelector(".comment-post-btn");
 const commentError = document.querySelector("#comment-error");
 const commentPost = document.querySelector(".comment-post");
-const spinner = document.querySelector("#commentPostSpinner #spinner");
+const spinners = document.querySelector("#commentPostSpinner #spinner");
 const commentsLen = document.querySelector("#comments-len");
 
 likeButtonArray.forEach((button, i) => {
@@ -56,54 +56,57 @@ likeButtonArray.forEach((button, i) => {
     });
 });
 
-commentInput.addEventListener("input", function () {
-    const commentInputVal = commentInput.value.trim();
-    if (commentInputVal) return commentPostBtn.disabled = false;
-    return commentPostBtn.disabled = true;
-})
-
-commentPostBtn.addEventListener("click", async function (e) {
-    try {
-        e.preventDefault();
+if (commentInput) {
+    commentInput.addEventListener("input", function () {
         const commentInputVal = commentInput.value.trim();
-        console.log("Comment from user:", commentInputVal);
-        
-        if (!commentInputVal) return;
-        const postId = commentPost.getAttribute("data-commentPostId");
-        console.log("Post id:", postId);
-        
-        commentError.innerHTML = "";
+        if (commentInputVal) return commentPostBtn.disabled = false;
+        return commentPostBtn.disabled = true;
+    })
 
-        spinner.classList.remove("hidden");
 
-        const inputs = {
-            commentInput: commentInputVal,
-            postId: postId
-        }
-        console.log("inputs:", inputs);
-        
+    commentPostBtn.addEventListener("click", async function (e) {
+        try {
+            e.preventDefault();
+            const commentInputVal = commentInput.value.trim();
 
-        const res = await fetch('/api/create/comment-post', {
-            method: "POST",
-            headers: { "Content-Type":"application/json" },
-            body: JSON.stringify(inputs)
-        });
+            if (!commentInputVal) return;
+            const postId = commentPost.getAttribute("data-commentPostId");
 
-        const data = await res.json();
-        console.log("data:", data);
-        
-        if (!res.ok) {
+            commentError.innerHTML = "";
+
+            spinners.classList.remove("hidden");
+
+            const inputs = {
+                commentInput: commentInputVal,
+                postId: postId
+            }
+            console.log("inputs:", inputs);
+
+
+            const res = await fetch('/api/create/comment-post', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(inputs)
+            });
+
+            const data = await res.json();
+            console.log("data:", data);
+
+            if (!res.ok) {
+                commentError.innerHTML = data.message;
+                spinners.classList.add("hidden");
+                return;
+            }
+
+            spinners.classList.add("hidden");
+
+            window.location.reload();
+        } catch (error) {
             commentError.innerHTML = data.message;
-            spinner.classList.add("hidden");
-            return;
+            spinners.classList.add("hidden");
+            return
         }
+    })
 
-        spinner.classList.add("hidden");
-        
-        window.location.reload();
-    } catch (error) {
-        commentError.innerHTML = data.message;
-        spinner.classList.add("hidden");
-        return
-    }
-})
+}
+
