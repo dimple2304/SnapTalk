@@ -77,7 +77,7 @@ export const likes = async (req, res, next) => {
         if (!post) throw new BadRequestError("Post not found!");
 
         const userIdStr = user._id.toString();
-        const existed = post.likes.some(like => like?.user?.toString() === userIdStr);
+        const existed = post.likes?.some(like => like?.user?.toString() === userIdStr);
 
         if (!existed || post.likes === null) {
             post.likes.push({ user: user._id });
@@ -86,17 +86,17 @@ export const likes = async (req, res, next) => {
         }
 
         let profile = await Profile.findOne({ user: req.user.id });
-        const profileLikeExisted = profile?.likes?.some(like => like.toString() === post._id.toString())
+        const profileLikeExisted = profile?.likes?.post.some(like => like.toString() === post._id.toString())
         if (!profileLikeExisted) {
             if (!profile) {
                 profile = new Profile({
                     likes: alreadyLiked ? [] : [post._id]
                 })
             } else {
-                profile.likes.push(post._id)
+                profile.likes.post.push(post._id)
             }
         } else {
-            profile.likes = profile?.likes?.filter(like => like.toString() !== post._id.toString());
+            profile.likes = profile?.likes?.post.filter(like => like.toString() !== post._id.toString());
         }
 
         const savedPost = await post.save();
