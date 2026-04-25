@@ -61,16 +61,33 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
     try {
         const user = await getUserDetails(req.user.id);
         const profile = await Profile.findOne({ user: req.user.id });
-        const posts = await Posts.find({ user: req.user.id }).populate("user", "name username").sort({ createdAt: -1 });
-        const enrichedPosts = posts.map((post) => {
-            post.profile = profile.profilepic.url ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` } }
-            return post;
+        const userPosts = await Posts.find({ 
+            user: req.user.id 
+        }).populate("user", "name username").sort({ createdAt: -1 });
+
+        const likedPosts = await Posts?.find({
+            _id: { $in: profile?.likes }
+        }).populate("user", "name username");
+        // console.log(likedPosts);
+        
+        const enrich = (posts) => 
+            posts.map(post => {
+                post.profile = profile.profilepic.url ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` } }
+                return post;
         })
+
+        const enrichedUserPosts = enrich(userPosts);
+        const enrichedLikedPosts = enrich(likedPosts);
+
+        enrichedLikedPosts.sort((a, b) => b.createdAt - a.createdAt);
+        console.log(enrichedLikedPosts);
+        
 
         res.render('profile/profile', {
             user,
             profile: profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` }, banner: { url: "" }, bio: "", link: { url: "", label: "" }, uploads: [] },
-            posts: enrichedPosts,
+            posts: enrichedUserPosts,
+            likedPosts: enrichedLikedPosts,
             source: "profile",
             profileUsername: user.username
         });

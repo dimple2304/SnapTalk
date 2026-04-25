@@ -71,7 +71,7 @@ if (typeof post !== "undefined") {
         <div>
           <span class="font-bold text-gray-900"><%= element.user?.name %></span>
           <span class="text-gray-400 ml-2 text-sm">@<%= element.user?.username %></span>
-          <span class="post-time text-gray-400 ml-2 text-sm"><%= element.createdAt %></span>
+          <span class="post-time text-gray-400 ml-2 text-sm" data-time="<%= element.createdAt %>"></span>
         </div>
 
         <button class="text-gray-400 hover:text-gray-600">
@@ -81,7 +81,7 @@ if (typeof post !== "undefined") {
         </button>
       </div>
 
-      <button class="postPageBtn"  data-postpageurl="/post/<%= element._id %>?from=<%= source %><% if(source === 'profile'){ %>&username=<%= profileUsername %> <% } %>">
+      <button class="postPageBtn" data-postpageurl="/post/<%= element._id %>?from=<%= source %><% if(source === 'profile'){ %>&username=<%= profileUsername %> <% } %>">
         <!-- Post Content -->
         <p class="mt-2 text-gray-700 text-left"><%= element.thought %></p>
 
@@ -131,10 +131,9 @@ if (typeof post !== "undefined") {
 <% } %>
 
 
-
+<script src="/js/postTimeFormatter.js"></script>
 <script>
-  
-const postPageBtn = document.querySelectorAll(".postPageBtn");
+  const postPageBtn = document.querySelectorAll(".postPageBtn");
   postPageBtn.forEach(el => {
     el.addEventListener("click", () => {
       const url = el.dataset.postpageurl;
@@ -144,6 +143,8 @@ const postPageBtn = document.querySelectorAll(".postPageBtn");
     });
   });
 
+  /* This is local scop post tine formatter that is replaced by global 
+  postTimeFormatter.js 
   function getPostTime(dateString) {
 
     const postDate = new Date(dateString);
@@ -158,9 +159,12 @@ const postPageBtn = document.querySelectorAll(".postPageBtn");
     return postDate.toLocaleDateString();
   }
 
-  document.querySelectorAll(".post-time").forEach(element => {
-    element.innerHTML = getPostTime(element.innerHTML);
-  });
+    document.querySelectorAll(".post-time").forEach(element => {
+      const rawDate = element.dataset.time;
+      element.innerHTML = getPostTime(rawDate);
+
+    });
+  */
 
   document.querySelectorAll(".like-button").forEach(button => {
     button.addEventListener("click", function() {
