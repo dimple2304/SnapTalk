@@ -8,6 +8,7 @@ const commentError = document.querySelector("#comment-error");
 const commentPost = document.querySelector(".comment-post");
 const spinners = document.querySelector("#commentPostSpinner #spinner");
 const commentsLen = document.querySelector("#comments-len");
+const commentDeleteBtn = document.querySelectorAll(".commentDltBtn");
 
 likeButtonArray.forEach((button, i) => {
     button.addEventListener("click", async function () {
@@ -110,3 +111,39 @@ if (commentInput) {
 
 }
 
+console.log(commentDeleteBtn);
+
+commentDeleteBtn.forEach(btn => {
+    btn.addEventListener("click", async function (e) {
+        try {
+            e.preventDefault();
+            const postPagePath = window.location.pathname;
+            const commentPostDltId = postPagePath.slice(postPagePath.lastIndexOf('/')+1,postPagePath.length);
+            if(!commentPostDltId) return;
+            
+            const commentId = btn.getAttribute("data-commentId");
+            console.log(commentId);
+            
+            const inputs = {
+                postId: commentPostDltId,
+                commentId: commentId
+            }
+
+            const res = await fetch("/api/create/comment-delete", {
+                method: "PATCH",
+                headers: {"Content-Type":"application/json"},
+                body:JSON.stringify(inputs)
+            })
+
+            const data = await res.json();
+
+            if(!res.ok){
+                return;
+            }
+            window.location.reload();            
+            
+        } catch (error) {
+            return
+        }
+    })
+})

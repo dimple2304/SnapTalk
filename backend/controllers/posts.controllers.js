@@ -1,6 +1,6 @@
 import { Posts } from "../models/post.models.js";
 import { Profile } from "../models/profile.models.js";
-import { BadRequestError, InternalServerError } from "../utils/customErrorHandler/customError.js";
+import { BadRequestError, ConflictError, InternalServerError } from "../utils/customErrorHandler/customError.js";
 import { getUserDetails } from "./auth.controllers.js";
 
 const extractHashtags = (text) => {
@@ -77,26 +77,36 @@ export const likes = async (req, res, next) => {
         if (!post) throw new BadRequestError("Post not found!");
 
         const userIdStr = user._id.toString();
-        const existed = post.likes.some(like => like?.user?.toString() === userIdStr);
+        const likesArray = post.likes || [];
+        const existed = likesArray.some(like => like?.user?.toString() === userIdStr);
 
-        if (!existed || post.likes === null) {
+        if (!existed) {
             post.likes.push({ user: user._id });
         } else {
-            post.likes = post.likes.filter(like => like?.user?.toString() !== userIdStr);
+            post.likes = post.likes.filter(
+                like => like?.user?.toString() !== userIdStr
+            );
         }
 
         let profile = await Profile.findOne({ user: req.user.id });
-        const profileLikeExisted = profile?.likes?.some(like => like.toString() === post._id.toString())
-        if (!profileLikeExisted) {
-            if (!profile) {
-                profile = new Profile({
-                    likes: alreadyLiked ? [] : [post._id]
-                })
-            } else {
-                profile.likes.push(post._id);
-            }
+
+        if (!profile) {
+            profile = new Profile({
+                user: req.user.id,
+                likes: [post._id]
+            });
         } else {
-            profile.likes = profile?.likes?.filter(like => like.toString() !== post._id.toString());
+            const profileLikeExisted = profile.likes.some(
+                like => like.toString() === post._id.toString()
+            );
+
+            if (!profileLikeExisted) {
+                profile.likes.push(post._id);
+            } else {
+                profile.likes = profile.likes.filter(
+                    like => like.toString() !== post._id.toString()
+                );
+            }
         }
 
         const savedPost = await post.save();
@@ -145,18 +155,36 @@ export const comments = async (req, res, next) => {
 }
 
 
-export const deleteComment = async(req, res, next) => {
-    try{
-        const { postId, commentId} = req.body;
-        if(!postId || !commentId) throw new BadRequestError("Either post or comment not available.");
+export const deleteComment = async (req, res, next) => {
+    try {
+        const { postId, commentId } = req.body;
+        if (!postId || !commentId) throw new BadRequestError("Either post or comment not available.");
 
         const user = await getUserDetails(req.user.id);
-        if(!user) throw new BadRequestError("User not found.");
+        if (!user) throw new BadRequestError("User not found.");
 
-        const post = await Posts.findOne({_id: postId});
-        if(!post) throw new BadRequestError("Post not found.");
+        const post = await Posts.findOne({ _id: postId });
+        if (!post) throw new BadRequestError("Post not found.");
 
-    }catch(err){
+        const comment = post.comments.find(c =>
+            c._id.toString() === commentId.toString()
+        )
+        if(!comment) throw new BadRequestError("Comment not found.");
+
+        if(comment.user.toString() !== req.user.id && post.user.toString() !== req.user.id){
+            throw new BadRequestError("Not authorized to delete this comment.");
+        }
+
+        post.comments = post.comments.filter(c => c?._id?.toString() !== commentId.toString());
+
+        const savedPostComments = await post.save();
+        if(!savedPostComments) throw new InternalServerError("Something went wrong.");
+
+        return res.status(200).json({
+            success: true, message: "Comment deleted successfully.",
+            commentLength: post.comments.length
+        })
+    } catch (err) {
         next(err);
     }
 }

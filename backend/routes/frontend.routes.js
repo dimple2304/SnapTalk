@@ -67,12 +67,17 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
 
         const likedPosts = await Posts?.find({
             _id: { $in: profile?.likes }
-        }).populate("user", "name username");
+        }).populate("user", "name username profilepic");
+        const userIds = likedPosts.map(post => post.user._id);
+        const fetchedProfiles = await Profile.find({user:{$in: userIds}});
         // console.log(likedPosts);
         
         const enrich = (posts) => 
             posts.map(post => {
-                post.profile = profile.profilepic.url ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` } }
+                const postProfile = fetchedProfiles.find(
+                    p => p.user.toString() === post.user._id.toString()
+                )
+                post.profile = postProfile?.profilepic?.url ? postProfile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` } }
                 return post;
         })
 
@@ -80,8 +85,6 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
         const enrichedLikedPosts = enrich(likedPosts);
 
         enrichedLikedPosts.sort((a, b) => b.createdAt - a.createdAt);
-        console.log(enrichedLikedPosts);
-        
 
         res.render('profile/profile', {
             user,
@@ -118,7 +121,6 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
         )
 
         let postUrl = req.url;
-        console.log(postUrl);
 
         const source = req.query.from;
         const profileUsername  = req.query.username;
