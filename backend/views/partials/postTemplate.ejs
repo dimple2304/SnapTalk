@@ -69,8 +69,11 @@ if (typeof post !== "undefined") {
       <!-- Header -->
       <div class="flex justify-between items-center">
         <div>
-          <span class="font-bold text-gray-900"><%= element.user?.name %></span>
-          <span class="text-gray-400 ml-2 text-sm">@<%= element.user?.username %></span>
+          <button class="userProfileBtn" data-userprofile="/profile/<%= element.user?.username %>">
+            <span class="font-bold text-gray-900"><%= element.user?.name %></span>
+            <span class="text-gray-400 ml-2 text-sm">@<%= element.user?.username %></span>
+          </button>
+          </a>
           <span class="post-time text-gray-400 ml-2 text-sm" data-time="<%= element.createdAt %>"></span>
         </div>
 
@@ -133,14 +136,24 @@ if (typeof post !== "undefined") {
 
 <script src="/js/postTimeFormatter.js"></script>
 <script>
+  document.querySelectorAll(".userProfileBtn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const url = btn.dataset.userprofile;
+
+        if (!url) return;
+
+        window.location.href = url;
+    });
+});
+
   // const postPageBtn = document.querySelectorAll(".postPageBtn");
-  document.addEventListener("click", function(e){
+  document.addEventListener("click", function(e) {
     const btn = e.target.closest(".postPageBtn");
     if (!btn) return;
     const url = btn.dataset.postpageurl;
     if (window.location.pathname !== url) {
-        window.location.href = url;
-      }
+      window.location.href = url;
+    }
   })
 
   /* This is local scop post tine formatter that is replaced by global 
