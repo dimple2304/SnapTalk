@@ -51,6 +51,7 @@ router.get('/feed', verifyToken, async (req, res, next) => {
 
         res.render("feedpage", {
             loggedInProfile,
+            loggedInUser,
             user,
             profile: profile ? profile : { profilepic: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` },
             posts: enrichedPosts,
@@ -66,12 +67,7 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
     try {
         const loggedInUser = await getUserDetails(req.user.id);
         const loggedInProfile = await Profile.findOne({user : req.user.id})
-        console.log(loggedInUser);
         
-        console.log(loggedInProfile);
-        
-        
-        // 🔵 [STEP 1] Get profile user
         const profileUser = await Users.findOne({ username: req.params.username })
             .select("name username");
 
@@ -79,10 +75,8 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
             return res.status(404).send("User not found");
         }
 
-        // 🔵 [STEP 2] Check ownership
         const isOwnProfile = profileUser._id.toString() === req.user.id.toString();
 
-        // 🔵 [STEP 3] Fetch profile + posts in parallel (PERFORMANCE BOOST)
         const [profile, userPosts] = await Promise.all([
             Profile.findOne({ user: profileUser._id }),
             Posts.find({ user: profileUser._id })
@@ -90,7 +84,6 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
                 .sort({ createdAt: -1 })
         ]);
 
-        // 🔵 [STEP 4] Fetch liked posts ONLY if own profile
         let likedPosts = [];
         if (isOwnProfile && profile?.likes?.length) {
             likedPosts = await Posts.find({
@@ -100,23 +93,19 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
                 .sort({ createdAt: -1 });
         }
 
-        // 🔵 [STEP 5] Collect all userIds from posts (NO duplicate queries)
         const allPosts = [...userPosts, ...likedPosts];
 
         const userIds = [
             ...new Set(allPosts.map(post => post.user._id.toString()))
         ];
 
-        // 🔵 [STEP 6] Fetch all profiles in ONE query
         const profiles = await Profile.find({ user: { $in: userIds } });
 
-        // 🔵 [STEP 7] Convert profiles to MAP (O(1) lookup instead of find)
         const profileMap = {};
         profiles.forEach(p => {
             profileMap[p.user.toString()] = p;
         });
 
-        // 🔵 [STEP 8] Enrich posts (FAST now)
         const enrich = (posts) =>
             posts.map(post => {
                 const postProfile = profileMap[post.user._id.toString()];
@@ -135,7 +124,6 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
         const enrichedUserPosts = enrich(userPosts);
         const enrichedLikedPosts = enrich(likedPosts);
 
-        // 🔵 [STEP 9] Default profile fallback
         const defaultProfile = {
             profilepic: {
                 url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${profileUser.name[0].toUpperCase()}`
@@ -146,9 +134,9 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
             uploads: []
         };
 
-        // 🔵 [STEP 10] Final render
         res.render('profile/profile', {
             loggedInProfile: loggedInProfile || defaultProfile,
+            loggedInUser,
             user: profileUser,
             profile: profile || defaultProfile,
             posts: enrichedUserPosts,
@@ -168,6 +156,9 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
     try {
         const user = await getUserDetails(req.user.id);
         const profile = await Profile.findOne({ user: req.user.id });
+
+        const loggedInUser = await getUserDetails(req.user.id);
+        const loggedInProfile = await Profile.findOne({user : req.user.id})
 
         const post = await Posts.findById(req.params.id).populate("user", "name username").populate("comments.user", "name username");
         post.comments.sort((a, b) => b.createdAt - a.createdAt);
@@ -195,6 +186,8 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
         }
 
         res.render('postPage', {
+            loggedInUser,
+            loggedInProfile,
             user,
             profile: profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` }, banner: { url: "" }, bio: "", link: { url: "", label: "" }, uploads: [] },
             post,

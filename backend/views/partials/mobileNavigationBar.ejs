@@ -29,7 +29,7 @@
       </svg>
     </a>
     <!-- Profile -->
-    <a href="/profile/<%= user.username %>" class="p-1">
+    <a href="/profile/<%= loggedInUser.username %>" class="p-1">
       <img src="<%= loggedInProfile.profilepic.url || user.profilepic.url || `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name[0].toUpperCase()}`%>" alt="Your Avatar" class="rounded-full w-8 h-8 border-2 border-transparent hover:border-gray-300 transition-colors">
     </a>
   </nav>
