@@ -36,7 +36,7 @@ router.get('/setting-username', verifyToken, async (req, res, next) => {
 router.get('/feed', verifyToken, async (req, res, next) => {
     try {
         const loggedInUser = await getUserDetails(req.user.id);
-        const loggedInProfile = await Profile.findOne({user : req.user.id})
+        const loggedInProfile = await Profile.findOne({ user: req.user.id })
         const user = await getUserDetails(req.user.id);
         const profile = await Profile.findOne({ user: req.user.id });
         const posts = await Posts.find().sort({ createdAt: -1 }).populate("user", "name username").lean();
@@ -48,6 +48,11 @@ router.get('/feed', verifyToken, async (req, res, next) => {
                 return post
             })
         )
+
+        let isOwnPost;
+        posts.map(async (p) => {
+            p.isOwnPost = p.user._id.toString() === req.user.id.toString();
+        })
 
         res.render("feedpage", {
             loggedInProfile,
@@ -66,8 +71,8 @@ router.get('/feed', verifyToken, async (req, res, next) => {
 router.get('/profile/:username', verifyToken, async (req, res, next) => {
     try {
         const loggedInUser = await getUserDetails(req.user.id);
-        const loggedInProfile = await Profile.findOne({user : req.user.id})
-        
+        const loggedInProfile = await Profile.findOne({ user: req.user.id })
+
         const profileUser = await Users.findOne({ username: req.params.username })
             .select("name username");
 
@@ -76,7 +81,7 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
         }
 
         const isOwnProfile = profileUser._id.toString() === req.user.id.toString();
-
+        // const posts = await Posts.find().sort({ createdAt: -1 }).populate("user", "name username").lean();
         const [profile, userPosts] = await Promise.all([
             Profile.findOne({ user: profileUser._id }),
             Posts.find({ user: profileUser._id })
@@ -93,7 +98,13 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
                 .sort({ createdAt: -1 });
         }
 
+        
         const allPosts = [...userPosts, ...likedPosts];
+        
+        let isOwnPost;
+        allPosts.map(async (p) => {
+            p.isOwnPost = p.user._id.toString() === req.user.id.toString();
+        })
 
         const userIds = [
             ...new Set(allPosts.map(post => post.user._id.toString()))
@@ -137,6 +148,7 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
         res.render('profile/profile', {
             loggedInProfile: loggedInProfile || defaultProfile,
             loggedInUser,
+            isOwnPost,
             user: profileUser,
             profile: profile || defaultProfile,
             posts: enrichedUserPosts,
@@ -158,10 +170,13 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
         const profile = await Profile.findOne({ user: req.user.id });
 
         const loggedInUser = await getUserDetails(req.user.id);
-        const loggedInProfile = await Profile.findOne({user : req.user.id})
+        const loggedInProfile = await Profile.findOne({ user: req.user.id })
 
         const post = await Posts.findById(req.params.id).populate("user", "name username").populate("comments.user", "name username");
         post.comments.sort((a, b) => b.createdAt - a.createdAt);
+
+        let isOwnPost;
+        post.isOwnPost = post.user._id.toString() === req.user.id.toString();
 
         const userProfile = await Profile.findOne({ user: post.user._id });
         post.profile = userProfile.profilepic.url ? userProfile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` } }
@@ -188,6 +203,7 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
         res.render('postPage', {
             loggedInUser,
             loggedInProfile,
+            isOwnPost,
             user,
             profile: profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` }, banner: { url: "" }, bio: "", link: { url: "", label: "" }, uploads: [] },
             post,

@@ -61,27 +61,35 @@ if (typeof post !== "undefined") {
 <% if (postArray.length > 0) { %>
 <% postArray.forEach(function (element) { %>
 <div class="bg-white p-6 rounded-2xl shadow-sm">
-  <div class="flex space-x-4">
-    <!-- User Avatar -->
-    <img src="<%= element.profile?.profilepic?.url || `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name[0].toUpperCase()}` %>" alt="Avatar" class="rounded-full h-12 w-12">
-
+  <div class="flex items-start space-x-4">
+    <button class="userProfileBtn shrink-0" data-userprofile="/profile/<%= element.user?.username %>">
+      <img src="<%= element.profile?.profilepic?.url || `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name[0].toUpperCase()}` %>" alt="Avatar" class="rounded-full h-12 w-12 object-cover">
+    </button>
+    
     <div class="w-full">
       <!-- Header -->
-      <div class="flex justify-between items-center">
-        <div>
+      <div class="flex justify-between items-center w-full">
+        <div class="flex items-center space-x-2">
           <button class="userProfileBtn" data-userprofile="/profile/<%= element.user?.username %>">
             <span class="font-bold text-gray-900"><%= element.user?.name %></span>
-            <span class="text-gray-400 ml-2 text-sm">@<%= element.user?.username %></span>
+            <span class="text-gray-400 text-sm ml-1">@<%= element.user?.username %></span>
           </button>
-          </a>
-          <span class="post-time text-gray-400 ml-2 text-sm" data-time="<%= element.createdAt %>"></span>
+          <span class="text-gray-400 text-sm">•</span>
+          <span class="post-time text-gray-400 text-sm" data-time="<%= element.createdAt %>"></span>
         </div>
+        <div class="flex items-center space-x-4">
+          <% if(!element.isOwnPost){ %>
+          <button class="px-5 py-1.5 bg-black text-white text-sm font-bold rounded-full hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
+            Follow
+          </button>
+          <% } %>
 
-        <button class="text-gray-400 hover:text-gray-600">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
-          </svg>
-        </button>
+          <button class="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <button class="postPageBtn" data-postpageurl="/post/<%= element._id %>?from=<%= source %><% if(source === 'profile'){ %>&username=<%= profileUsername %><% } %>">
@@ -138,13 +146,13 @@ if (typeof post !== "undefined") {
 <script>
   document.querySelectorAll(".userProfileBtn").forEach(btn => {
     btn.addEventListener("click", () => {
-        const url = btn.dataset.userprofile;
+      const url = btn.dataset.userprofile;
 
-        if (!url) return;
+      if (!url) return;
 
-        window.location.href = url;
+      window.location.href = url;
     });
-});
+  });
 
   // const postPageBtn = document.querySelectorAll(".postPageBtn");
   document.addEventListener("click", function(e) {

@@ -39,7 +39,6 @@ export const createPost = async (req, res, next) => {
         if (!post) throw new BadRequestError("Post not found!");
 
         let profile = await Profile.findOne({ user: req.user.id });
-        console.log("post is:", post._id);
 
         if (!profile) {
             profile = new Profile({
