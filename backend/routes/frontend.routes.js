@@ -100,7 +100,7 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
 
         
         const allPosts = [...userPosts, ...likedPosts];
-        
+
         let isOwnPost;
         allPosts.map(async (p) => {
             p.isOwnPost = p.user._id.toString() === req.user.id.toString();
@@ -188,6 +188,10 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
                 return ppost
             })
         )
+        
+        enrichedComments.map(async (c) => {
+
+        })
 
         let postUrl = req.url;
 

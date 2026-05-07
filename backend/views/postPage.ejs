@@ -58,8 +58,8 @@
             <div class="flex justify-between items-start">
 
               <div class="flex items-center space-x-2">
-                <h4 class="font-bold text-slate-800"><%= element.user.name %></h4>
-                <span class="text-sm text-slate-500">@<%= element.user.username %></span>
+                <a href="/profile/<%= element.user.username %>" class="font-bold text-slate-800"><%= element.user.name %></a>
+                <a href="/profile/<%= element.user.username %>" class="text-sm text-slate-500">@<%= element.user.username %></a>
                 <span class="comment-time text-gray-400 ml-2 text-sm"><%= element.createdAt %></span>
               </div>
 
