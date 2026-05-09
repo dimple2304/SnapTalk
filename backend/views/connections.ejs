@@ -64,7 +64,6 @@
             </div>
         </div>
       </div>
-
       <!-- Connection Tabs -->
       <div id="tab-controls" class="flex justify-around border-b border-slate-200 bg-white">
         <button onclick="switchTab('followers')" id="btn-followers" class="tab-btn active w-full text-center py-4">Followers</button>
@@ -72,8 +71,7 @@
       </div>
 
       <!-- Content Area -->
-      <div class="divide-y divide-slate-100">
-        
+      <div class="divide-y divide-slate-100"> 
         <!-- Followers Section -->
         <div id="section-followers" class="tab-pane">
           <!-- Example User Row -->
@@ -90,26 +88,33 @@
               Follow
             </button>
           </div>
+          <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
+            <div class="flex items-center gap-3">
+              <img src="https://placehold.co/100x100/475569/ffffff?text=D" class="z-10 rounded-full h-12 w-12 border border-slate-200" alt="Avatar">
+              <div>
+                <h4 class="font-bold text-sm text-gray-900 capitalize">Dev Singh</h4>
+                <p class="text-xs text-gray-500">@root_access</p>
+              </div>
+            </div>
+            <button class="px-6 py-1.5 text-xs font-semibold rounded-full bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 transition-all active:scale-95">
+              Following
+            </button>
+          </div>
         </div>
-
         <!-- Following Section (Hidden by default) -->
         <div id="section-following" class="tab-pane hidden">
           <div class="p-10 text-center text-slate-400 italic text-sm">
             You aren't following anyone yet.
           </div>
         </div>
-
       </div>
     </main>
-
     <!-- Right Column (Hidden on mobile, matching profile.ejs) -->
     <div id="right-column-call" class="hidden lg:block lg:w-1/4">
        <!-- <%- include('../partials/rightColumn') %> -->
        <div class="p-4 text-slate-400 italic text-center">Right Column Placeholder</div>
     </div>
-
   </div>
-
   <!-- Mobile Nav Placeholder -->
   <div class="lg:hidden fixed bottom-0 w-full h-16 bg-white border-t border-slate-200 z-50 flex items-center justify-around">
      <i class="ri-home-line text-xl"></i>

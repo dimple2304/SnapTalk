@@ -4,6 +4,7 @@ import { getUserDetails } from '../controllers/auth.controllers.js';
 import { Profile } from '../models/profile.models.js';
 import { Posts } from '../models/post.models.js';
 import { Users } from '../models/user.models.js';
+import { BadRequestError } from '../utils/customErrorHandler/customError.js';
 
 const router = express.Router();
 
@@ -78,7 +79,7 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
             .select("name username followingCount followersCount");
 
         if (!profileUser) {
-            return res.status(404).send("User not found");
+            throw new BadRequestError("User not found.");
         }
 
         const isOwnProfile = profileUser._id.toString() === req.user.id.toString();
@@ -178,6 +179,53 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
 });
 
 
+// router.get('/profile/:username/followings', verifyToken, async (req, res, next) => {
+//     try {
+//         const loggedInUser = await getUserDetails(req.user.id);
+//         const loggedInProfile = await Profile.findOne({ user: req.user.id })
+
+//         const profileUser = await Users.findOne({ username: req.params.username })
+//             .select("name username followingCount followersCount");
+//         if (!profileUser) {
+//             throw new BadRequestError("Profile user not found.");
+//         }
+
+//         const isOwnProfile = profileUser._id.toString() === req.user.id.toString();
+
+//         const profile = await Profile.findOne({ user: profileUser._id })
+//         if (!profile) throw new BadRequestError("Profile not found.");
+
+//         let likedPosts = [];
+//         if (isOwnProfile && profile?.likes?.length) {
+//             likedPosts = await Posts.find({
+//                 _id: { $in: profile.likes }
+//             })
+//                 .populate("user", "name username")
+//                 .sort({ createdAt: -1 });
+//         }
+
+//         let followingList = [];
+//         if (profile?.followings?.length) {
+//             followingList = await profile.followings?.map((fl) => {
+//                 fl.id;
+//             }).populate("user", "name username profilePic");
+//         }
+
+//         res.render('connections.ejs', {
+//             loggedInUser,
+//             loggedInProfile,
+//             profileUser,
+//             profile: profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` } },
+//             isOwnProfile: isOwnProfile,
+//             followingList: followingList,
+//         });
+
+//     } catch (error) {
+//         next(error)
+//     }
+// })
+
+
 router.get('/post/:id', verifyToken, async (req, res, next) => {
     try {
         const user = await getUserDetails(req.user.id);
@@ -206,10 +254,6 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
                 return ppost
             })
         )
-
-        enrichedComments.map(async (c) => {
-
-        })
 
         let postUrl = req.url;
 

@@ -61,60 +61,60 @@ if (typeof post !== "undefined") {
 
 <% if (postArray.length > 0) { %>
 <% postArray.forEach(function (element) { %>
-<div class="bg-white p-6 rounded-2xl shadow-sm">
-  <div class="flex items-start space-x-4">
+<div class="bg-white p-3 sm:p-4 md:p-6 rounded-2xl shadow-sm overflow-hidden">
+  <div class="flex items-start gap-3 sm:gap-4 w-full min-w-0">
     <button class="userProfileBtn shrink-0" data-userprofile="/profile/<%= element.user?.username %>">
-      <img src="<%= element.profile?.profilepic?.url || `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name[0].toUpperCase()}` %>" alt="Avatar" class="rounded-full h-12 w-12 object-cover">
+      <img src="<%= element.profile?.profilepic?.url || `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name[0].toUpperCase()}` %>" alt="Avatar" class="rounded-full h-10 w-10 sm:h-12 sm:w-12 object-cover shrink-0">
     </button>
-
-    <div class="w-full">
+    <div class="w-full min-w-0">
       <!-- Header -->
-      <div class="flex justify-between items-center w-full">
-        <div class="flex items-center space-x-2">
+      <div class="flex justify-between items-start gap-3 w-full">
+        <div class="flex items-center gap-1 sm:gap-2 flex-wrap min-w-0">
           <button class="userProfileBtn" data-userprofile="/profile/<%= element.user?.username %>">
-            <span class="font-bold text-gray-900"><%= element.user?.name %></span>
-            <span class="text-gray-400 text-sm ml-1">@<%= element.user?.username %></span>
+            <span class="font-bold text-gray-900 text-sm sm:text-base break-words">
+              <%= element.user?.name %>
+            </span>
+            <span class="text-gray-400 text-xs sm:text-sm ml-1 break-all">
+              @<%= element.user?.username %>
+            </span>
           </button>
           <span class="text-gray-400 text-sm">•</span>
-          <span class="post-time text-gray-400 text-sm" data-time="<%= element.createdAt %>"></span>
+          <span class="post-time text-gray-400 text-xs sm:text-sm" data-time="<%= element.createdAt %>"></span>
         </div>
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center gap-2 shrink-0">
           <% if(!element.isOwnPost){ %>
-          <button data-postOwnerUserId="<%= element.user._id %>" class="followBtn px-7 py-2 text-sm font-semibold rounded-full transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2 border hover:shadow-sm <%= element.isFollowing ? 'bg-[#f8fafc] text-[#334155] border-[#dbe1e8]' : 'bg-white text-[#0f172a] border-[#dbe1e8] hover:bg-[#f8fafc]' %>">
-
+          <button data-postOwnerUserId="<%= element.user._id %>" class="followBtn px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-full transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-1.5 border whitespace-nowrap hover:shadow-sm <%= element.isFollowing ? 'bg-[#f8fafc] text-[#334155] border-[#dbe1e8]' : 'bg-white text-[#0f172a] border-[#dbe1e8] hover:bg-[#f8fafc]' %>">
             <% if(element.isFollowing){ %>
             <i class="ri-check-line text-base"></i>
             <% } else { %>
             <i class="ri-add-line text-base"></i>
             <% } %>
-
             <%= element.isFollowing ? "Following" : "Follow" %>
           </button>
           <span id="follow-err" class="follow-error error text-red-500 text-xs mt-1 block"></span>
           <% } %>
-
-          <button class="text-gray-400 hover:text-gray-600 transition-colors">
+          <button class="text-gray-400 hover:text-gray-600 transition-colors shrink-0">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
+              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z">
+              </path>
             </svg>
           </button>
         </div>
       </div>
-
       <button class="postPageBtn" data-postpageurl="/post/<%= element._id %>?from=<%= source %><% if(source === 'profile'){ %>&username=<%= profileUsername %><% } %>">
         <!-- Post Content -->
-        <p class="mt-2 text-gray-700 text-left"><%= element.thought %></p>
-
+        <p class="mt-2 text-gray-700 text-left text-sm sm:text-base break-words leading-relaxed">
+          <%= element.thought %>
+        </p>
         <!-- Media -->
         <div class="postdynamicimg">
           <% if (element.media?.url) { %>
-          <img src="<%= element.media.url %>" class="w-45 max-h-[350px] h-45 mt-4 object-cover rounded-xl" alt="Post image">
+          <img src="<%= element.media.url %>" class="w-full max-h-[220px] sm:max-h-[350px] mt-4 object-cover rounded-xl" alt="Post image">
           <% } %>
         </div>
       </button>
-
       <!-- Post Actions -->
-      <div class="flex justify-start items-center mt-5 space-x-8 text-gray-500">
+      <div class="flex justify-between sm:justify-start items-center mt-4 sm:mt-5 gap-4 sm:gap-8 text-gray-500 flex-wrap">
         <!-- Like Button -->
         <div class="like-button relative flex items-center space-x-2 
               <%= element.likes?.some(el => el.user?.toString() === user?._id?.toString()) ? 'text-pink-500' : 'hover:text-pink-500' %> 
@@ -122,16 +122,19 @@ if (typeof post !== "undefined") {
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
           </svg>
-          <div class="likes-count text-black"><%= element.likes?.length > 0 ? element.likes.length : "" %></div>
+          <div class="likes-count text-black">
+            <%= element.likes?.length > 0 ? element.likes.length : "" %>
+          </div>
         </div>
-
         <!-- Comment -->
         <button class="postPageBtn" data-postpageurl="/post/<%= element._id %>?from=<%= source %><% if(source === 'profile'){ %>&username=<%= profileUsername %><% } %>">
           <div class="comment-post flex items-center space-x-2 hover:text-blue-500 cursor-pointer" data-commentPostId="<%= element._id %>">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
             </svg>
-            <span class="comment-count"><%= element.comments?.length>0 ? element.comments.length : "" %></span>
+            <span class="comment-count">
+              <%= element.comments?.length>0 ? element.comments.length : "" %>
+            </span>
           </div>
         </button>
         <!-- Share -->
@@ -152,7 +155,6 @@ if (typeof post !== "undefined") {
 
 
 <script src="/js/postTimeFormatter.js"></script>
-<!-- <script src="/js/followSystem.js"></script> -->
 <script>
   document.querySelectorAll(".userProfileBtn").forEach(btn => {
     btn.addEventListener("click", () => {
