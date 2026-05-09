@@ -179,51 +179,55 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
 });
 
 
-// router.get('/profile/:username/followings', verifyToken, async (req, res, next) => {
-//     try {
-//         const loggedInUser = await getUserDetails(req.user.id);
-//         const loggedInProfile = await Profile.findOne({ user: req.user.id })
+router.get('/profile/:username/follows', verifyToken, async (req, res, next) => {
+    try {
+        const loggedInUser = await getUserDetails(req.user.id);
+        const loggedInProfile = await Profile.findOne({ user: req.user.id })
 
-//         const profileUser = await Users.findOne({ username: req.params.username })
-//             .select("name username followingCount followersCount");
-//         if (!profileUser) {
-//             throw new BadRequestError("Profile user not found.");
-//         }
+        const profileUser = await Users.findOne({ username: req.params.username })
+            .select("name username followingCount followersCount");
+        if (!profileUser) {
+            throw new BadRequestError("Profile user not found.");
+        }
 
-//         const isOwnProfile = profileUser._id.toString() === req.user.id.toString();
+        const isOwnProfile = profileUser._id.toString() === req.user.id.toString();
 
-//         const profile = await Profile.findOne({ user: profileUser._id })
-//         if (!profile) throw new BadRequestError("Profile not found.");
+        const profile = await Profile.findOne({ user: profileUser._id })
+        if (!profile) throw new BadRequestError("Profile not found.");
 
-//         let likedPosts = [];
-//         if (isOwnProfile && profile?.likes?.length) {
-//             likedPosts = await Posts.find({
-//                 _id: { $in: profile.likes }
-//             })
-//                 .populate("user", "name username")
-//                 .sort({ createdAt: -1 });
-//         }
+        let followingList = [];
+        if (profile?.followings?.length) {
+            followingList = await Users.find({ _id: { $in: profile.followings } });
+        }
+        console.log(followingList);
 
-//         let followingList = [];
-//         if (profile?.followings?.length) {
-//             followingList = await profile.followings?.map((fl) => {
-//                 fl.id;
-//             }).populate("user", "name username profilePic");
-//         }
+        const followingUserProfiles = await Profile.find({
+            user: { $in: profile.followings }
+        });
+        console.log(followingUserProfiles);
 
-//         res.render('connections.ejs', {
-//             loggedInUser,
-//             loggedInProfile,
-//             profileUser,
-//             profile: profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` } },
-//             isOwnProfile: isOwnProfile,
-//             followingList: followingList,
-//         });
 
-//     } catch (error) {
-//         next(error)
-//     }
-// })
+        followingList = followingList.map(p => ({
+            ...p.toObject(),
+            isFollowing: loggedInProfile.followings.some(
+                id => id.toString() === p._id.toString()
+            )
+        }));
+
+        res.render('connections.ejs', {
+            loggedInUser,
+            loggedInProfile,
+            profileUser,
+            followingUserProfiles,
+            profile: profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${profileUser.name[0].toUpperCase()}` } },
+            isOwnProfile: isOwnProfile,
+            followingList: followingList,
+        });
+
+    } catch (error) {
+        next(error)
+    }
+})
 
 
 router.get('/post/:id', verifyToken, async (req, res, next) => {
