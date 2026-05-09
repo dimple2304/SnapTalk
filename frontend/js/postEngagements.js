@@ -14,7 +14,6 @@ likeButtonArray.forEach((button, i) => {
     button.addEventListener("click", async function () {
         const postId = this.getAttribute("data-postid");
         const userIdOfFeed = this.getAttribute("data-userIdOfFeed").toString();
-        console.log("user:", userIdOfFeed);
 
         const res = await fetch('/api/create/like-post', {
             method: "POST",
@@ -34,8 +33,6 @@ likeButtonArray.forEach((button, i) => {
         } else {
             likesCount[i].innerHTML = "";
         }
-
-        console.log("likes", data.likes);
 
         let isLiked = false;
         data.likes.map((e) => {
@@ -111,7 +108,6 @@ if (commentInput) {
 
 }
 
-console.log(commentDeleteBtn);
 
 commentDeleteBtn.forEach(btn => {
     btn.addEventListener("click", async function (e) {
@@ -122,7 +118,6 @@ commentDeleteBtn.forEach(btn => {
             if(!commentPostDltId) return;
             
             const commentId = btn.getAttribute("data-commentId");
-            console.log(commentId);
             
             const inputs = {
                 postId: commentPostDltId,

@@ -30,8 +30,6 @@ export const createPost = async (req, res, next) => {
             isMedia: media
         })
 
-
-
         const savedPost = await newPost.save();
         if (!savedPost) throw new InternalServerError("Something went wrong.");
 

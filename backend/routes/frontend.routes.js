@@ -52,6 +52,7 @@ router.get('/feed', verifyToken, async (req, res, next) => {
         let isOwnPost;
         posts.map(async (p) => {
             p.isOwnPost = p.user._id.toString() === req.user.id.toString();
+            p.isFollowing = profile.followings.includes(p.user._id);
         })
 
         res.render("feedpage", {
@@ -74,7 +75,7 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
         const loggedInProfile = await Profile.findOne({ user: req.user.id })
 
         const profileUser = await Users.findOne({ username: req.params.username })
-            .select("name username");
+            .select("name username followingCount followersCount");
 
         if (!profileUser) {
             return res.status(404).send("User not found");
@@ -98,7 +99,20 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
                 .sort({ createdAt: -1 });
         }
 
-        
+        if (isOwnProfile) {
+            likedPosts.map(async (lp) => {
+                lp.isOwnPost = lp.user._id.toString() === req.user.id.toString();
+                lp.isFollowing = loggedInProfile.followings.includes(lp.user._id)
+            })
+        }
+
+        if (!isOwnProfile) {
+            userPosts.map(async (p) => {
+                p.isFollowing = loggedInProfile.followings.includes(p.user._id);
+            })
+            profile.isFollowing = loggedInProfile.followings.includes(profile.user._id);
+        }
+
         const allPosts = [...userPosts, ...likedPosts];
 
         let isOwnPost;
@@ -155,7 +169,7 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
             likedPosts: enrichedLikedPosts,
             isOwnProfile,
             source: isOwnProfile ? "profile" : "otherProfile",
-            profileUsername: profileUser.username
+            profileUsername: profileUser.username,
         });
 
     } catch (err) {
@@ -181,6 +195,10 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
         const userProfile = await Profile.findOne({ user: post.user._id });
         post.profile = userProfile.profilepic.url ? userProfile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` } }
 
+        if (!isOwnPost) {
+            post.isFollowing = loggedInProfile?.followings?.includes(userProfile.user._id);
+        }
+
         const enrichedComments = await Promise.all(
             post.comments.map(async (ppost) => {
                 const userProfile = await Profile.findOne({ user: ppost.user._id });
@@ -188,7 +206,7 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
                 return ppost
             })
         )
-        
+
         enrichedComments.map(async (c) => {
 
         })

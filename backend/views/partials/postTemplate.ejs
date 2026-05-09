@@ -47,6 +47,7 @@
     animation: burst 0.6s ease-out forwards;
   }
 </style>
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 <% 
 // If a single post is passed in, wrap it as an array for unified handling
 let postArray = [];
@@ -65,7 +66,7 @@ if (typeof post !== "undefined") {
     <button class="userProfileBtn shrink-0" data-userprofile="/profile/<%= element.user?.username %>">
       <img src="<%= element.profile?.profilepic?.url || `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name[0].toUpperCase()}` %>" alt="Avatar" class="rounded-full h-12 w-12 object-cover">
     </button>
-    
+
     <div class="w-full">
       <!-- Header -->
       <div class="flex justify-between items-center w-full">
@@ -79,9 +80,17 @@ if (typeof post !== "undefined") {
         </div>
         <div class="flex items-center space-x-4">
           <% if(!element.isOwnPost){ %>
-          <button class="px-5 py-1.5 bg-black text-white text-sm font-bold rounded-full hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
-            Follow
+          <button data-postOwnerUserId="<%= element.user._id %>" class="followBtn px-7 py-2 text-sm font-semibold rounded-full transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2 border hover:shadow-sm <%= element.isFollowing ? 'bg-[#f8fafc] text-[#334155] border-[#dbe1e8]' : 'bg-white text-[#0f172a] border-[#dbe1e8] hover:bg-[#f8fafc]' %>">
+
+            <% if(element.isFollowing){ %>
+            <i class="ri-check-line text-base"></i>
+            <% } else { %>
+            <i class="ri-add-line text-base"></i>
+            <% } %>
+
+            <%= element.isFollowing ? "Following" : "Follow" %>
           </button>
+          <span id="follow-err" class="follow-error error text-red-500 text-xs mt-1 block"></span>
           <% } %>
 
           <button class="text-gray-400 hover:text-gray-600 transition-colors">
@@ -143,6 +152,7 @@ if (typeof post !== "undefined") {
 
 
 <script src="/js/postTimeFormatter.js"></script>
+<!-- <script src="/js/followSystem.js"></script> -->
 <script>
   document.querySelectorAll(".userProfileBtn").forEach(btn => {
     btn.addEventListener("click", () => {
