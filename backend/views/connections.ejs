@@ -88,46 +88,19 @@
       <div class="divide-y divide-slate-100">
         <!-- Followers Section -->
         <div id="section-followers" class="tab-pane">
+          <% if(followerList.length) {%>
+          <% followerList.forEach((list) => {%>
           <!-- Example User Row -->
           <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
             <div class="flex items-center gap-3">
-              <img src="https://placehold.co/100x100/1d4ed8/ffffff?text=A" class="z-10 rounded-full h-12 w-12 border border-slate-200" alt="Avatar">
-              <div>
-                <h4 class="font-bold text-sm text-gray-900 capitalize">Amarjot Kaur</h4>
-                <p class="text-xs text-gray-500">@amar_codes</p>
-              </div>
-            </div>
-            <!-- Professional Button Style -->
-            <button class="px-6 py-1.5 text-xs font-semibold rounded-full border border-slate-300 hover:bg-black hover:text-white hover:border-black transition-all active:scale-95 shadow-sm">
-              Follow
-            </button>
-          </div>
-          <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
-            <div class="flex items-center gap-3">
-              <img src="https://placehold.co/100x100/475569/ffffff?text=D" class="z-10 rounded-full h-12 w-12 border border-slate-200" alt="Avatar">
-              <div>
-                <h4 class="font-bold text-sm text-gray-900 capitalize">Dev Singh</h4>
-                <p class="text-xs text-gray-500">@root_access</p>
-              </div>
-            </div>
-            <button class="px-6 py-1.5 text-xs font-semibold rounded-full bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 transition-all active:scale-95">
-              Following
-            </button>
-          </div>
-        </div>
-
-        <!-- Following Section (Hidden by default) -->
-        <div id="section-following" class="tab-pane hidden">
-          <% if(followingList.length) {%>
-          <% followingList.forEach((list) => { %>
-          <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
-            <div class="flex items-center gap-3">
-              <img src=<%= followingUserProfiles?.profilePic?.url? followingUserProfiles?.profilePic?.url:`https://placehold.co/128x128/1d4ed8/ffffff?text=${list.name[0].toUpperCase()}` %> class="z-10 rounded-full h-12 w-12 border border-slate-200" alt="Avatar">
+              <img src=<%= followerUserProfile?.profilePic?.url? followerUserProfile?.profilePic?.url:`https://placehold.co/128x128/1d4ed8/ffffff?text=${list.name[0].toUpperCase()}` %> class="z-10 rounded-full h-12 w-12 border border-slate-200" alt="Avatar">
               <div>
                 <h4 class="font-bold text-sm text-gray-900 capitalize"><%= list.name %></h4>
                 <p class="text-xs text-gray-500">@<%= list.username %></p>
               </div>
             </div>
+            <!-- Professional Button Style -->
+            <% if(!list.isItMe) {%>
             <button data-profileOwnerUserId="<%= list._id %>" class="followBtnFromConnections px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-full transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-1.5 border whitespace-nowrap hover:shadow-sm <%= list.isFollowing ? 'bg-[#f8fafc] text-[#334155] border-[#dbe1e8]' : 'bg-white text-[#0f172a] border-[#dbe1e8] hover:bg-[#f8fafc]' %>">
               <% if(list.isFollowing){ %>
               <i class="ri-check-line text-base"></i>
@@ -136,19 +109,47 @@
               <% } %>
               <%= list.isFollowing ? "Following" : "Follow" %>
             </button>
+            <% } %>
           </div>
-          <% }) %>
-          <% }else{ %>
-          <span class="flex items-center justify-center mt-[50px] text-[20px] text-gray-500 text-center px-4">
-            You're not following anyone yet.
-          </span>
+          <% })  %>
           <% } %>
         </div>
       </div>
-    </main>
+      <!-- Following Section (Hidden by default) -->
+      <div id="section-following" class="tab-pane hidden">
+        <% if(followingList.length) {%>
+        <% followingList.forEach((list) => { %>
+        <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
+          <a href="/profile/<%= list.username %>?from=connections&connectionOwner=<%= profileUser.username%>" class="flex items-center gap-3">
+            <img src=<%= list?.profilepic? list?.profilepic:`https://placehold.co/128x128/1d4ed8/ffffff?text=${list.name[0].toUpperCase()}` %> class="z-10 rounded-full h-12 w-12 border border-slate-200" alt="Avatar">
+            <div>
+              <h4 class="font-bold text-sm text-gray-900 capitalize"><%= list.name %></h4>
+              <p class="text-xs text-gray-500">@<%= list.username %></p>
+            </div>
+          </a>
+          <% if(!list.isItMe){%>
+          <button data-profileOwnerUserId="<%= list._id %>" class="followBtnFromConnections px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-full transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-1.5 border whitespace-nowrap hover:shadow-sm <%= list.isFollowing ? 'bg-[#f8fafc] text-[#334155] border-[#dbe1e8]' : 'bg-white text-[#0f172a] border-[#dbe1e8] hover:bg-[#f8fafc]' %>">
+            <% if(list.isFollowing){ %>
+            <i class="ri-check-line text-base"></i>
+            <% } else { %>
+            <i class="ri-add-line text-base"></i>
+            <% } %>
+            <%= list.isFollowing ? "Following" : "Follow" %>
+          </button>
+          <%} %>
+        </div>
+        <% }) %>
+        <% }else{ %>
+        <span class="flex items-center justify-center mt-[50px] text-[20px] text-gray-500 text-center px-4">
+          You're not following anyone yet.
+        </span>
+        <% } %>
+      </div>
+  </div>
+  </main>
 
-    <!-- Right Column (Width fix: Removed wrapper and lg:w-1/4 to exactly match profile.ejs logic) -->
-    <%- include('partials/rightColumn') %>
+  <!-- Right Column (Width fix: Removed wrapper and lg:w-1/4 to exactly match profile.ejs logic) -->
+  <%- include('partials/rightColumn') %>
 
   </div>
 

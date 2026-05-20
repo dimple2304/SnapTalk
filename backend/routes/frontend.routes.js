@@ -53,7 +53,7 @@ router.get('/feed', verifyToken, async (req, res, next) => {
         let isOwnPost;
         posts.map(async (p) => {
             p.isOwnPost = p.user._id.toString() === req.user.id.toString();
-            p.isFollowing = profile.followings.includes(p.user._id);
+            p.isFollowing = profile?.followings?.includes(p.user._id);
         })
 
         res.render("feedpage", {
@@ -171,6 +171,8 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
             isOwnProfile,
             source: isOwnProfile ? "profile" : "otherProfile",
             profileUsername: profileUser.username,
+            from: req.query.from || "feed",
+            connectionOwner: req.query.connectionOwner || null
         });
 
     } catch (err) {
@@ -199,7 +201,6 @@ router.get('/profile/:username/follows', verifyToken, async (req, res, next) => 
         if (profile?.followings?.length) {
             followingList = await Users.find({ _id: { $in: profile.followings } });
         }
-        console.log(followingList);
 
         const followingUserProfiles = await Profile.find({
             user: { $in: profile.followings }
@@ -207,18 +208,57 @@ router.get('/profile/:username/follows', verifyToken, async (req, res, next) => 
         console.log(followingUserProfiles);
 
 
-        followingList = followingList.map(p => ({
+        followingList = followingList.map(user => {
+            const profileData = followingUserProfiles.find(
+                p => p.user.toString() === user._id.toString()
+            );
+
+            return {
+                ...user.toObject(),
+                profilepic: profileData?.profilepic?.url || null,
+                isFollowing: loggedInProfile.followings.some(
+                    id => id.toString() === user._id.toString()
+                )
+            };
+        });
+
+        let followerList = [];
+        if (profile?.followers?.length) {
+            followerList = await Users.find({ _id: { $in: profile.followers } })
+        }
+        // console.log(followerList);
+        const followerUserProfile = await Profile.find({
+            user: { $in: profile.followers }
+        })
+        // console.log(followerUserProfile);
+        followerList = followerList.map(p => ({
             ...p.toObject(),
             isFollowing: loggedInProfile.followings.some(
                 id => id.toString() === p._id.toString()
             )
         }));
 
+        if (!isOwnProfile) {
+            followingList = followingList.map(fl => ({
+                ...fl,
+                isItMe: fl._id.toString() === loggedInUser._id.toString()
+            }));
+
+            followerList = followerList.map(fl => ({
+                ...fl,
+                isItMe: fl._id.toString() === loggedInUser._id.toString()
+            }));
+        }
+
+
+
         res.render('connections.ejs', {
             loggedInUser,
             loggedInProfile,
             profileUser,
             followingUserProfiles,
+            followerList,
+            followerUserProfile,
             profile: profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${profileUser.name[0].toUpperCase()}` } },
             isOwnProfile: isOwnProfile,
             followingList: followingList,
