@@ -57,7 +57,7 @@ router.get('/feed', verifyToken, async (req, res, next) => {
         })
 
         const followingUserPosts = posts.filter(pst => pst.isFollowing);
-        
+
         res.render("feedpage", {
             loggedInProfile,
             loggedInUser,
@@ -208,7 +208,7 @@ router.get('/profile/:username/follows', verifyToken, async (req, res, next) => 
         const followingUserProfiles = await Profile.find({
             user: { $in: profile.followings }
         });
-        console.log(followingUserProfiles);
+        // console.log(followingUserProfiles);
 
 
         followingList = followingList.map(user => {
@@ -234,12 +234,17 @@ router.get('/profile/:username/follows', verifyToken, async (req, res, next) => 
             user: { $in: profile.followers }
         })
         // console.log(followerUserProfile);
-        followerList = followerList.map(p => ({
-            ...p.toObject(),
-            isFollowing: loggedInProfile.followings.some(
-                id => id.toString() === p._id.toString()
-            )
-        }));
+        followerList = followerList.map(user => {
+            const profileData = followerUserProfile.find(
+                p => p.user.toString() === user._id.toString()
+            );
+
+            return {
+                ...user.toObject(),
+                profilepic: profileData?.profilepic?.url || null,
+            };
+        });
+        console.log(followerList)
 
         if (!isOwnProfile) {
             followingList = followingList.map(fl => ({
@@ -252,9 +257,6 @@ router.get('/profile/:username/follows', verifyToken, async (req, res, next) => 
                 isItMe: fl._id.toString() === loggedInUser._id.toString()
             }));
         }
-
-
-
         res.render('connections.ejs', {
             loggedInUser,
             loggedInProfile,

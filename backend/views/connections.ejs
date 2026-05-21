@@ -93,11 +93,13 @@
           <!-- Example User Row -->
           <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
             <div class="flex items-center gap-3">
-              <img src=<%= followerUserProfile?.profilePic?.url? followerUserProfile?.profilePic?.url:`https://placehold.co/128x128/1d4ed8/ffffff?text=${list.name[0].toUpperCase()}` %> class="z-10 rounded-full h-12 w-12 border border-slate-200" alt="Avatar">
-              <div>
-                <h4 class="font-bold text-sm text-gray-900 capitalize"><%= list.name %></h4>
-                <p class="text-xs text-gray-500">@<%= list.username %></p>
-              </div>
+              <a href="/profile/<%= list.username %>?from=connections&connectionOwner=<%= profileUser.username%>" class="flex items-center gap-3">
+                <img src="<%= list?.profilepic? list.profilepic:`https://placehold.co/128x128/1d4ed8/ffffff?text=${list.name[0].toUpperCase()}` %>" class="z-10 rounded-full h-12 w-12 border border-slate-200" alt="Avatar">
+                <div>
+                  <h4 class="font-bold text-sm text-gray-900 capitalize"><%= list.name %></h4>
+                  <p class="text-xs text-gray-500">@<%= list.username %></p>
+                </div>
+              </a>
             </div>
             <!-- Professional Button Style -->
             <% if(!list.isItMe) {%>
@@ -113,9 +115,15 @@
           </div>
           <% })  %>
           <% } else{%>
+          <% if(isOwnProfile){ %>
           <span class="flex items-center justify-center mt-[50px] text-[20px] text-gray-500 text-center px-4">
             you will see all people who follows you here.
           </span>
+          <% } else{%>
+          <span class="flex items-center justify-center mt-[50px] text-[20px] text-gray-500 text-center px-4">
+            This account has not any follower yet.
+          </span>
+          <% } %>
           <% } %>
         </div>
       </div>
@@ -144,9 +152,15 @@
         </div>
         <% }) %>
         <% }else{ %>
+        <% if(isOwnProfile){ %>
         <span class="flex items-center justify-center mt-[50px] text-[20px] text-gray-500 text-center px-4">
           You're not following anyone yet.
         </span>
+        <% }else{ %>
+        <span class="flex items-center justify-center mt-[50px] text-[20px] text-gray-500 text-center px-4">
+          This account is not following anyone yet.
+        </span>
+        <% } %>
         <% } %>
       </div>
   </div>
@@ -154,16 +168,10 @@
 
   <!-- Right Column (Width fix: Removed wrapper and lg:w-1/4 to exactly match profile.ejs logic) -->
   <%- include('partials/rightColumn') %>
+  <%- include('partials/mobileNavigationBar') %>
 
   </div>
 
-  <!-- Mobile Nav Placeholder -->
-  <div class="lg:hidden fixed bottom-0 w-full h-16 bg-white border-t border-slate-200 z-50 flex items-center justify-around">
-    <i class="ri-home-line text-xl"></i>
-    <i class="ri-search-line text-xl"></i>
-    <i class="ri-notification-line text-xl"></i>
-    <i class="ri-user-fill text-xl text-blue-600"></i>
-  </div>
 
   <script src="/js/followSystem.js"></script>
   <script>

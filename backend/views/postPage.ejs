@@ -33,7 +33,7 @@
       </article>
 
       <form class="flex space-x-4 p-4">
-        <img class="h-10 w-10 rounded-full object-cover" src="<%= profile?.profilepic.url ? profile.profilepic?.url : 'https://placehold.co/100x100' %>" alt="Your Avatar">
+        <img class="h-10 w-10 rounded-full object-cover" src="<%= profile?.profilepic.url ? profile.profilepic?.url : `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` %> %>" alt="Your Avatar">
         <div class="flex-1">
           <input type="text" class="comment-input w-full p-3 bg-slate-100 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Post your comment"></input>
           <span id="comment-error" class="error text-red-600 text-sm"></span>
