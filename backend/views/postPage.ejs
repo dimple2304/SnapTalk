@@ -48,7 +48,7 @@
         </div>
       </form>
 
-      <section class="">
+      <section class="pb-20">
         <% if(post?.comments?.length > 0){ %>
         <% enrichedComments.forEach(element => { %>
         <article class="flex space-x-4 p-3 hover:bg-slate-50 transition-colors group">
@@ -96,6 +96,7 @@
     </main> <%- include('partials/rightColumn') %>
 
   </div>
+  <%- include('partials/mobileNavigationBar') %>
 
   <script src="/js/postEngagements.js"></script>
   <script src="/js/followSystem.js"></script>

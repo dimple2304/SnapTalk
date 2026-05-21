@@ -5,7 +5,9 @@
     </div>
   </div>
   <div class="flex items-center space-x-4">
-    <img src=<%= profile.profilepic.url ? profile.profilepic.url : `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name[0].toUpperCase()}` %> alt="Your Avatar" class="rounded-full h-12 w-12">
+    <a href="/profile/<%= loggedInUser.username %>">
+    <img src=<%= profile.profilepic.url ? profile.profilepic.url : `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name[0].toUpperCase()}` %> alt="Your Avatar" class="rounded-full h-12 w-12 object-cover shrink-0">
+    </a>
     <textarea id="thought" name="thought" rows="" class="bg-slate-100 w-full text-gray-700 placeholder-gray-500 focus:outline-none rounded-2xl py-3 px-5" placeholder="Share something..."></textarea>
   </div>
 

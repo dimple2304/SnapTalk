@@ -6,6 +6,18 @@ import { imagekit } from "../utils/imagekit.js";
 import { Posts } from "../models/post.models.js";
 import { Users } from "../models/user.models.js";
 
+export const logout = async (req, res, next) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax"
+    });
+    return res.status(200).json({
+        success: true,
+        message: "logged out successfully."
+    })
+}
+
 export const editDetails = async (req, res, next) => {
     try {
         const { url, fileId, name, username, bio, linkLabel, link } = req.body;
@@ -107,15 +119,15 @@ export const followSystem = async (req, res, next) => {
 
         const loggedInUser = await getUserDetails(req.user.id);
         if (!loggedInUser) throw new BadRequestError("User not found.");
-        
+
         const postOwnerId = postOwnerUserId;
-        
+
         if (!postOwnerId) throw new BadRequestError("Post not found or has no owner.");
 
         let loggedInUserProfile = await Profile.findOne({ user: req.user.id });
         let followingUser = await Users.findOne({ _id: postOwnerId });
         if (!followingUser) throw new BadRequestError("User to follow not found.");
-        
+
         let followingUserProfile = await Profile.findOne({ user: followingUser._id.toString() });
 
         if (!loggedInUserProfile) {
@@ -141,14 +153,14 @@ export const followSystem = async (req, res, next) => {
         if (!alreadyFollowing) {
             loggedInUserProfile.followings.push(postOwnerId);
             loggedInUser.followingCount = (loggedInUser.followingCount || 0) + 1;
-            
+
             followingUserProfile.followers.push(loggedInUser._id);
             followingUser.followersCount = (followingUser.followersCount || 0) + 1;
         } else {
             loggedInUserProfile.followings = loggedInUserProfile.followings?.filter(uf => uf?.toString() !== postOwnerId?.toString());
             loggedInUser.followingCount = Math.max(0, (loggedInUser.followingCount || 1) - 1);
-            
-            followingUserProfile.followers = followingUserProfile.followers?.filter(rf => rf?.toString() !== loggedInUser._id?.toString()); 
+
+            followingUserProfile.followers = followingUserProfile.followers?.filter(rf => rf?.toString() !== loggedInUser._id?.toString());
             followingUser.followersCount = Math.max(0, (followingUser.followersCount || 1) - 1);
         }
 
@@ -156,7 +168,7 @@ export const followSystem = async (req, res, next) => {
         const savedFup = await followingUserProfile.save();
         const savedLu = await loggedInUser.save();
         const savedFu = await followingUser.save();
-        if(!savedLiup || !savedFup || !savedLu || !savedFu) throw new InternalServerError("Something went wrong in saving.");
+        if (!savedLiup || !savedFup || !savedLu || !savedFu) throw new InternalServerError("Something went wrong in saving.");
 
         return res.status(200).json({
             success: true,

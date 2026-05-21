@@ -56,12 +56,15 @@ router.get('/feed', verifyToken, async (req, res, next) => {
             p.isFollowing = profile?.followings?.includes(p.user._id);
         })
 
+        const followingUserPosts = posts.filter(pst => pst.isFollowing);
+        
         res.render("feedpage", {
             loggedInProfile,
             loggedInUser,
             user,
             profile: profile ? profile : { profilepic: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` },
             posts: enrichedPosts,
+            followingUserPosts,
             source: "feed"
         });
     } catch (err) {
