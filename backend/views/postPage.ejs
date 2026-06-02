@@ -133,6 +133,12 @@
     el.addEventListener("click", function() {
       commentDltBtn[i].classList.toggle("hidden");
     })
+
+    document.addEventListener("click", function(e) {
+      if (!el.contains(e.target) && !commentDltBtn[i].contains(e.target)) {
+        commentDltBtn[i].classList.add("hidden");
+      }
+    })
   })
   // if (commentMenus) {
   //   document.addEventListener("click", function(e) {
