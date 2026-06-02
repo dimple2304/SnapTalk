@@ -93,12 +93,24 @@ if (typeof post !== "undefined") {
           </button>
           <span id="follow-err" class="follow-error error text-red-500 text-xs mt-1 block"></span>
           <% } %>
-          <button class="text-gray-400 hover:text-gray-600 transition-colors shrink-0">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z">
-              </path>
-            </svg>
-          </button>
+          <% if(element.isOwnPost){ %>
+          <div class="postMenu relative ml-auto">
+            <button class="text-gray-400 hover:text-gray-600 transition-colors shrink-0">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z">
+                </path>
+              </svg>
+            </button>
+            <div id="menu-<%= element._id %>" data-postId="<%= element._id %>" class="postDeleteBtn hidden absolute right-0 mt-1 w-32 bg-white border border-slate-100 rounded-md shadow-lg z-10">
+              <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 flex items-center gap-2 rounded-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Delete
+              </button>
+            </div>
+          </div>
+          <% } %>
         </div>
       </div>
       <button class="postPageBtn" data-postpageurl="/post/<%= element._id %>?from=<%= source %><% if(source === 'profile'){ %>&username=<%= profileUsername %><% } %>">
@@ -155,6 +167,7 @@ if (typeof post !== "undefined") {
 
 
 <script src="/js/postTimeFormatter.js"></script>
+<script src="/js/deletePost.js"></script>
 <script>
   document.querySelectorAll(".userProfileBtn").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -175,29 +188,6 @@ if (typeof post !== "undefined") {
       window.location.href = url;
     }
   })
-
-  /* This is local scop post tine formatter that is replaced by global 
-  postTimeFormatter.js 
-  function getPostTime(dateString) {
-
-    const postDate = new Date(dateString);
-    const nowDate = new Date();
-    const diff = Math.floor(nowDate - postDate) / 1000;
-
-    if (diff < 60) return "Just now";
-    if (diff < 3600) return Math.floor(diff / 60) + "m ago";
-    if (diff < 86400) return Math.floor(diff / 3600) + "h ago";
-    if (diff < 604800) return Math.floor(diff / 86400) + "d ago";
-
-    return postDate.toLocaleDateString();
-  }
-
-    document.querySelectorAll(".post-time").forEach(element => {
-      const rawDate = element.dataset.time;
-      element.innerHTML = getPostTime(rawDate);
-
-    });
-  */
 
   document.querySelectorAll(".like-button").forEach(button => {
     button.addEventListener("click", function() {

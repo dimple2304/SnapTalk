@@ -1,6 +1,7 @@
 import { Posts } from "../models/post.models.js";
 import { Profile } from "../models/profile.models.js";
-import { BadRequestError, ConflictError, InternalServerError } from "../utils/customErrorHandler/customError.js";
+import { Users } from "../models/user.models.js";
+import { BadRequestError, ConflictError, InternalServerError, UnauthorizedError } from "../utils/customErrorHandler/customError.js";
 import { getUserDetails } from "./auth.controllers.js";
 
 const extractHashtags = (text) => {
@@ -166,16 +167,16 @@ export const deleteComment = async (req, res, next) => {
         const comment = post.comments.find(c =>
             c._id.toString() === commentId.toString()
         )
-        if(!comment) throw new BadRequestError("Comment not found.");
+        if (!comment) throw new BadRequestError("Comment not found.");
 
-        if(comment.user.toString() !== req.user.id && post.user.toString() !== req.user.id){
+        if (comment.user.toString() !== req.user.id && post.user.toString() !== req.user.id) {
             throw new BadRequestError("Not authorized to delete this comment.");
         }
 
         post.comments = post.comments.filter(c => c?._id?.toString() !== commentId.toString());
 
         const savedPostComments = await post.save();
-        if(!savedPostComments) throw new InternalServerError("Something went wrong.");
+        if (!savedPostComments) throw new InternalServerError("Something went wrong.");
 
         return res.status(200).json({
             success: true, message: "Comment deleted successfully.",
@@ -187,9 +188,41 @@ export const deleteComment = async (req, res, next) => {
 }
 
 
-export const deletePost = async(req, res, next) => {
+export const deletePost = async (req, res, next) => {
     try {
-        
+        const { postId } = req.query;
+        if (!postId) throw new BadRequestError("Post not found.");
+
+        const post = await Posts.findOne({ _id: postId });
+        if (!post) throw new BadRequestError("Post not found.");
+
+        const ownerUser = post.user.toString() === req.user.id.toString();
+
+        if (post.user.toString() === req.user.id.toString()) {
+            const deletedPost = await post.deleteOne();
+            if (!deletedPost) throw new InternalServerError("Something went wrong in post deleting.");
+            const postOwnerProfile = await Profile.findOne({ user: post.user });
+            if (!postOwnerProfile) throw new BadRequestError("Owner profile not found.");
+            console.log(postOwnerProfile);
+
+            postOwnerProfile.uploads = postOwnerProfile.uploads.filter(
+                p => p.toString() !== postId.toString()
+            )
+            await Profile.updateMany(
+                { likes: postId },
+                { $pull: { likes: postId } }
+            );
+
+            const savedProfile = await postOwnerProfile.save();
+            if (!savedProfile) throw new InternalServerError("Something went wrong.");
+        } else {
+            throw new UnauthorizedError("You are not authorized to delete this post.");
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Post deleted successfully",
+        })
     } catch (error) {
         next(error)
     }

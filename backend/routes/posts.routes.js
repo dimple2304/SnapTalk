@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyToken } from "../middlewares/auth.middlewares.js";
-import { comments, createPost, deleteComment, likes } from "../controllers/posts.controllers.js";
+import { comments, createPost, deleteComment, deletePost, likes } from "../controllers/posts.controllers.js";
 
 const router = express.Router();
 
@@ -8,5 +8,6 @@ router.post("/create-post", verifyToken, createPost);
 router.post("/like-post", verifyToken, likes);
 router.post("/comment-post", verifyToken, comments);
 router.patch("/comment-delete", verifyToken, deleteComment);
+router.delete("/delete-post", verifyToken, deletePost);
 
 export default router;

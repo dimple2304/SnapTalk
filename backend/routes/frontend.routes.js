@@ -60,8 +60,6 @@ router.get('/feed', verifyToken, async (req, res, next) => {
 
         const allUsers = await getAllUsers();
         const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
-        console.log(allUsers);
-
 
         res.render("feedpage", {
             loggedInProfile,
