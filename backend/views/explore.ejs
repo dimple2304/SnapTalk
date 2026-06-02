@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,6 +26,7 @@
     }
   </style>
 </head>
+
 <body class="bg-slate-100 text-gray-800 font-sans pb-20 lg:pb-0">
   <div class="container mx-auto flex">
     <!-- Sidebar -->
@@ -34,33 +36,30 @@
     <!-- Main Section -->
     <main class="w-full lg:w-1/2 min-h-screen border-x border-slate-200 bg-slate-100">
       <!-- Header -->
-      <div
-        class="sticky top-0 z-20 bg-slate-100/80 backdrop-blur-md border-b border-slate-200 px-4 py-4">
+      <div class="sticky top-0 z-20 bg-slate-100/80 backdrop-blur-md border-b border-slate-200 px-4 py-4">
         <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">
           Explore
         </h2>
       </div>
       <!-- Search Area -->
       <div class="px-4 py-6">
-        <div
-          class="bg-white border-2 border-slate-300 rounded-[30px] p-5 shadow-sm">
+        <div class="bg-white border-2 border-slate-300 rounded-[30px] p-5 shadow-sm">
           <!-- Search Bar -->
-          <div class="flex gap-3">
-            <input
-              type="text"
-              placeholder="Search here..."
-              class="input-field flex-1 border-2 border-slate-300 rounded-2xl px-5 py-3 text-lg outline-none focus:border-indigo-400 bg-slate-50" />
-            <button
-              class="border-2 border-slate-300 rounded-2xl px-6 py-3 font-semibold text-lg bg-slate-50 hover:bg-slate-100 transition">
+          <div class="flex gap-3 items-start">
+            <div class="flex-1">
+              <input type="text" placeholder="Search here..." class="input-field w-full border-2 border-slate-300 rounded-2xl px-5 py-3 text-lg outline-none focus:border-indigo-400 bg-slate-50" />
+              <span id="search-user-error" class="error text-black-600 text-sm mt-2 ml-2 block"></span>
+            </div>
+            <button class="border-2 border-slate-300 rounded-2xl px-6 py-3 font-semibold text-lg bg-slate-50 hover:bg-slate-100 transition">
               Search
             </button>
-            <span id="search-user-error" class="error text-red-600 text-sm"></span>
           </div>
           <!-- Users -->
-          <div class="usersDiv mt-6 space-y-1">
+          <div class="usersDiv min-h-[80px]">
             <%- include('partials/spinner.ejs') %>
             <!-- User -->
           </div>
+
         </div>
       </div>
     </main>
@@ -72,4 +71,5 @@
 </body>
 <script src="/js/followSystem.js"></script>
 <script src="/js/explore.js"></script>
+
 </html>

@@ -185,3 +185,12 @@ export const deleteComment = async (req, res, next) => {
         next(err);
     }
 }
+
+
+export const deletePost = async(req, res, next) => {
+    try {
+        
+    } catch (error) {
+        next(error)
+    }
+}

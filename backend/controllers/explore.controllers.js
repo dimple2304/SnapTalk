@@ -12,19 +12,17 @@ export const searchUser = async (req, res, next) => {
                 $options: "i"
             }
         }).select("name username").limit(10);
+        if(!users.length) throw new BadRequestError("No user found with this name.");
 
         users = await Promise.all(
             users.map(async (u) => {
                 const profileData = await Profile.findOne({ user: u._id });
-                // console.log(profileData);
                 return {
                     ...u.toObject(),
                     profilepic: profileData?.profilepic?.url ? profileData.profilepic.url : `https://placehold.co/128x128/1d4ed8/ffffff?text=${u.name.split('')[0].toUpperCase()}`
                 }
             })
         )
-        // console.log(users);
-
 
         return res.status(200).json({
             success: true,

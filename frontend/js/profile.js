@@ -81,6 +81,11 @@ const settingsBtn = document.querySelector(".settingsBtn");
 settingsBtn.addEventListener("click", function () {
     logOutBtn.classList.toggle("hidden");
 })
+document.addEventListener("click", function (e) {
+    if (!settingsBtn.contains(e.target)) {
+        logOutBtn.classList.add("hidden");
+    }
+})
 logoutfunc(logOutBtn);
 
 
