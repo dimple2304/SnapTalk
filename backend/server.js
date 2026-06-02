@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.routes.js';
 import profileRoutes from './routes/profile.routes.js';
 import frontendRoutes from './routes/frontend.routes.js';
 import postRoutes from './routes/posts.routes.js';
+import exploreRoutes from './routes/explore.routes.js';
 import cookieParser from 'cookie-parser';
 import { globalErrorHandler } from './middlewares/globalErrorHandler.js';
 
@@ -31,6 +32,7 @@ app.use('/api/auth', authRoutes);
 app.use('/', frontendRoutes);
 app.use('/api/account', profileRoutes);
 app.use('/api/create', postRoutes);
+app.use('/api/explore', exploreRoutes);
 
 
 app.use(globalErrorHandler)

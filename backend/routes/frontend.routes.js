@@ -58,6 +58,11 @@ router.get('/feed', verifyToken, async (req, res, next) => {
 
         const followingUserPosts = posts.filter(pst => pst.isFollowing);
 
+        const allUsers = await getAllUsers();
+        const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
+        console.log(allUsers);
+
+
         res.render("feedpage", {
             loggedInProfile,
             loggedInUser,
@@ -65,9 +70,27 @@ router.get('/feed', verifyToken, async (req, res, next) => {
             profile: profile ? profile : { profilepic: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` },
             posts: enrichedPosts,
             followingUserPosts,
+            allUsers: updatedUsers,
             source: "feed"
         });
     } catch (err) {
+        next(err);
+    }
+})
+
+router.get('/explore', verifyToken, async (req, res, next) => {
+    try {
+        const loggedInUser = await getUserDetails(req.user.id);
+        const loggedInProfile = await Profile.findOne({ user: req.user.id })
+
+        const allUsers = await getAllUsers();
+        const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
+        res.render("explore", {
+            loggedInUser,
+            loggedInProfile,
+            allUsers: updatedUsers
+        });
+    } catch (error) {
         next(err);
     }
 })
@@ -163,6 +186,9 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
             uploads: []
         };
 
+        const allUsers = await getAllUsers();
+        const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
+
         res.render('profile/profile', {
             loggedInProfile: loggedInProfile || defaultProfile,
             loggedInUser,
@@ -175,7 +201,8 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
             source: isOwnProfile ? "profile" : "otherProfile",
             profileUsername: profileUser.username,
             from: req.query.from || "feed",
-            connectionOwner: req.query.connectionOwner || null
+            connectionOwner: req.query.connectionOwner || null,
+            allUsers: updatedUsers
         });
 
     } catch (err) {
@@ -208,8 +235,6 @@ router.get('/profile/:username/follows', verifyToken, async (req, res, next) => 
         const followingUserProfiles = await Profile.find({
             user: { $in: profile.followings }
         });
-        // console.log(followingUserProfiles);
-
 
         followingList = followingList.map(user => {
             const profileData = followingUserProfiles.find(
@@ -242,9 +267,11 @@ router.get('/profile/:username/follows', verifyToken, async (req, res, next) => 
             return {
                 ...user.toObject(),
                 profilepic: profileData?.profilepic?.url || null,
+                isFollowing: loggedInProfile.followings.some(
+                    id => id.toString() === user._id.toString()
+                )
             };
         });
-        console.log(followerList)
 
         if (!isOwnProfile) {
             followingList = followingList.map(fl => ({
@@ -257,6 +284,10 @@ router.get('/profile/:username/follows', verifyToken, async (req, res, next) => 
                 isItMe: fl._id.toString() === loggedInUser._id.toString()
             }));
         }
+
+        const allUsers = await getAllUsers();
+        const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
+
         res.render('connections.ejs', {
             loggedInUser,
             loggedInProfile,
@@ -267,6 +298,7 @@ router.get('/profile/:username/follows', verifyToken, async (req, res, next) => 
             profile: profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${profileUser.name[0].toUpperCase()}` } },
             isOwnProfile: isOwnProfile,
             followingList: followingList,
+            allUsers: updatedUsers
         });
 
     } catch (error) {
@@ -315,6 +347,9 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
             backTo = `/profile/${profileUsername}`;
         }
 
+        const allUsers = await getAllUsers();
+        const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
+
         res.render('postPage', {
             loggedInUser,
             loggedInProfile,
@@ -326,11 +361,57 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
             postUrl,
             backTo,
             source,
-            profileUsername
+            profileUsername,
+            allUsers: updatedUsers
         })
     } catch (err) {
         next(err);
     }
 })
+
+// to return all users
+export const getAllUsers = async (req, res, next) => {
+    try {
+        const users = await Users.find({});
+
+        return {
+            success: true,
+            count: users.length,
+            users
+        };
+
+    } catch (error) {
+        console.error("Error fetching users:", error);
+
+        return {
+            success: false,
+            message: "Failed to fetch users"
+        };
+    }
+};
+
+// to add profilepics of corresponding user in all users
+export const enrichUsersWithProfilePics = async (req, users, loggedInUserId = null) => {
+    const loggedInProfile = await Profile.findOne({ user: req?.user?.id });
+
+    const filteredUsers = loggedInUserId
+        ? users.filter(
+            u => u._id.toString() !== loggedInUserId.toString()
+        )
+        : users;
+    const updatedUsers = await Promise.all(
+        filteredUsers.map(async (u) => {
+            const profile = await Profile.findOne({ user: u._id });
+            return {
+                ...u._doc,
+                isFollowing: loggedInProfile?.followings?.includes(u._id) || false,
+                pp: profile?.profilepic?.url
+                    ? profile.profilepic.url
+                    : `https://placehold.co/40x40/1d4ed8/ffffff?text=${u.name?.charAt(0).toUpperCase()}`
+            };
+        })
+    );
+    return updatedUsers;
+};
 
 export default router;

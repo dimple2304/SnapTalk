@@ -4,6 +4,7 @@ const followBtnArray = Array.from(followBtn);
 const followError = document.querySelectorAll(".follow-error")
 const followErrorFromProfile = document.querySelector("#follow-error")
 const followBtnFromConnections = document.querySelectorAll(".followBtnFromConnections")
+const followBtnFromSidebar = document.querySelectorAll(".followBtnFromSidebar")
 
 if (followBtnFromConnections) {
     followBtnFromConnections.forEach((btns) => {
@@ -23,11 +24,13 @@ if (followBtnFromConnections) {
                 if (!res.ok) {
                     return;
                 }
-                if(!data.isFollowing){
+                if (!data.isFollowing) {
                     btns.innerHTML = `<i class="ri-add-line text-base"></i> Follow`;
-                }else{
+                } else {
                     btns.innerHTML = `<i class="ri-check-line text-base"></i> Following`
                 }
+
+                window.location.reload();
             } catch (error) {
                 return error;
             }
@@ -60,6 +63,32 @@ if (followBtnFromProfile) {
         } catch (error) {
             followErrorFromProfile.innerHTML = error.message || "An error occurred";
         }
+    })
+}
+
+if (followBtnFromSidebar) {
+    followBtnFromSidebar.forEach((btn) => {
+        btn.addEventListener("click", async function (e) {
+            try {
+                const postOwnerUserId = this.getAttribute("data-profileOwnerUserId");
+
+                const res = await fetch('/api/account/follow-system', {
+                    method: "PATCH",
+                    headers: { "Content-TYpe": "application/json" },
+                    body: JSON.stringify({ postOwnerUserId })
+                })
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    return;
+                }
+
+                window.location.reload();
+            } catch (error) {
+                console.log(error);
+            }
+        })
     })
 }
 

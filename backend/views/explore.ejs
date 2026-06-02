@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Explore / SnapTalk</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
   <style>
     ::-webkit-scrollbar {
       width: 6px;
@@ -27,7 +28,7 @@
 <body class="bg-slate-100 text-gray-800 font-sans pb-20 lg:pb-0">
   <div class="container mx-auto flex">
     <!-- Sidebar -->
-    <div id="sidebar-partial-call" class="hidden lg:block">
+    <div id="" class="">
       <%- include('partials/sidebar') %>
     </div>
     <!-- Main Section -->
@@ -48,29 +49,17 @@
             <input
               type="text"
               placeholder="Search here..."
-              class="flex-1 border-2 border-slate-300 rounded-2xl px-5 py-3 text-lg outline-none focus:border-indigo-400 bg-slate-50" />
+              class="input-field flex-1 border-2 border-slate-300 rounded-2xl px-5 py-3 text-lg outline-none focus:border-indigo-400 bg-slate-50" />
             <button
               class="border-2 border-slate-300 rounded-2xl px-6 py-3 font-semibold text-lg bg-slate-50 hover:bg-slate-100 transition">
               Search
             </button>
+            <span id="search-user-error" class="error text-red-600 text-sm"></span>
           </div>
           <!-- Users -->
-          <div class="mt-6 space-y-1">
+          <div class="usersDiv mt-6 space-y-1">
+            <%- include('partials/spinner.ejs') %>
             <!-- User -->
-            <div
-              class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-slate-100 transition cursor-pointer">
-              <img
-                src="https://i.pravatar.cc/100?img=12"
-                class="w-11 h-11 rounded-full object-cover" />
-              <div>
-                <h3 class="font-semibold text-gray-900">
-                  user 1
-                </h3>
-                <p class="text-sm text-gray-500">
-                  @userone
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -81,4 +70,6 @@
   <!-- Mobile Navigation -->
   <%- include('partials/mobileNavigationBar') %>
 </body>
+<script src="/js/followSystem.js"></script>
+<script src="/js/explore.js"></script>
 </html>

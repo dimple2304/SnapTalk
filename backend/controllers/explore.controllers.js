@@ -1,0 +1,37 @@
+import { Profile } from "../models/profile.models.js";
+import { Users } from "../models/user.models.js";
+import { BadRequestError, NotFoundError } from "../utils/customErrorHandler/customError.js";
+
+export const searchUser = async (req, res, next) => {
+    try {
+        const { searchQuery } = req.query;
+        // if (!searchQuery) throw new BadRequestError("Query not found");
+        let users = await Users.find({
+            name: {
+                $regex: searchQuery,
+                $options: "i"
+            }
+        }).select("name username").limit(10);
+
+        users = await Promise.all(
+            users.map(async (u) => {
+                const profileData = await Profile.findOne({ user: u._id });
+                // console.log(profileData);
+                return {
+                    ...u.toObject(),
+                    profilepic: profileData?.profilepic?.url ? profileData.profilepic.url : `https://placehold.co/128x128/1d4ed8/ffffff?text=${u.name.split('')[0].toUpperCase()}`
+                }
+            })
+        )
+        // console.log(users);
+
+
+        return res.status(200).json({
+            success: true,
+            count: users.length,
+            users: users || []
+        });
+    } catch (error) {
+        next(error)
+    }
+}
