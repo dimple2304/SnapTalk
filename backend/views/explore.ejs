@@ -30,7 +30,7 @@
 <body class="bg-slate-100 text-gray-800 font-sans pb-20 lg:pb-0">
   <div class="container mx-auto flex">
     <!-- Sidebar -->
-    <div id="" class="">
+    <div id="" class="hidden lg:block">
       <%- include('partials/sidebar') %>
     </div>
     <!-- Main Section -->
@@ -55,9 +55,11 @@
             </button>
           </div>
           <!-- Users -->
-          <div class="usersDiv min-h-[80px]">
+          <div class="relative">
             <%- include('partials/spinner.ejs') %>
-            <!-- User -->
+            <div class="usersDiv min-h-[80px]">
+              <!-- User -->
+            </div>
           </div>
 
         </div>

@@ -12,14 +12,14 @@
         <% allUsers.forEach(au => { %>
         <div class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 transition-colors duration-200">
           <a href="/profile/<%= au?.username %>">
-          <div class="flex items-center">
-            <img src="<%= au.pp?au.pp: `https://placehold.co/40x40/1d4ed8/ffffff?text=${au.name?.charAt(0).toUpperCase()}` %>" alt="Avatar" class="rounded-full h-10 w-10">
-            <div class="ml-3">
-              <p class="font-bold text-gray-800"><%= au.name %></p>
-              <p class="text-sm text-gray-400">@<%= au.username %></p>
+            <div class="flex items-center">
+              <img src="<%= au.pp?au.pp: `https://placehold.co/40x40/1d4ed8/ffffff?text=${au.name?.charAt(0).toUpperCase()}` %>" alt="Avatar" class="rounded-full h-10 w-10">
+              <div class="ml-3">
+                <p class="font-bold text-gray-800"><%= au.name %></p>
+                <p class="text-sm text-gray-400">@<%= au.username %></p>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
           <button data-profileOwnerUserId="<%= au._id %>" class="followBtnFromSidebar px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-full transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-1.5 border whitespace-nowrap hover:shadow-sm <%= au.isFollowing ? 'bg-[#f8fafc] text-[#334155] border-[#dbe1e8]' : 'bg-white text-[#0f172a] border-[#dbe1e8] hover:bg-[#f8fafc]' %>">
             <% if(au.isFollowing){ %>
             <i class="ri-check-line text-base"></i>
@@ -73,5 +73,3 @@
       </div> -->
     </div>
 </aside>
-
-<!-- <script src="/js/followSystem.js"></script> -->

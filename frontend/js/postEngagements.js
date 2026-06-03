@@ -41,11 +41,21 @@ likeButtonArray.forEach((button, i) => {
             }
 
         })
+
         console.log("isLiked:", isLiked);
 
         if (isLiked) {
             button.classList.add("text-pink-500");
             button.classList.remove("hover:text-pink-500");
+
+            if (data.receiver) {
+                const permission = await Notification.requestPermission();
+                if (permission === "granted") {
+                    new Notification("SnapTalk", {
+                        body: `new like`
+                    })
+                }
+            }
         } else {
             button.classList.remove("text-pink-500");
             button.classList.add("hover:text-pink-500");
@@ -114,11 +124,11 @@ commentDeleteBtn.forEach(btn => {
         try {
             e.preventDefault();
             const postPagePath = window.location.pathname;
-            const commentPostDltId = postPagePath.slice(postPagePath.lastIndexOf('/')+1,postPagePath.length);
-            if(!commentPostDltId) return;
-            
+            const commentPostDltId = postPagePath.slice(postPagePath.lastIndexOf('/') + 1, postPagePath.length);
+            if (!commentPostDltId) return;
+
             const commentId = btn.getAttribute("data-commentId");
-            
+
             const inputs = {
                 postId: commentPostDltId,
                 commentId: commentId
@@ -126,17 +136,17 @@ commentDeleteBtn.forEach(btn => {
 
             const res = await fetch("/api/create/comment-delete", {
                 method: "PATCH",
-                headers: {"Content-Type":"application/json"},
-                body:JSON.stringify(inputs)
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(inputs)
             })
 
             const data = await res.json();
 
-            if(!res.ok){
+            if (!res.ok) {
                 return;
             }
-            window.location.reload();            
-            
+            window.location.reload();
+
         } catch (error) {
             return
         }

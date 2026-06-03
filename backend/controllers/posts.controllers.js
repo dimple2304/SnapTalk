@@ -116,7 +116,7 @@ export const likes = async (req, res, next) => {
         return res.status(200).json({
             success: true, message: "Like updated successfully.",
             likesCount: post.likes.length,
-            likes: post.likes
+            likes: post.likes,
         });
 
     } catch (err) {

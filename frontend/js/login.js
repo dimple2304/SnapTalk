@@ -45,6 +45,7 @@ submitBtn.addEventListener("click", async function (e) {
     }
 
     window.location.href = data.redirectUrl;
+    askNotificationPermission();
 
   } catch (err) {
     loginPasswordError.innerHTML = "Something went wrong.";
@@ -53,6 +54,15 @@ submitBtn.addEventListener("click", async function (e) {
   }
 })
 
+function askNotificationPermission() {
+  Notification.requestPermission().then((permission) => {
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');
+    } else if (permission === 'denied') {
+      console.log('Notification permission denied.');
+    }
+  });
+}
 
 // Redirect for signup from login page if don't have an account
 signupRedirect.addEventListener("click", function () {
