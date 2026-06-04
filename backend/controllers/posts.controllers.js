@@ -2,6 +2,7 @@ import { Posts } from "../models/post.models.js";
 import { Profile } from "../models/profile.models.js";
 import { Users } from "../models/user.models.js";
 import { BadRequestError, ConflictError, InternalServerError, UnauthorizedError } from "../utils/customErrorHandler/customError.js";
+import { imagekit } from "../utils/imagekit.js";
 import { getUserDetails } from "./auth.controllers.js";
 
 const extractHashtags = (text) => {
@@ -203,14 +204,26 @@ export const deletePost = async (req, res, next) => {
         const post = await Posts.findOne({ _id: postId });
         if (!post) throw new BadRequestError("Post not found.");
 
-        const ownerUser = post.user.toString() === req.user.id.toString();
+        const loggedInUser = await getUserDetails(req.user.id);
+        if (!loggedInUser) throw new BadRequestError("Logged in user not found.");
 
+        // const ownerUser = post.user.toString() === req.user.id.toString();
+
+        if (post?.media?.fileId !== null) {
+            const fileId = post?.media?.fileId;
+            try {
+                await imagekit.deleteFile(fileId);
+            } catch (error) {
+                next(error);
+            }
+        }
+
+        let redirectUrl;
         if (post.user.toString() === req.user.id.toString()) {
             const deletedPost = await post.deleteOne();
             if (!deletedPost) throw new InternalServerError("Something went wrong in post deleting.");
             const postOwnerProfile = await Profile.findOne({ user: post.user });
             if (!postOwnerProfile) throw new BadRequestError("Owner profile not found.");
-            console.log(postOwnerProfile);
 
             postOwnerProfile.uploads = postOwnerProfile.uploads.filter(
                 p => p.toString() !== postId.toString()
@@ -222,6 +235,8 @@ export const deletePost = async (req, res, next) => {
 
             const savedProfile = await postOwnerProfile.save();
             if (!savedProfile) throw new InternalServerError("Something went wrong.");
+
+            redirectUrl = req.query.page === "profile" ? `/profile/${loggedInUser.username}` : `/feed`;
         } else {
             throw new UnauthorizedError("You are not authorized to delete this post.");
         }
@@ -229,6 +244,7 @@ export const deletePost = async (req, res, next) => {
         return res.status(200).json({
             success: true,
             message: "Post deleted successfully",
+            redirectUrl
         })
     } catch (error) {
         next(error)

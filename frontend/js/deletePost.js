@@ -1,6 +1,11 @@
 const postMenus = document.querySelectorAll(".postMenu");
 const postDeleteBtn = document.querySelectorAll(".postDeleteBtn");
 
+let source;
+const currentpath = window.location.pathname;
+console.log(currentpath);
+
+
 if (postMenus) {
     postMenus.forEach((menu, i) => {
         menu.addEventListener("click", function () {
@@ -18,8 +23,7 @@ if (postMenus) {
                 if (!postId) {
                     return;
                 }
-
-                const res = await fetch(`/api/create/delete-post?postId=${postId}`, {
+                const res = await fetch(`/api/create/delete-post?postId=${postId}&page=profile`, {
                     method: "DELETE"
                 });
                 const data = await res.json();
@@ -29,7 +33,8 @@ if (postMenus) {
                     return;
                 }
 
-                window.location.reload();
+                window.location.href = data.redirectUrl;
+                // window.location.reload();
             } catch (error) {
                 console.log(error);
             }

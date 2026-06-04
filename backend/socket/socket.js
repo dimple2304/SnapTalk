@@ -7,7 +7,6 @@ export function setupSocket(server) {
         // when user join
         socket.on("join", (userId) => {
             onlineUsers[userId] = socket.id;
-            console.log("Online users:", onlineUsers);
         })
 
         // for like
