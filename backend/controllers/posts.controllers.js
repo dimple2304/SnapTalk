@@ -110,6 +110,11 @@ export const likes = async (req, res, next) => {
         const savedPost = await post.save();
         if (!savedPost) throw new InternalServerError("Something went wrong!");
 
+        const likedByUsername = user.username;
+        if (!likedByUsername) throw new BadRequestError("Not found who liked.");
+        const postOwnerId = post.user.toString();
+        if (!postOwnerId) throw new BadRequestError("Owner of this post is not found.");
+
         const savedProfile = await profile.save();
         if (!savedProfile) throw new InternalServerError("Something went wrong!");
 
@@ -117,6 +122,8 @@ export const likes = async (req, res, next) => {
             success: true, message: "Like updated successfully.",
             likesCount: post.likes.length,
             likes: post.likes,
+            likedByUsername,
+            postOwnerId
         });
 
     } catch (err) {

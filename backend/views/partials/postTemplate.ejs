@@ -61,7 +61,7 @@ if (typeof post !== "undefined") {
 
 <% if (postArray.length > 0) { %>
 <% postArray.forEach(function (element) { %>
-<div class="bg-white p-3 sm:p-4 md:p-6 rounded-2xl shadow-sm overflow-hidden">
+<div class="bg-white p-3 sm:p-4 md:p-6 rounded-2xl shadow-sm overflow-hidden" data-userid="<%= user._id %>">
   <div class="flex items-start gap-3 sm:gap-4 w-full min-w-0">
     <button class="userProfileBtn shrink-0" data-userprofile="/profile/<%= element.user?.username %>?from=feed">
       <img src="<%= element.profile?.profilepic?.url || `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name[0].toUpperCase()}` %>" alt="Avatar" class="rounded-full h-10 w-10 sm:h-12 sm:w-12 object-cover shrink-0">
@@ -165,7 +165,8 @@ if (typeof post !== "undefined") {
 <p class="text-gray-500 text-center mt-10">No posts yet.</p>
 <% } %>
 
-
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/notification.js"></script>
 <script src="/js/postTimeFormatter.js"></script>
 <script src="/js/deletePost.js"></script>
 <script>

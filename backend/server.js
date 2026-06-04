@@ -11,6 +11,9 @@ import exploreRoutes from './routes/explore.routes.js';
 import cookieParser from 'cookie-parser';
 import { globalErrorHandler } from './middlewares/globalErrorHandler.js';
 
+import http from 'http';
+import { setupSocket } from './socket/socket.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,6 +40,12 @@ app.use('/api/explore', exploreRoutes);
 
 app.use(globalErrorHandler)
 
-app.listen(PORT, () => {
+const server = http.createServer(app)
+setupSocket(server)
+
+server.listen(PORT, () => {
     console.log(`Server started at https://localhost:${PORT}`);
 })
+// app.listen(PORT, () => {
+//     console.log(`Server started at https://localhost:${PORT}`);
+// })

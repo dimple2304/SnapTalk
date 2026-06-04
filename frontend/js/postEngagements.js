@@ -10,10 +10,19 @@ const spinners = document.querySelector("#commentPostSpinner #spinner");
 const commentsLen = document.querySelector("#comments-len");
 const commentDeleteBtn = document.querySelectorAll(".commentDltBtn");
 
+const socket = io();
+const currentUserId = document.body.dataset.currentUserId;
+console.log(currentUserId);
+
+socket.emit("join", currentUserId)
+socket.on('receive like', (data) => {
+    notifyMe(data.message);
+});
+
 likeButtonArray.forEach((button, i) => {
     button.addEventListener("click", async function () {
         const postId = this.getAttribute("data-postid");
-        const userIdOfFeed = this.getAttribute("data-userIdOfFeed").toString();
+        console.log("currentUserId:", currentUserId);
 
         const res = await fetch('/api/create/like-post', {
             method: "POST",
@@ -36,7 +45,7 @@ likeButtonArray.forEach((button, i) => {
 
         let isLiked = false;
         data.likes.map((e) => {
-            if (e.user.toString() === userIdOfFeed) {
+            if (e.user.toString() === currentUserId) {
                 return isLiked = true;
             }
 
@@ -48,13 +57,11 @@ likeButtonArray.forEach((button, i) => {
             button.classList.add("text-pink-500");
             button.classList.remove("hover:text-pink-500");
 
-            if (data.receiver) {
-                const permission = await Notification.requestPermission();
-                if (permission === "granted") {
-                    new Notification("SnapTalk", {
-                        body: `new like`
-                    })
-                }
+            if (data.postOwnerId !== currentUserId) {
+                socket.emit('new like', {
+                    message: `${data.likedByUsername} liked your post.`,
+                    targetUserId: data.postOwnerId
+                });
             }
         } else {
             button.classList.remove("text-pink-500");
@@ -64,13 +71,13 @@ likeButtonArray.forEach((button, i) => {
     });
 });
 
+
 if (commentInput) {
     commentInput.addEventListener("input", function () {
         const commentInputVal = commentInput.value.trim();
         if (commentInputVal) return commentPostBtn.disabled = false;
         return commentPostBtn.disabled = true;
     })
-
 
     commentPostBtn.addEventListener("click", async function (e) {
         try {
@@ -107,6 +114,8 @@ if (commentInput) {
             }
 
             spinners.classList.add("hidden");
+
+            
 
             window.location.reload();
         } catch (error) {
