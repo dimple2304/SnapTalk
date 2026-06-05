@@ -6,12 +6,18 @@ const followErrorFromProfile = document.querySelector("#follow-error")
 const followBtnFromConnections = document.querySelectorAll(".followBtnFromConnections")
 const followBtnFromSidebar = document.querySelectorAll(".followBtnFromSidebar")
 
+import socket from './socketClient.js';
+
+socket.on('receive follower', (data) => {
+    notifyMe(data.message);
+})
+
+
 if (followBtnFromConnections) {
     followBtnFromConnections.forEach((btns) => {
         btns.addEventListener("click", async function (e) {
             try {
                 const postOwnerUserId = btns.getAttribute("data-profileOwnerUserId");
-                console.log("profileOwnerUserId: " + postOwnerUserId);
 
                 const res = await fetch('/api/account/follow-system', {
                     method: "PATCH",
@@ -28,7 +34,13 @@ if (followBtnFromConnections) {
                     btns.innerHTML = `<i class="ri-add-line text-base"></i> Follow`;
                 } else {
                     btns.innerHTML = `<i class="ri-check-line text-base"></i> Following`
+
+                    socket.emit('new follower', {
+                        message: `${data.followedByUsername} started following you`,
+                        targetUserId: data.followingUserId
+                    })
                 }
+
 
                 window.location.reload();
             } catch (error) {
@@ -43,7 +55,6 @@ if (followBtnFromProfile) {
         try {
             followErrorFromProfile.innerHTML = "";
             const postOwnerUserId = followBtnFromProfile.getAttribute("data-profileOwnerId");
-            console.log("profileOwnerUserId: " + postOwnerUserId);
 
             const res = await fetch('/api/account/follow-system', {
                 method: "PATCH",
@@ -56,6 +67,13 @@ if (followBtnFromProfile) {
             if (!res.ok) {
                 followErrorFromProfile.innerHTML = data.message;
                 return;
+            }
+
+            if (data.isFollowing) {
+                socket.emit('new follower', {
+                    message: `${data.followedByUsername} started following you`,
+                    targetUserId: data.followingUserId
+                })
             }
 
             window.location.reload();
@@ -84,6 +102,13 @@ if (followBtnFromSidebar) {
                     return;
                 }
 
+                if (data.isFollowing) {
+                    socket.emit('new follower', {
+                        message: `${data.followedByUsername} started following you`,
+                        targetUserId: data.followingUserId
+                    })
+                }
+
                 window.location.reload();
             } catch (error) {
                 console.log(error);
@@ -98,7 +123,6 @@ followBtnArray.forEach((btn) => {
         try {
             followError.innerHTML = "";
             const postOwnerUserId = this.getAttribute("data-postOwnerUserId");
-            console.log("postID" + postOwnerUserId);
 
             const res = await fetch('/api/account/follow-system', {
                 method: "PATCH",
@@ -115,6 +139,10 @@ followBtnArray.forEach((btn) => {
 
             if (data.isFollowing) {
                 btn.innerHTML = "following";
+                socket.emit('new follower', {
+                    message: `${data.followedByUsername} started following you`,
+                    targetUserId: data.followingUserId
+                })
             }
             window.location.reload();
         } catch (error) {

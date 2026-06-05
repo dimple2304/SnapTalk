@@ -170,12 +170,19 @@ export const followSystem = async (req, res, next) => {
         const savedFu = await followingUser.save();
         if (!savedLiup || !savedFup || !savedLu || !savedFu) throw new InternalServerError("Something went wrong in saving.");
 
+        const followedByUsername = loggedInUser.username;
+        if(!followedByUsername) throw new BadRequestError("User who followed not found.");
+        const followingUserId = followingUser._id.toString();
+        if(! followingUserId) throw new BadRequestError("Following user not found.");
+
         return res.status(200).json({
             success: true,
             message: `${loggedInUser.username} ${alreadyFollowing ? 'unfollowed' : 'followed'} successfully.`,
             followingCount: loggedInUser.followingCount,
             followersCount: followingUser.followersCount,
-            isFollowing: !alreadyFollowing
+            isFollowing: !alreadyFollowing,
+            followedByUsername,
+            followingUserId
         })
 
     } catch (err) {

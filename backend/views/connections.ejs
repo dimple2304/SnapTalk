@@ -52,7 +52,7 @@
   </style>
 </head>
 
-<body class="bg-slate-100 text-gray-800 font-sans pb-20 lg:pb-0">
+<body class="bg-slate-100 text-gray-800 font-sans pb-20 lg:pb-0" data-current-user-id="<%= loggedInUser._id %>">
   <div class="container mx-auto flex">
 
     <!-- Left Sidebar (Width fix: Removed lg:w-1/4 to match profile.ejs) -->
@@ -172,8 +172,9 @@
 
   </div>
 
-
-  <script src="/js/followSystem.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/notification.js"></script>
+  <script type="module" src="/js/followSystem.js"></script>
   <script>
     function switchTab(type) {
       const followersBtn = document.getElementById('btn-followers');

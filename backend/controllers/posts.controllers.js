@@ -147,12 +147,19 @@ export const comments = async (req, res, next) => {
 
         post.comments.push({ user: user._id, comment: commentInput });
 
+        const commentByUsername = user.username;
+        if(!commentByUsername) throw new BadRequestError("user who commented not found.");
+        const postOwnerId = post.user.toString();
+        if(!postOwnerId) throw new BadRequestError("Post owner not found."); 
+
         const savedComment = await post.save();
         if (!savedComment) throw new InternalServerError("Something went wrong!");
 
         return res.status(200).json({
             success: true, message: "Comment posted successfully.",
-            comment: commentInput, commentLength: post.comments.length
+            comment: commentInput, commentLength: post.comments.length,
+            commentByUsername,
+            postOwnerId
         });
 
     } catch (err) {
@@ -206,8 +213,6 @@ export const deletePost = async (req, res, next) => {
 
         const loggedInUser = await getUserDetails(req.user.id);
         if (!loggedInUser) throw new BadRequestError("Logged in user not found.");
-
-        // const ownerUser = post.user.toString() === req.user.id.toString();
 
         if (post?.media?.fileId !== null) {
             const fileId = post?.media?.fileId;

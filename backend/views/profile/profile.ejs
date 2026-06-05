@@ -169,11 +169,13 @@
 
   <%- include('editProfile') %>
 
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/notification.js"></script>
   <script src="/js/tabs.js"></script>
   <script src="/js/logout.js"></script>
   <script src="/js/profile.js"></script>
-  <script src="/js/postEngagements.js"></script>
-  <script src="/js/followSystem.js"></script>
+  <script type="module" src="/js/postEngagements.js"></script>
+  <script type="module" src="/js/followSystem.js"></script>
 </body>
 
 </html>

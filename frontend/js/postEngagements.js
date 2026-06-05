@@ -10,19 +10,21 @@ const spinners = document.querySelector("#commentPostSpinner #spinner");
 const commentsLen = document.querySelector("#comments-len");
 const commentDeleteBtn = document.querySelectorAll(".commentDltBtn");
 
-const socket = io();
+import socket from "./socketClient.js";
 const currentUserId = document.body.dataset.currentUserId;
-console.log(currentUserId);
 
-socket.emit("join", currentUserId)
 socket.on('receive like', (data) => {
     notifyMe(data.message);
 });
 
+socket.on('receive comment', (data) => {
+    notifyMe(data.message);
+})
+
+
 likeButtonArray.forEach((button, i) => {
     button.addEventListener("click", async function () {
         const postId = this.getAttribute("data-postid");
-        console.log("currentUserId:", currentUserId);
 
         const res = await fetch('/api/create/like-post', {
             method: "POST",
@@ -88,7 +90,6 @@ if (commentInput) {
             const postId = commentPost.getAttribute("data-commentPostId");
 
             commentError.innerHTML = "";
-
             spinners.classList.remove("hidden");
 
             const inputs = {
@@ -97,7 +98,6 @@ if (commentInput) {
             }
             console.log("inputs:", inputs);
 
-
             const res = await fetch('/api/create/comment-post', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -105,7 +105,6 @@ if (commentInput) {
             });
 
             const data = await res.json();
-            console.log("data:", data);
 
             if (!res.ok) {
                 commentError.innerHTML = data.message;
@@ -113,10 +112,14 @@ if (commentInput) {
                 return;
             }
 
+            if (data.postOwnerId !== currentUserId) {
+                socket.emit("new comment", {
+                    message: `${data.commentByUsername} commented on your post`,
+                    targetUserId: data.postOwnerId
+                })
+            }
+
             spinners.classList.add("hidden");
-
-            
-
             window.location.reload();
         } catch (error) {
             commentError.innerHTML = data.message;
@@ -155,7 +158,6 @@ commentDeleteBtn.forEach(btn => {
                 return;
             }
             window.location.reload();
-
         } catch (error) {
             return
         }
