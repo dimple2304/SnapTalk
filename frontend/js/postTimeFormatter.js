@@ -12,6 +12,8 @@ function getPostTime(dateString) {
     return postDate.toLocaleDateString();
 }
 
+export default getPostTime;
+
 document.querySelectorAll(".post-time").forEach(element => {
     const rawDate = element.dataset.time;
     element.innerHTML = getPostTime(rawDate);

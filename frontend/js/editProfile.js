@@ -51,8 +51,6 @@ if (editProfileBtn) {
                     preview.src = data.fileUrl;
                     fileId = data.fileId;
                     console.log(data);
-
-
                 })
                 label.addEventListener("click", () => profilePicInput.click());
 
@@ -92,7 +90,6 @@ if (editProfileBtn) {
                     };
                     console.log(details);
 
-
                     try {
                         editSpinner.classList.remove("hidden");
 
@@ -104,7 +101,6 @@ if (editProfileBtn) {
 
                         const data = await res.json();
                         console.log(data);
-
 
                         editSpinner.classList.add("hidden");
 

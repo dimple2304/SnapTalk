@@ -34,7 +34,7 @@
       </svg>
       Messages
     </a>
-    <a id="notification-btn" href="#" class="flex items-center p-4 text-gray-600 font-semibold hover:bg-slate-200 hover:text-gray-900 rounded-lg transform hover:translate-x-1 transition-all duration-200 ease-in-out">
+    <a id="notification-btn" href="/notification" class="flex items-center p-4 text-gray-600 font-semibold hover:bg-slate-200 hover:text-gray-900 rounded-lg transform hover:translate-x-1 transition-all duration-200 ease-in-out">
       <svg class="w-6 h-6 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
       </svg>
@@ -95,7 +95,7 @@
   } else if (window.location.pathname === "/message") {
     messageBtn.classList.remove("text-gray-600", "hover:bg-slate-200", "hover:text-gray-900")
     messageBtn.classList.add("active-tab")
-  } else if (window.location.pathname === "/notifications") {
+  } else if (window.location.pathname === "/notification") {
     notificationBtn.classList.remove("text-gray-600", "hover:bg-slate-200", "hover:text-gray-900")
     notificationBtn.classList.add("active-tab")
   } else if (window.location.pathname === "/profile/<%= loggedInUser.username %>") {

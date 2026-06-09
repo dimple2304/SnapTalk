@@ -1,3 +1,4 @@
+import { Notification } from "../models/notification.models.js";
 import { Posts } from "../models/post.models.js";
 import { Profile } from "../models/profile.models.js";
 import { Users } from "../models/user.models.js";
@@ -112,12 +113,38 @@ export const likes = async (req, res, next) => {
         if (!savedPost) throw new InternalServerError("Something went wrong!");
 
         const likedByUsername = user.username;
-        if (!likedByUsername) throw new BadRequestError("Not found who liked.");
         const postOwnerId = post.user.toString();
         if (!postOwnerId) throw new BadRequestError("Owner of this post is not found.");
+        const postOwnerProfile = await Profile.findOne({ user: postOwnerId });
+        if (!postOwnerProfile) throw new BadRequestError("Post owner not found.")
 
         const savedProfile = await profile.save();
         if (!savedProfile) throw new InternalServerError("Something went wrong!");
+
+        // notofication storage
+        if (!existed && postOwnerId.toString() !== userIdStr) {
+            const newNotification = new Notification({
+                receiver: postOwnerId,
+                sender: req.user.id,
+                type: "like",
+                post: post._id,
+                profile: profile._id
+            })
+            const savedNotification = await newNotification.save();
+            if (!savedNotification) throw new InternalServerError("Something went wrong.");
+        } else {
+            const notificationForDeletion = await Notification.findOne({
+                receiver: postOwnerId,
+                sender: req.user.id,
+                type: "like",
+                post: post._id,
+                profile: profile._id
+            })
+            if (notificationForDeletion) {
+                await notificationForDeletion.deleteOne();
+            }
+        }
+
 
         return res.status(200).json({
             success: true, message: "Like updated successfully.",
@@ -142,18 +169,33 @@ export const comments = async (req, res, next) => {
         const user = await getUserDetails(req.user.id);
         if (!user) throw new BadRequestError("User not found!");
 
+        const loggedInProfile = await Profile.findOne({user: req.user.id});
+        if(!loggedInProfile) throw new BadRequestError("Profile not found.");
+
         const post = await Posts.findOne({ _id: postId })
         if (!post) throw new BadRequestError("Post not found!");
 
         post.comments.push({ user: user._id, comment: commentInput });
 
         const commentByUsername = user.username;
-        if(!commentByUsername) throw new BadRequestError("user who commented not found.");
+        if (!commentByUsername) throw new BadRequestError("User who commented not found.");
         const postOwnerId = post.user.toString();
-        if(!postOwnerId) throw new BadRequestError("Post owner not found."); 
+        if (!postOwnerId) throw new BadRequestError("Post owner not found.");
 
         const savedComment = await post.save();
         if (!savedComment) throw new InternalServerError("Something went wrong!");
+
+        if (postOwnerId.toString() !== user._id.toString()) {
+            const newNotification = new Notification({
+                receiver: postOwnerId,
+                sender: req.user.id,
+                type: "comment",
+                post: post._id,
+                profile: loggedInProfile._id
+            })
+            const savedNotification = await newNotification.save();
+            if (!savedNotification) throw new InternalServerError("Something went wrong.");
+        }
 
         return res.status(200).json({
             success: true, message: "Comment posted successfully.",
@@ -192,6 +234,16 @@ export const deleteComment = async (req, res, next) => {
 
         const savedPostComments = await post.save();
         if (!savedPostComments) throw new InternalServerError("Something went wrong.");
+
+        const notificationForDeletion = await Notification.findOne({
+            receiver: post.user,
+            sender: user._id,
+            type: "comment",
+            post: post._id
+        })
+        if (notificationForDeletion) {
+            await notificationForDeletion.deleteOne();
+        }
 
         return res.status(200).json({
             success: true, message: "Comment deleted successfully.",

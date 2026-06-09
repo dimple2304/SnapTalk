@@ -5,6 +5,7 @@ import { tokenCreation } from "../utils/jwt_service.js";
 import { imagekit } from "../utils/imagekit.js";
 import { Posts } from "../models/post.models.js";
 import { Users } from "../models/user.models.js";
+import { Notification } from "../models/notification.models.js";
 
 export const logout = async (req, res, next) => {
     res.clearCookie("token", {
@@ -171,9 +172,31 @@ export const followSystem = async (req, res, next) => {
         if (!savedLiup || !savedFup || !savedLu || !savedFu) throw new InternalServerError("Something went wrong in saving.");
 
         const followedByUsername = loggedInUser.username;
-        if(!followedByUsername) throw new BadRequestError("User who followed not found.");
+        if (!followedByUsername) throw new BadRequestError("User who followed not found.");
         const followingUserId = followingUser._id.toString();
-        if(! followingUserId) throw new BadRequestError("Following user not found.");
+        if (!followingUserId) throw new BadRequestError("Following user not found.");
+
+        // for notification
+        if (!alreadyFollowing && postOwnerId.toString() !== loggedInUser._id.toString()) {
+            const newNotification = new Notification({
+                receiver: postOwnerId,
+                sender: req.user.id,
+                type: "follow",
+                profile: loggedInUserProfile._id,
+            })
+            const savedNotification = await newNotification.save();
+            if (!savedNotification) throw new InternalServerError("Something went wrong.");
+        } else {
+            const notificationForDeletion = await Notification.findOne({
+                receiver: postOwnerId,
+                sender: req.user.id,
+                type: "follow",
+                profile: loggedInUserProfile._id,
+            })
+            if (notificationForDeletion) {          
+                await notificationForDeletion.deleteOne();
+            }
+        }
 
         return res.status(200).json({
             success: true,

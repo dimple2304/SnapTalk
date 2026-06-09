@@ -5,6 +5,7 @@ import { Profile } from '../models/profile.models.js';
 import { Posts } from '../models/post.models.js';
 import { Users } from '../models/user.models.js';
 import { BadRequestError } from '../utils/customErrorHandler/customError.js';
+import { Notification } from '../models/notification.models.js';
 
 const router = express.Router();
 
@@ -79,7 +80,9 @@ router.get('/feed', verifyToken, async (req, res, next) => {
 router.get('/explore', verifyToken, async (req, res, next) => {
     try {
         const loggedInUser = await getUserDetails(req.user.id);
+        if (!loggedInUser) throw new BadRequestError("You are not authenticated");
         const loggedInProfile = await Profile.findOne({ user: req.user.id })
+        if (!loggedInProfile) throw new BadRequestError("User profile not found.");
 
         const allUsers = await getAllUsers();
         const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
@@ -88,8 +91,33 @@ router.get('/explore', verifyToken, async (req, res, next) => {
             loggedInProfile,
             allUsers: updatedUsers
         });
-    } catch (error) {
+    } catch (err) {
         next(err);
+    }
+})
+
+router.get('/notification', verifyToken, async (req, res, next) => {
+    try {
+        const loggedInUser = await getUserDetails(req.user.id);
+        if (!loggedInUser) throw new BadRequestError("You are not authenticated");
+        const loggedInProfile = await Profile.findOne({ user: req.user.id })
+        if (!loggedInProfile) throw new BadRequestError("User profile not found.");
+
+        const loggedInUserNotifications = await Notification.find({
+            receiver: req.user.id
+        }).populate("sender").populate("profile").populate("post")
+            .sort({ createdAt: -1 });
+
+        const allUsers = await getAllUsers();
+        const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
+        res.render("notification", {
+            loggedInUser,
+            loggedInProfile,
+            allUsers: updatedUsers,
+            notifications: loggedInUserNotifications,
+        })
+    } catch (error) {
+        next(error)
     }
 })
 

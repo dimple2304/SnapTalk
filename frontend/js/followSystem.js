@@ -6,6 +6,7 @@ const followErrorFromProfile = document.querySelector("#follow-error")
 const followBtnFromConnections = document.querySelectorAll(".followBtnFromConnections")
 const followBtnFromSidebar = document.querySelectorAll(".followBtnFromSidebar")
 
+import notifyMe from './notification.js';
 import socket from './socketClient.js';
 
 socket.on('receive follower', (data) => {
@@ -40,7 +41,6 @@ if (followBtnFromConnections) {
                         targetUserId: data.followingUserId
                     })
                 }
-
 
                 window.location.reload();
             } catch (error) {

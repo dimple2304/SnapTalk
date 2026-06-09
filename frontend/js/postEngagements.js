@@ -10,6 +10,7 @@ const spinners = document.querySelector("#commentPostSpinner #spinner");
 const commentsLen = document.querySelector("#comments-len");
 const commentDeleteBtn = document.querySelectorAll(".commentDltBtn");
 
+import notifyMe from "./notification.js";
 import socket from "./socketClient.js";
 const currentUserId = document.body.dataset.currentUserId;
 
@@ -46,7 +47,7 @@ likeButtonArray.forEach((button, i) => {
         }
 
         let isLiked = false;
-        data.likes.map((e) => {
+        data.likes?.map((e) => {
             if (e.user.toString() === currentUserId) {
                 return isLiked = true;
             }

@@ -1,5 +1,4 @@
 const socket = io();
-
 const currentUserId = document.body.dataset.currentUserId;
 
 if (currentUserId) {

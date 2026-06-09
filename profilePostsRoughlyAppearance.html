@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Explore / SnapTalk</title>
+  <title>Notifications / SnapTalk</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     ::-webkit-scrollbar {
@@ -24,53 +25,45 @@
     }
   </style>
 </head>
+
 <body class="bg-slate-100 text-gray-800 font-sans pb-20 lg:pb-0">
   <div class="container mx-auto flex">
     <!-- Sidebar -->
     <div id="sidebar-partial-call" class="hidden lg:block">
       <%- include('partials/sidebar') %>
     </div>
-    <!-- Main Section -->
-    <main class="w-full lg:w-1/2 min-h-screen border-x border-slate-200 bg-slate-100">
+    <!-- Main Notification Section -->
+    <main class="w-full lg:w-1/2">
       <!-- Header -->
-      <div
-        class="sticky top-0 z-20 bg-slate-100/80 backdrop-blur-md border-b border-slate-200 px-4 py-4">
-        <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">
-          Explore
-        </h2>
-      </div>
-      <!-- Search Area -->
-      <div class="px-4 py-6">
-        <div
-          class="bg-white border-2 border-slate-300 rounded-[30px] p-5 shadow-sm">
-          <!-- Search Bar -->
-          <div class="flex gap-3">
-            <input
-              type="text"
-              placeholder="Search here..."
-              class="flex-1 border-2 border-slate-300 rounded-2xl px-5 py-3 text-lg outline-none focus:border-indigo-400 bg-slate-50" />
-            <button
-              class="border-2 border-slate-300 rounded-2xl px-6 py-3 font-semibold text-lg bg-slate-50 hover:bg-slate-100 transition">
-              Search
-            </button>
-          </div>
-          <!-- Users -->
-          <div class="mt-6 space-y-1">
-            <!-- User -->
-            <div
-              class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-slate-100 transition cursor-pointer">
-              <img
-                src="https://i.pravatar.cc/100?img=12"
-                class="w-11 h-11 rounded-full object-cover" />
-              <div>
+      <div>
+        <!-- Main Header -->
+        <div class="sticky top-0 z-10 flex justify-between items-center bg-slate-100/80 backdrop-blur-md px-4 py-3 border-b border-slate-200">
+          <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">
+            Notifications
+          </h2>
+          <button class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition hidden lg:block">
+            Mark all read
+          </button>
+        </div>
+        <!-- Notifications -->
+        <div class="space-y-3 px-2 py-4 pb-6">
+          <!-- Notification -->
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 flex items-start gap-3 hover:bg-slate-50 transition cursor-pointer">
+            <img src="https://i.pravatar.cc/100?img=12" class="w-12 h-12 rounded-full object-cover" />
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
                 <h3 class="font-semibold text-gray-900">
-                  user 1
+                  Alex Johnson
                 </h3>
-                <p class="text-sm text-gray-500">
-                  @userone
-                </p>
+                <span class="text-xs text-gray-400">
+                  2m
+                </span>
               </div>
+              <p class="text-sm text-gray-600 mt-1">
+                started following you.
+              </p>
             </div>
+            <div class="w-2.5 h-2.5 rounded-full bg-indigo-500 mt-2"></div>
           </div>
         </div>
       </div>
@@ -81,4 +74,5 @@
   <!-- Mobile Navigation -->
   <%- include('partials/mobileNavigationBar') %>
 </body>
+
 </html>
