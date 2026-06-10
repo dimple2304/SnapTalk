@@ -6,13 +6,27 @@ const followErrorFromProfile = document.querySelector("#follow-error")
 const followBtnFromConnections = document.querySelectorAll(".followBtnFromConnections")
 const followBtnFromSidebar = document.querySelectorAll(".followBtnFromSidebar")
 
-import notifyMe from './notification.js';
+import notifyMe, { notificationCounter } from './notification.js';
 import socket from './socketClient.js';
+let unreadNotificationCount = document.querySelector("#unread-notification-count");
 
-socket.on('receive follower', (data) => {
-    notifyMe(data.message);
+//WHEN ON NOTIFICATION PAGE , NOTIFICATION MUST BE isRead:true by default
+
+socket.on('receive follower', async (data) => {
+    if (window.location.pathname !== "/notification") {
+        notifyMe(data.message);
+        notificationCounter(unreadNotificationCount);
+    } else {
+        const res = await fetch("/api/account/isread-true", {
+            method: "PATCH"
+        })
+        if (res.ok) {
+            unreadNotificationCount.innerHTML = 0;
+            unreadNotificationCount.classList.add("hidden");
+        }
+    }
+
 })
-
 
 if (followBtnFromConnections) {
     followBtnFromConnections.forEach((btns) => {

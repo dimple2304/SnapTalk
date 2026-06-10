@@ -6,6 +6,7 @@ import { Posts } from '../models/post.models.js';
 import { Users } from '../models/user.models.js';
 import { BadRequestError } from '../utils/customErrorHandler/customError.js';
 import { Notification } from '../models/notification.models.js';
+import { notificationReadProperty } from '../controllers/profile.controllers.js';
 
 const router = express.Router();
 
@@ -62,6 +63,14 @@ router.get('/feed', verifyToken, async (req, res, next) => {
         const allUsers = await getAllUsers();
         const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
 
+        const unreadNotifications = await Notification.find({
+            receiver: req.user.id,
+            isRead: false
+        })
+
+        console.log(unreadNotifications.length);
+        
+
         res.render("feedpage", {
             loggedInProfile,
             loggedInUser,
@@ -70,7 +79,8 @@ router.get('/feed', verifyToken, async (req, res, next) => {
             posts: enrichedPosts,
             followingUserPosts,
             allUsers: updatedUsers,
-            source: "feed"
+            source: "feed",
+            unreadNotificationsLength : unreadNotifications.length
         });
     } catch (err) {
         next(err);
@@ -86,10 +96,17 @@ router.get('/explore', verifyToken, async (req, res, next) => {
 
         const allUsers = await getAllUsers();
         const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
+
+        const unreadNotifications = await Notification.find({
+            receiver: req.user.id,
+            isRead: false
+        })
+
         res.render("explore", {
             loggedInUser,
             loggedInProfile,
-            allUsers: updatedUsers
+            allUsers: updatedUsers,
+            unreadNotificationsLength : unreadNotifications.length
         });
     } catch (err) {
         next(err);
@@ -108,6 +125,10 @@ router.get('/notification', verifyToken, async (req, res, next) => {
         }).populate("sender").populate("profile").populate("post")
             .sort({ createdAt: -1 });
 
+        const unreadNotifications = await Notification.find({
+            receiver: req.user.id,
+            isRead: false
+        })
         const allUsers = await getAllUsers();
         const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
         res.render("notification", {
@@ -115,6 +136,7 @@ router.get('/notification', verifyToken, async (req, res, next) => {
             loggedInProfile,
             allUsers: updatedUsers,
             notifications: loggedInUserNotifications,
+            unreadNotificationsLength : unreadNotifications.length
         })
     } catch (error) {
         next(error)
@@ -215,6 +237,11 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
         const allUsers = await getAllUsers();
         const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
 
+        const unreadNotifications = await Notification.find({
+            receiver: req.user.id,
+            isRead: false
+        })
+
         res.render('profile/profile', {
             loggedInProfile: loggedInProfile || defaultProfile,
             loggedInUser,
@@ -228,7 +255,8 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
             profileUsername: profileUser.username,
             from: req.query.from || "feed",
             connectionOwner: req.query.connectionOwner || null,
-            allUsers: updatedUsers
+            allUsers: updatedUsers,
+            unreadNotificationsLength : unreadNotifications.length
         });
 
     } catch (err) {
@@ -314,6 +342,11 @@ router.get('/profile/:username/follows', verifyToken, async (req, res, next) => 
         const allUsers = await getAllUsers();
         const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
 
+        const unreadNotifications = await Notification.find({
+            receiver: req.user.id,
+            isRead: false
+        })
+
         res.render('connections.ejs', {
             loggedInUser,
             loggedInProfile,
@@ -324,7 +357,8 @@ router.get('/profile/:username/follows', verifyToken, async (req, res, next) => 
             profile: profile ? profile : { profilepic: { url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${profileUser.name[0].toUpperCase()}` } },
             isOwnProfile: isOwnProfile,
             followingList: followingList,
-            allUsers: updatedUsers
+            allUsers: updatedUsers,
+            unreadNotificationsLength : unreadNotifications.length
         });
 
     } catch (error) {
@@ -376,6 +410,11 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
         const allUsers = await getAllUsers();
         const updatedUsers = await enrichUsersWithProfilePics(req, allUsers.users, req.user.id);
 
+        const unreadNotifications = await Notification.find({
+            receiver: req.user.id,
+            isRead: false
+        })
+
         res.render('postPage', {
             loggedInUser,
             loggedInProfile,
@@ -388,7 +427,8 @@ router.get('/post/:id', verifyToken, async (req, res, next) => {
             backTo,
             source,
             profileUsername,
-            allUsers: updatedUsers
+            allUsers: updatedUsers,
+            unreadNotificationsLength : unreadNotifications.length
         })
     } catch (err) {
         next(err);

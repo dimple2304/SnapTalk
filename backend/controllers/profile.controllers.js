@@ -176,13 +176,14 @@ export const followSystem = async (req, res, next) => {
         const followingUserId = followingUser._id.toString();
         if (!followingUserId) throw new BadRequestError("Following user not found.");
 
-        // for notification
+        // for notification        
         if (!alreadyFollowing && postOwnerId.toString() !== loggedInUser._id.toString()) {
             const newNotification = new Notification({
                 receiver: postOwnerId,
                 sender: req.user.id,
                 type: "follow",
                 profile: loggedInUserProfile._id,
+                
             })
             const savedNotification = await newNotification.save();
             if (!savedNotification) throw new InternalServerError("Something went wrong.");
@@ -193,7 +194,7 @@ export const followSystem = async (req, res, next) => {
                 type: "follow",
                 profile: loggedInUserProfile._id,
             })
-            if (notificationForDeletion) {          
+            if (notificationForDeletion) {
                 await notificationForDeletion.deleteOne();
             }
         }
@@ -210,5 +211,26 @@ export const followSystem = async (req, res, next) => {
 
     } catch (err) {
         next(err);
+    }
+}
+
+
+export const notificationReadProperty = async (req, res, next) => {
+    try {
+        await Notification.updateMany(
+            {
+                receiver: req.user.id,
+                isRead: false
+            },
+            {
+                $set: {
+                    isRead: true
+                }
+            }
+        );
+
+        return res.status(200).json({success: true, message:"Notification read successfully."});
+    } catch (error) {
+        next(error)
     }
 }

@@ -10,16 +10,40 @@ const spinners = document.querySelector("#commentPostSpinner #spinner");
 const commentsLen = document.querySelector("#comments-len");
 const commentDeleteBtn = document.querySelectorAll(".commentDltBtn");
 
-import notifyMe from "./notification.js";
+import notifyMe, { notificationCounter } from "./notification.js";
 import socket from "./socketClient.js";
 const currentUserId = document.body.dataset.currentUserId;
 
-socket.on('receive like', (data) => {
-    notifyMe(data.message);
+let unreadNotificationCount = document.querySelector("#unread-notification-count");
+
+socket.on('receive like', async (data) => {
+    if (window.location.pathname !== "/notification") {
+        notifyMe(data.message);
+        notificationCounter(unreadNotificationCount);
+    } else {
+        const res = await fetch("/api/account/isread-true", {
+            method: "PATCH"
+        })
+        if (res.ok) {
+            unreadNotificationCount.innerHTML = 0;
+            unreadNotificationCount.classList.add("hidden");
+        }
+    }
 });
 
-socket.on('receive comment', (data) => {
-    notifyMe(data.message);
+socket.on('receive comment', async (data) => {
+    if (window.location.pathname !== "/notification") {
+        notifyMe(data.message);
+        notificationCounter(unreadNotificationCount);
+    } else {
+        const res = await fetch("/api/account/isread-true", {
+            method: "PATCH"
+        })
+        if (res.ok) {
+            unreadNotificationCount.innerHTML = 0;
+            unreadNotificationCount.classList.add("hidden");
+        }
+    }
 })
 
 
