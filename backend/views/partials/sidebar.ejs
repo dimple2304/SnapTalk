@@ -4,6 +4,9 @@
     color: white;
   }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <aside class="h-screen sticky top-0 flex flex-col justify-between p-4 lg:w-72 flex-shrink-0">
   <div>
     <div class="flex items-center p-3 mb-6"><a href="/profile/<%= loggedInUser?.username %>">
@@ -28,12 +31,12 @@
       </svg>
       Explore
     </a>
-    <a id="message-btn" href="#" class="flex items-center p-4 text-gray-600 font-semibold hover:bg-slate-200 hover:text-gray-900 rounded-lg transform hover:translate-x-1 transition-all duration-200 ease-in-out">
+    <!-- <a id="message-btn" href="#" class="flex items-center p-4 text-gray-600 font-semibold hover:bg-slate-200 hover:text-gray-900 rounded-lg transform hover:translate-x-1 transition-all duration-200 ease-in-out">
       <svg class="w-6 h-6 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
       </svg>
       Messages
-    </a>
+    </a> -->
     <a id="notification-btn" href="/notification" class="relative flex items-center p-4 text-gray-600 font-semibold hover:bg-slate-200 hover:text-gray-900 rounded-lg transform hover:translate-x-1 transition-all duration-200 ease-in-out">
       <div class="relative">
         <svg class="w-6 h-6 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -71,7 +74,7 @@
   </nav>
 
   <div class="mt-8 px-2">
-    <button class="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold text-lg py-3 px-4 rounded-lg hover:opacity-90 transform hover:scale-105 transition-all duration-200">
+    <button id="new-post-btn" class="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold text-lg py-3 px-4 rounded-lg hover:opacity-90 transform hover:scale-105 transition-all duration-200">
       New Post
     </button>
   </div>
@@ -85,7 +88,7 @@
 <script>
   const homeBtn = document.querySelector("#home-btn");
   const exploreBtn = document.querySelector("#explore-btn");
-  const messageBtn = document.querySelector("#message-btn");
+  // const messageBtn = document.querySelector("#message-btn");
   const notificationBtn = document.querySelector("#notification-btn");
   const unreadNotificationCount = document.querySelector("#unread-notification-count");
   const profileBtn = document.querySelector("#profile-btn");
