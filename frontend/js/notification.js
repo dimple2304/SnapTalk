@@ -40,20 +40,27 @@ export function notificationCounter(unreadNotificationCount) {
             unreadNotificationCount.classList.add("hidden");
         }
     }
+}
 
 
-    // realtime notification page update 
-    // if (window.location.pathname === "/notification" && notificationContainer) {
-    //     const div = document.createElement("div");
-    //     div.classList.add("bg-white", "border", "border-slate-200", "rounded-2xl", "p-4", "flex", "items-start", "gap-3", "hover:bg-slate-50", "transition", "cursor-pointer");
-    //     div.innerHTML = ` <div class="flex-1"> <div class="flex items-center justify-between"> <h3 class="font-semibold text-gray-900"> ${data.followedByUsername} </h3> 
-    //     <span class="text-xs text-gray-400"> Just now </span> 
-    //     </div> <p class="text-sm text-gray-600 mt-1"> 
-    //     started following you </p> 
-    //     </div> 
-    //     <div class="w-2.5 h-2.5 rounded-full bg-indigo-500 mt-2"></div> `;
-    //     notificationContainer.prepend(div);
-    // }
+export function toastify(text) {
+    Toastify({
+        text: text,
+        duration: 2500,
+        close: false,
+        gravity: "top",
+        position: "center",
+        stopOnFocus: true,
+        style: {
+            background: "#111827",
+            color: "#fff",
+            borderRadius: "12px",
+            padding: "12px 18px",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.25)",
+            fontWeight: "500",
+            fontSize: "14px"
+        }
+    }).showToast();
 }
 
 

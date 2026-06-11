@@ -217,7 +217,6 @@ router.get('/profile/:username', verifyToken, async (req, res, next) => {
                             url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${post.user.name[0].toUpperCase()}`
                         }
                     };
-
                 return post;
             });
 

@@ -74,13 +74,19 @@
   </nav>
 
   <div class="mt-8 px-2">
-    <button id="new-post-btn" class="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold text-lg py-3 px-4 rounded-lg hover:opacity-90 transform hover:scale-105 transition-all duration-200">
-      New Post
+    <button class="new-post-btn group relative w-full overflow-hidden rounded-xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300">
+      <div class="absolute inset-0 bg-gradient-to-r from-violet-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <div class="relative flex items-center justify-center gap-3 py-3.5 px-4">
+        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-violet-500 to-indigo-600 text-white text-lg font-bold">
+          +
+        </span>
+        <span class="font-semibold text-gray-800 text-base">
+          Create New Post
+        </span>
+      </div>
     </button>
   </div>
-  </div>
-
-  <div></div>
+  
 </aside>
 <script src="/js/logout.js"></script>
 <script src="/js/sidebar.js"></script>

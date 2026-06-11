@@ -1,3 +1,5 @@
+import { toastify } from "./notification.js";
+
 const editProfileBtn = document.querySelector("#edit-profile-btn");
 const editProfileModal = document.querySelector("#edit-profile-modal");
 
@@ -109,7 +111,6 @@ if (editProfileBtn) {
                         }
                         Swal.close();
                         window.location.reload();
-
                     } catch (err) {
                         editError.innerHTML = data.message;
                         editSpinner.classList.add("hidden");

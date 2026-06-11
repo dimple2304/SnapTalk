@@ -115,17 +115,19 @@ if (createPostModal) {
 
 
 
-const newPostBtn = document.querySelector("#new-post-btn");
-if (newPostBtn) {
-    newPostBtn.addEventListener("click", function () {
-        swal.fire({
-            html: createPostModal.innerHTML,
-            showConfirmButton: false,
-            showCloseButton: true,
-            didOpen: () => {
-                const popup = Swal.getPopup();
-                createPostFunc(popup);
-            }
+const newPostBtns = document.querySelectorAll(".new-post-btn");
+if (newPostBtns) {
+    newPostBtns.forEach((btn) => {
+        btn.addEventListener("click", function () {
+            swal.fire({
+                html: createPostModal.innerHTML,
+                showConfirmButton: false,
+                showCloseButton: true,
+                didOpen: () => {
+                    const popup = Swal.getPopup();
+                    createPostFunc(popup);
+                }
+            })
         })
     })
 }

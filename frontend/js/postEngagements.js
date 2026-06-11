@@ -10,7 +10,7 @@ const spinners = document.querySelector("#commentPostSpinner #spinner");
 const commentsLen = document.querySelector("#comments-len");
 const commentDeleteBtn = document.querySelectorAll(".commentDltBtn");
 
-import notifyMe, { notificationCounter } from "./notification.js";
+import notifyMe, { notificationCounter, toastify } from "./notification.js";
 import socket from "./socketClient.js";
 const currentUserId = document.body.dataset.currentUserId;
 
@@ -188,3 +188,14 @@ commentDeleteBtn.forEach(btn => {
         }
     })
 })
+
+
+document.querySelectorAll(".share-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+        const postUrl = btn.dataset.postpageurl;
+        const url = `${window.location.origin}${postUrl}`;
+        await navigator.clipboard.writeText(url);
+
+        toastify("Link copied successfully");
+    });
+});

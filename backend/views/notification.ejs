@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notifications / SnapTalk</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-100 text-gray-800 font-sans pb-20 lg:pb-0">
+  <div class="container mx-auto flex">
+    <!-- Sidebar -->
+    <div id="sidebar-partial-call" class="hidden lg:block">
+      <%- include('partials/sidebar') %>
+    </div>
+    <!-- Main Notification Section -->
+    <main class="w-full lg:w-1/2">
+      <!-- Header -->
+      <div>
+        <!-- Main Header -->
+        <div class="sticky top-0 z-10 flex justify-between items-center bg-slate-100/80 backdrop-blur-md px-4 py-3 border-b border-slate-200">
+          <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">
+            Notifications
+          </h2>
+          <button id="mark-all-read-btn" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition hidden lg:block">
+            Mark all read
+          </button>
+        </div>
+        <!-- Notifications -->
+        <div class="notifications-container space-y-3 px-2 py-4 pb-6">
+          <!-- Notification -->
+          <% if(notifications.length > 0){ %>
+          <% notifications.forEach(element => { %>
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 flex items-start gap-3 hover:bg-slate-50 transition cursor-pointer">
+            <a href="/profile/<%= element.sender?.username %>">
+              <img src="<%= element.profile?.profilepic?.url ? element.profile.profilepic.url : `https://placehold.co/128x128/1d4ed8/ffffff?text=${element.sender?.name.split('')[0].toUpperCase()}` %>" class="w-12 h-12 rounded-full object-cover" />
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <h3 class="font-semibold text-gray-900">
+                    <%= element.sender?.username %>
+                  </h3>
+            </a>
+            <span class="notification-time text-xs text-gray-400">
+              <%= element.createdAt %>
+            </span>
+          </div>
+          <p class="text-sm text-gray-600 mt-1">
+            <% if(element.type === "like"){ %>
+            liked your post
+            <% } else if(element.type === "comment") { %>
+            commented on your post
+            <% } else if(element.type === "follow"){ %>
+            started following you
+            <% } %>
+          </p>
+        </div>
+        <div class="unread-dot w-2.5 h-2.5 rounded-full bg-indigo-500 mt-2"></div>
+      </div>
+      <% }); %>
+      <% } else {%>
+      <span class="flex items-center justify-center mt-[50px] text-[20px] text-gray-500 text-center px-4">
+        No notification yet!
+      </span>
+      <% } %>
+  </div>
+  </div>
+  </main>
+  <!-- Right Column -->
+  <%- include('partials/rightColumn') %>
+  </div>
+  <!-- Mobile Navigation -->
+  <%- include('partials/mobileNavigationBar') %>
+  <div class="hidden">
+    <%- include('partials/createPost') %>
+  </div>
+</body>
+
+<!-- <script type="module" src="/js/followSystem.js"></script> -->
+<script type="module" src="/js/notification.js"></script>
+<script type="module" src="/js/notificationRealtime.js"></script>
+<script type="module" src="/js/followSystem.js"></script>
+<script src="/js/createPost.js"></script>
+
+</html>

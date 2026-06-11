@@ -169,8 +169,8 @@ export const comments = async (req, res, next) => {
         const user = await getUserDetails(req.user.id);
         if (!user) throw new BadRequestError("User not found!");
 
-        const loggedInProfile = await Profile.findOne({user: req.user.id});
-        if(!loggedInProfile) throw new BadRequestError("Profile not found.");
+        const loggedInProfile = await Profile.findOne({ user: req.user.id });
+        if (!loggedInProfile) throw new BadRequestError("Profile not found.");
 
         const post = await Posts.findOne({ _id: postId })
         if (!post) throw new BadRequestError("Post not found!");
