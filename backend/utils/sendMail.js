@@ -24,8 +24,7 @@ export const sendMail = async ({ email, subject, html }) => {
                 subject: subject,
                 html: html
             });
-
-            console.log("Message sent:", info.messageId);
+            
             return{ success: true, message: "OTP sent to your registered email id." }
         })();
     } catch (err) {

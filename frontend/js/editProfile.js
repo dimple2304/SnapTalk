@@ -29,7 +29,6 @@ if (editProfileBtn) {
 
                 profilePicInput.addEventListener("change", async function (e) {
                     const file = e.target.files[0];
-                    console.log(file);
 
                     const formData = new FormData();
                     formData.append("file", file);
@@ -52,7 +51,6 @@ if (editProfileBtn) {
                     const data = await res.json();
                     preview.src = data.fileUrl;
                     fileId = data.fileId;
-                    console.log(data);
                 })
                 label.addEventListener("click", () => profilePicInput.click());
 
@@ -90,7 +88,6 @@ if (editProfileBtn) {
                         link: urlVal,
                         fileId: fileId
                     };
-                    console.log(details);
 
                     try {
                         editSpinner.classList.remove("hidden");
@@ -102,7 +99,6 @@ if (editProfileBtn) {
                         });
 
                         const data = await res.json();
-                        console.log(data);
 
                         editSpinner.classList.add("hidden");
 

@@ -3,7 +3,6 @@ const postDeleteBtn = document.querySelectorAll(".postDeleteBtn");
 
 let source;
 const currentpath = window.location.pathname;
-console.log(currentpath);
 
 
 if (postMenus) {

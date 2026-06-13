@@ -63,7 +63,6 @@ likeButtonArray.forEach((button, i) => {
             data.message
         }
 
-        console.log("likesCount:", data.likesCount);
         if (data.likesCount > 0) {
             likesCount[i].innerHTML = data.likesCount;
         } else {
@@ -121,7 +120,6 @@ if (commentInput) {
                 commentInput: commentInputVal,
                 postId: postId
             }
-            console.log("inputs:", inputs);
 
             const res = await fetch('/api/create/comment-post', {
                 method: "POST",

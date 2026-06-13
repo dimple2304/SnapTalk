@@ -14,7 +14,6 @@ if (bannerPicInput) {
     bannerPicInput.addEventListener("change", async function (e) {
         try {
             const file = e.target.files[0];
-            console.log(file);
 
             const formData = new FormData();
             formData.append("file", file);

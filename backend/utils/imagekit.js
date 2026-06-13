@@ -28,11 +28,3 @@ export const uploadFile = async (req, res, next) => {
     }
 }
 
-
-// get file id (file name)
-// export const getFileId = function(url){
-//     const fileId = url.slice(url.lastIndexOf('/')+1,url.length)
-//     console.log(fileId);
-    
-//     return fileId.trim();
-// }

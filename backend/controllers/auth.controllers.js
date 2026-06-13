@@ -8,6 +8,7 @@ import bcrypt from 'bcrypt';
 import moment from 'moment-timezone';
 import { tokenCreation } from '../utils/jwt_service.js';
 import { BadRequestError, ConflictError, ForbiddenError, InternalServerError, UnauthorizedError } from '../utils/customErrorHandler/customError.js';
+import { Profile } from '../models/profile.models.js';
 
 
 // otp sender
@@ -94,6 +95,16 @@ export const registerUser = async (req, res, next) => {
         const token = tokenCreation({ id: savedUser.id, email: savedUser.email, username: "" });
         res.cookie("token", token);
 
+        const userProfile = new Profile({
+            user: savedUser._id,
+            profilepic: {
+                url: `https://placehold.co/128x128/1d4ed8/ffffff?text=${savedUser.name[0].toUpperCase()}`,
+                fileId: null
+            },
+        })
+
+        await userProfile.save();
+
         return res.status(201).json({ success: true, redirectUrl: "/setting-username" });
     } catch (err) {
         next(err);
@@ -108,8 +119,8 @@ export const setUsername = async (req, res, next) => {
         if (!username) throw new BadRequestError("Username is required!");
 
         const user = await getUserDetails(req.user.id);
-        
-        if(!user) throw new BadRequestError("User not found.");
+
+        if (!user) throw new BadRequestError("User not found.");
 
         const existed = await Users.findOne({ username });
         if (existed) throw new ConflictError("This username is not available. Please choose a different one.");
@@ -117,11 +128,11 @@ export const setUsername = async (req, res, next) => {
         user.username = username;
 
         const updated = await user.save();
-        if(!updated) throw new InternalServerError("Something went wrong!");
+        if (!updated) throw new InternalServerError("Something went wrong!");
 
         const token = tokenCreation({ id: user.id, email: user.email, username: username });
         res.cookie("token", token);
-        return res.status(200).json({ success: true, message: "Username set successfully.", redirectUrl: "/feed" });6
+        return res.status(200).json({ success: true, message: "Username set successfully.", redirectUrl: "/feed" }); 6
     } catch (err) {
         next(err);
     }

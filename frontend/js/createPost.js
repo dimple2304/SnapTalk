@@ -23,7 +23,6 @@ function createPostFunc(container = document) {
         const mediaFiles = postMediaInput.files;
         if (mediaFiles.length > 0) {
             const file = e.target.files[0];
-            console.log(file);
             previewSpinner.classList.remove("hidden");
             postBtn.disabled = false;
 
@@ -55,8 +54,6 @@ function createPostFunc(container = document) {
             fileId = data.fileId
 
             previewSpinner.classList.add("hidden");
-            console.log(data);
-
         }
     })
 

@@ -68,14 +68,11 @@ router.get('/feed', verifyToken, async (req, res, next) => {
             isRead: false
         })
 
-        console.log(unreadNotifications.length);
-        
-
         res.render("feedpage", {
             loggedInProfile,
             loggedInUser,
             user,
-            profile: profile ? profile : { profilepic: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` },
+            profile: profile ? profile : { profilepic: `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name?.split('')[0].toUpperCase()}` },
             posts: enrichedPosts,
             followingUserPosts,
             allUsers: updatedUsers,

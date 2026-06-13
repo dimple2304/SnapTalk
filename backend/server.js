@@ -14,7 +14,6 @@ import { globalErrorHandler } from './middlewares/globalErrorHandler.js';
 import http from 'http';
 import { setupSocket } from './socket/socket.js';
 
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -43,8 +42,10 @@ app.use(globalErrorHandler)
 const server = http.createServer(app)
 setupSocket(server)
 
-server.listen(PORT, () => {
-    console.log(`Server started at https://localhost:${PORT}`);
+const port = process.env.PORT || PORT || 3000;
+
+server.listen(port, () => {
+    console.log(`Server started at ${PORT}`);
 })
 // app.listen(PORT, () => {
 //     console.log(`Server started at https://localhost:${PORT}`);
