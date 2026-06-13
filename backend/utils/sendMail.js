@@ -7,6 +7,9 @@ export const sendMail = async ({ email, subject, html }) => {
     if (!html) throw new error("Missing email body");
 
     try {
+
+        console.log("EMAIL_ID:", EMAIL_ID);
+        console.log("EMAIL_PASS exists:", !!EMAIL_PASS);
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 587,
@@ -17,27 +20,19 @@ export const sendMail = async ({ email, subject, html }) => {
             },
         });
 
-        try {
-            await transporter.verify();
-            console.log("SMTP connection successful");
-        } catch (err) {
-            console.error("SMTP verify failed:", err);
-        }
-
-        (async () => {
-            const info = await transporter.sendMail({
-                from: `"SnapTalk" ${EMAIL_ID}`,
-                to: email,
-                subject: subject,
-                html: html
-            });
-
-            return { success: true, message: "OTP sent to your registered email id." }
-        })();
+        const info = await transporter.sendMail({
+            from: `"SnapTalk" <${EMAIL_ID}>`,
+            to: email,
+            subject,
+            html
+        });
+        console.log(info);
+        return {
+            success: true,
+            message: "OTP sent to your registered email id."
+        };
     } catch (err) {
         console.log("Error occured", err);
         return { success: false, message: "Failed to send OTP" };
     }
 }
-
-// sendMail({email:"teambinarybrothers@gmail.com",subject:"OTP", html:otp})
