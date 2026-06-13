@@ -16,7 +16,14 @@ export const sendMail = async ({ email, subject, html }) => {
                 pass: EMAIL_PASS,
             },
         });
-        
+
+        try {
+            await transporter.verify();
+            console.log("SMTP connection successful");
+        } catch (err) {
+            console.error("SMTP verify failed:", err);
+        }
+
         (async () => {
             const info = await transporter.sendMail({
                 from: `"SnapTalk" ${EMAIL_ID}`,
@@ -24,8 +31,8 @@ export const sendMail = async ({ email, subject, html }) => {
                 subject: subject,
                 html: html
             });
-            
-            return{ success: true, message: "OTP sent to your registered email id." }
+
+            return { success: true, message: "OTP sent to your registered email id." }
         })();
     } catch (err) {
         console.log("Error occured", err);
