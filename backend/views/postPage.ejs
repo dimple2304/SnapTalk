@@ -53,7 +53,7 @@
       <section class="pb-20">
         <% if(post?.comments?.length > 0){ %>
         <% enrichedComments.forEach(element => { %>
-        <article class="flex space-x-4 p-3 hover:bg-slate-50 transition-colors group">
+        <article class="flex space-x-4 p-4 hover:bg-slate-50 transition-colors group">
           <a href="/profile/<%= element.user.username %>">
             <img class="h-10 w-10 rounded-full object-cover flex-shrink-0" src="<%= element.profile?.profilepic?.url ? element.profile.profilepic.url : `https://placehold.co/128x128/1d4ed8/ffffff?text=${user.name.split('')[0].toUpperCase()}` %>" alt="<%= element.user.name %>'s Avatar">
             <div class="flex-1">
