@@ -45,7 +45,7 @@ setupSocket(server)
 const port = process.env.PORT || PORT || 3000;
 
 server.listen(port, () => {
-    console.log(`Server started at ${PORT}`);
+    console.log(`Server started at ${port}`);
 })
 // app.listen(PORT, () => {
 //     console.log(`Server started at https://localhost:${PORT}`);
