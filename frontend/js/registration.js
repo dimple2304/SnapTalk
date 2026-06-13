@@ -201,7 +201,7 @@ nextBtn.addEventListener("click", async function (e) {
         else if (data.success) {
             registrationForm.classList.add("hidden");
             otpVerificationForm.classList.remove("hidden");
-            id = setInterval(() => startTimer(4, 59), 1000);
+            id = setInterval(() => startTimer(0, 59), 1000);
         }
         else {
             dateError.innerHTML = "Error sending otp, Please try again!"
@@ -242,7 +242,7 @@ resendBtn.addEventListener("click", async function (e) {
             resentMsg.innerHTML = "OTP re-sent to your registered email.";
             resentMsg.style.color = "green";
             relative.appendChild(resentMsg);
-            id = setInterval(() => startTimer(4, 59), 1000);
+            id = setInterval(() => startTimer(0, 59), 1000);
         }
     } catch (err) {
         console.log("Catch triggered" + err);
