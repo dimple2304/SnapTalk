@@ -3,15 +3,12 @@ import { EMAIL_ID, EMAIL_PASS } from "../config/envIndex.js";
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false,
     auth: {
         user: EMAIL_ID,
         pass: EMAIL_PASS
-    },
-    connectionTimeout: 15000,
-    greetingTimeout: 15000,
-    socketTimeout: 15000
+    }
 });
 
 transporter.verify((err, success) => {
