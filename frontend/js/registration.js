@@ -237,7 +237,7 @@ resendBtn.addEventListener("click", async function (e) {
         spinner.classList.add("hidden");
 
         if (!res.ok) {
-            otpError.innerHTML = data.messaage;
+            otpError.innerHTML = data.message;
         } else if (data.success) {
             resentMsg.innerHTML = "OTP re-sent to your registered email.";
             resentMsg.style.color = "green";

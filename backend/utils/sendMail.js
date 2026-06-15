@@ -1,30 +1,33 @@
-import { Resend } from "resend";
-import { RESEND_API_KEY } from "../config/envIndex.js";
+import nodemailer from "nodemailer";
+import { EMAIL_ID, EMAIL_PASS } from "../config/envIndex.js";
 
-const resend = new Resend(RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: EMAIL_ID,
+        pass: EMAIL_PASS
+    }
+});
 
 export const sendMail = async ({ email, subject, html }) => {
-    if (!email) throw new error("Missing email");
-    if (!subject) throw new error("Missing subject");
-    if (!html) throw new error("Missing email body");
+    if (!email) throw new Error("Missing email");
+    if (!subject) throw new Error("Missing subject");
+    if (!html) throw new Error("Missing email body");
     try {
-        const response = await resend.emails.send({
-            from: "SnapTalk <onboarding@resend.dev>",
+        const info = await transporter.sendMail({
+            from: `"SnapTalk" <${EMAIL_ID}>`,
             to: email,
             subject,
             html
         });
-
-        console.log(response);
-
+        console.log("Email sent:", info.messageId);
         return {
             success: true,
             message: "OTP sent successfully"
         };
 
     } catch (err) {
-        console.error(err);
-
+        console.error("Email Error:", err);
         return {
             success: false,
             message: "Failed to send OTP"
