@@ -11,14 +11,6 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-transporter.verify((err, success) => {
-    if (err) {
-        console.error("Verify Error:", err);
-    } else {
-        console.log("SMTP Ready");
-    }
-});
-
 export const sendMail = async ({ email, subject, html }) => {
     if (!email) throw new Error("Missing email");
     if (!subject) throw new Error("Missing subject");
