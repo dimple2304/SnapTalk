@@ -11,7 +11,6 @@ export function generateOtpEmail(otp) {
 <body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f4f7f6;">
     <!-- Main container table -->
     <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border-collapse: collapse; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-        
         <!-- Header Section with Logo -->
         <tr>
             <td align="center" style="padding: 30px 0;">
@@ -43,7 +42,6 @@ export function generateOtpEmail(otp) {
                     <tr>
                         <td align="center" style="padding-bottom: 30px;">
                             <div style="background-color: #EAEAEA; border-radius: 8px; display: inline-block; padding: 15px 30px; font-size: 36px; font-weight: bold; letter-spacing: 6px; color: purple; border: 1px dashed #bde0ff;">
-                                <!-- The OTP is dynamically inserted here -->
                                 ${otp}
                             </div>
                         </td>
@@ -52,7 +50,7 @@ export function generateOtpEmail(otp) {
                     <!-- Expiration Information -->
                     <tr>
                         <td align="center" style="color: #888888; font-size: 14px; padding-bottom: 30px;">
-                            This passcode will expire in <strong>5 minutes</strong>.
+                            This passcode will expire in <strong>1 minute only</strong>.
                         </td>
                     </tr>
                     

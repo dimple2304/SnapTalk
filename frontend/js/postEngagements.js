@@ -14,7 +14,7 @@ import notifyMe, { notificationCounter, toastify } from "./notification.js";
 import socket from "./socketClient.js";
 const currentUserId = document.body.dataset.currentUserId;
 
-let unreadNotificationCount = document.querySelector("#unread-notification-count");
+let unreadNotificationCount = document.querySelector(".unread-notification-count");
 
 socket.on('receive like', async (data) => {
     if (window.location.pathname !== "/notification") {

@@ -1,4 +1,3 @@
-
 const createPostModal = document.querySelector("#create-post-modal");
 function createPostFunc(container = document) {
     const postMediaInput = container.querySelector(".post-media-input");

@@ -38,7 +38,7 @@ signupModalClose.addEventListener("click", () => {
     window.location.href = '/';
 })
 
-signinRedirect.addEventListener("click", function(){
+signinRedirect.addEventListener("click", function () {
     window.location.href = "/login";
 })
 
@@ -104,16 +104,18 @@ function showEmailError() {
 }
 
 function showDOBError() {
+    const currentYear = new Date().getFullYear();
     if (!dobTouched) {
         return;
     }
     const month = selectMonthV.value;
     const day = parseInt(selectDayV.value);
     const year = parseInt(selectYearV.value);
+
     if (!month || !day || !year) {
         return;
     }
-    else if (year > 2009) {
+    else if (year > (currentYear - 16)) {
         dateError.innerHTML = "Age must be greater than 16!";
     }
     else {
@@ -411,42 +413,42 @@ function toggleHandler(inputField, icon) {
 
 
 // Save user details and redirect to the homepage
-confirmBtn.addEventListener("click", async function(e){
+confirmBtn.addEventListener("click", async function (e) {
     e.preventDefault();
 
-    try{
+    try {
         confirmPasswordError.innerHTML = "";
 
         const userDetails = {
-            name:name.value.trim(),
-            email:email.value.trim(),
-            month:selectMonthV.value.trim(),
-            day:selectDayV.value.trim(),
-            year:selectYearV.value.trim(),
-            password:password.value.trim()
+            name: name.value.trim(),
+            email: email.value.trim(),
+            month: selectMonthV.value.trim(),
+            day: selectDayV.value.trim(),
+            year: selectYearV.value.trim(),
+            password: password.value.trim()
         }
 
         spinner.classList.remove("hidden");
 
         const res = await fetch("/api/auth/register", {
-            method:"POST",
-            headers:{"Content-Type":"Application/json"},
-            body:JSON.stringify(userDetails)
+            method: "POST",
+            headers: { "Content-Type": "Application/json" },
+            body: JSON.stringify(userDetails)
         });
-   
+
         const data = await res.json();
-        
-        if(!res.ok){
+
+        if (!res.ok) {
             confirmPasswordError.innerHTML = data.message;
             spinner.classList.add("hidden");
             return;
         }
         window.location.href = data.redirectUrl;
 
-    }catch(err){
+    } catch (err) {
         confirmPasswordError.innerHTML = "Something went wrong!";
         spinner.classList.add("hidden");
-        console.log(err);     
+        console.log(err);
     }
 })
 

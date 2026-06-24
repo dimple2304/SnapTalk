@@ -5,14 +5,23 @@ import { BadRequestError, NotFoundError } from "../utils/customErrorHandler/cust
 export const searchUser = async (req, res, next) => {
     try {
         const { searchQuery } = req.query;
-        // if (!searchQuery) throw new BadRequestError("Query not found");
         let users = await Users.find({
-            name: {
-                $regex: searchQuery,
-                $options: "i"
-            }
+            $or: [
+                {
+                    name: {
+                        $regex: searchQuery,
+                        $options: "i"
+                    }
+                },
+                {
+                    username: {
+                        $regex: searchQuery,
+                        $options: "i"
+                    }
+                }
+            ]
         }).select("name username").limit(10);
-        if(!users.length) throw new BadRequestError("No user found with this name.");
+        if (!users.length) throw new BadRequestError("No user found with this name.");
 
         users = await Promise.all(
             users.map(async (u) => {

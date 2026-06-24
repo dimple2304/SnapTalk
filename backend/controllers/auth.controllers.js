@@ -119,7 +119,6 @@ export const setUsername = async (req, res, next) => {
         if (!username) throw new BadRequestError("Username is required!");
 
         const user = await getUserDetails(req.user.id);
-
         if (!user) throw new BadRequestError("User not found.");
 
         const existed = await Users.findOne({ username });

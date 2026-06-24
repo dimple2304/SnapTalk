@@ -106,7 +106,7 @@ if (editProfileBtn) {
                             editError.innerHTML = data.message;
                         }
                         Swal.close();
-                        window.location.reload();
+                        window.location.href = `/profile/${details.username}`;
                     } catch (err) {
                         editError.innerHTML = data.message;
                         editSpinner.classList.add("hidden");

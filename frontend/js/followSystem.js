@@ -8,7 +8,7 @@ const followBtnFromSidebar = document.querySelectorAll(".followBtnFromSidebar")
 
 import notifyMe, { notificationCounter } from './notification.js';
 import socket from './socketClient.js';
-let unreadNotificationCount = document.querySelector("#unread-notification-count");
+let unreadNotificationCount = document.querySelector(".unread-notification-count");
 
 //WHEN ON NOTIFICATION PAGE , NOTIFICATION MUST BE isRead:true by default
 // one idea is that we can make a global function for notification creation
