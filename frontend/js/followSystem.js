@@ -10,11 +10,6 @@ import notifyMe, { notificationCounter } from './notification.js';
 import socket from './socketClient.js';
 let unreadNotificationCount = document.querySelector(".unread-notification-count");
 
-//WHEN ON NOTIFICATION PAGE , NOTIFICATION MUST BE isRead:true by default
-// one idea is that we can make a global function for notification creation
-// which holds the current pathnam and if it contains '/notification' then upcoming 
-// notifications must is isRead: true
-
 socket.on('receive follower', async (data) => {
     if (window.location.pathname !== "/notification") {
         notifyMe(data.message);
