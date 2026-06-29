@@ -31,8 +31,6 @@ if (inputField) {
                 if (!res.ok) {
                     searchUserError.innerHTML = data.message;
                 }
-                // WORKING ON PROFILE BACK BTN (BTN MUST BE BACK TO THE EXPLORE PAGE RATHER THAN FEED IF 
-                // PROFILE IS OPENED FROM SEARCH BAR)
                 if (data) {
                     data.users.forEach(u => {
                         const a = document.createElement("a");
